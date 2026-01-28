@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block title %}Galería de Animales - Animal Recognition{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">🏆 Galería de Animales</h1>
+    <p class="text-gray-600">Explora todos los animales que puedes descubrir con nuestra aplicación</p>
+</div>
+
+<!-- Filters -->
+<div class="bg-white rounded-2xl card-shadow p-6 mb-8">
+    <div class="flex flex-wrap gap-4 items-center">
+        <div class="flex-1 min-w-64">
+            <input 
+                type="text" 
+                id="search-input" 
+                placeholder="Buscar animales..." 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            >
+        </div>
+        <div class="flex gap-2">
+            <button class="filter-btn active px-4 py-2 rounded-lg bg-purple-600 text-white" data-class="all">
+                Todos
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-class="MAMMAL">
+                🦁 Mamíferos
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-class="BIRD">
+                🦅 Aves
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-class="REPTILE">
+                🐊 Reptiles
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-class="FISH">
+                🐠 Peces
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Animals Grid -->
+<div id="animals-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <!-- Loading state -->
+    <div id="loading-state" class="col-span-full text-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+        <p class="text-gray-500">Cargando animales...</p>
+    </div>
+</div>
+
+<!-- Empty state -->
+<div id="empty-state" class="hidden text-center py-12">
+    <div class="text-6xl mb-4">🔍</div>
+    <h3 class="text-xl font-semibold text-gray-700 mb-2">No se encontraron animales</h3>
+    <p class="text-gray-500">Intenta con otro término de búsqueda</p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let allAnimals = [];
+    let filteredAnimals = [];
+    
+    // Fetch animals on page load
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const response = await fetch('/api/animals/');
+            allAnimals = await response.json();
+            filteredAnimals = [...allAnimals];
+            renderAnimals();
+        } catch (error) {
+            console.error('Error fetching animals:', error);
+            document.getElementById('loading-state').innerHTML = `
+                <p class="text-red-500">Error al cargar animales</p>
+            `;
+        }
+    });
+    
+    function renderAnimals() {
+        const grid = document.getElementById('animals-grid');
+        const loadingState = document.getElementById('loading-state');
+        const emptyState = document.getElementById('empty-state');
+        
+        loadingState.classList.add('hidden');
+        
+        if (filteredAnimals.length === 0) {
+            emptyState.classList.remove('hidden');
+            grid.innerHTML = '';
+            return;
+        }
+        
+        emptyState.classList.add('hidden');
+        
+        grid.innerHTML = filteredAnimals.map(animal => `
+            <div class="discovery-card bg-white rounded-2xl card-shadow overflow-hidden cursor-pointer" onclick="viewAnimal('${animal.id}')">
+                <div class="aspect-square bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center text-6xl">
+                    ${getAnimalEmoji(animal.animal_class)}
+                </div>
+                <div class="p-4">
+                    <h3 class="font-bold text-gray-800 text-lg">${animal.name}</h3>
+                    <p class="text-gray-500 text-sm italic">${animal.scientific_name}</p>
+                    <div class="flex items-center gap-2 mt-3">
+                        <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs rounded-full">
+                            ${animal.animal_class}
+                        </span>
+                        ${animal.is_endangered ? '<span class="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full">En peligro</span>' : ''}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    function getAnimalEmoji(animalClass) {
+        const emojis = {
+            'Mamífero': '🦁',
+            'Ave': '🦅',
+            'Reptil': '🐊',
+            'Anfibio': '🐸',
+            'Pez': '🐠',
+            'Invertebrado': '🦋'
+        };
+        return emojis[animalClass] || '🐾';
+    }
+    
+    function viewAnimal(animalId) {
+        window.location.href = `/animal/${animalId}/`;
+    }
+    
+    // Search functionality
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        filteredAnimals = allAnimals.filter(animal => 
+            animal.name.toLowerCase().includes(query) ||
+            animal.scientific_name.toLowerCase().includes(query) ||
+            animal.description.toLowerCase().includes(query)
+        );
+        renderAnimals();
+    });
+    
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update active state
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('active', 'bg-purple-600', 'text-white');
+                b.classList.add('bg-gray-100', 'text-gray-700');
+            });
+            btn.classList.add('active', 'bg-purple-600', 'text-white');
+            btn.classList.remove('bg-gray-100', 'text-gray-700');
+            
+            // Filter animals
+            const filterClass = btn.dataset.class;
+            if (filterClass === 'all') {
+                filteredAnimals = [...allAnimals];
+            } else {
+                filteredAnimals = allAnimals.filter(animal => 
+                    animal.animal_class === filterClass
+                );
+            }
+            renderAnimals();
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Acerca de - Animal Recognition{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Hero -->
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">
+            🦁 Acerca de Animal Recognition
+        </h1>
+        <p class="text-xl text-gray-600">
+            Una herramienta educativa interactiva para aprender sobre el reino animal
+        </p>
+    </div>
+    
+    <!-- Mission -->
+    <div class="bg-white rounded-2xl card-shadow p-8 mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">🎯 Nuestra Misión</h2>
+        <p class="text-gray-600 leading-relaxed">
+            Animal Recognition es una aplicación diseñada para acercar a las personas al fascinante 
+            mundo animal. Utilizando tecnología de reconocimiento de imágenes con inteligencia artificial, 
+            permitimos a turistas, visitantes de zoológicos y niños aprender sobre diferentes especies 
+            de manera interactiva y divertida.
+        </p>
+    </div>
+    
+    <!-- Features -->
+    <div class="bg-white rounded-2xl card-shadow p-8 mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">✨ Características</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-2xl">
+                    📷
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-1">Reconocimiento en Tiempo Real</h3>
+                    <p class="text-gray-600 text-sm">
+                        Usa tu cámara para identificar animales instantáneamente con nuestra IA.
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-2xl">
+                    📚
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-1">Información Educativa</h3>
+                    <p class="text-gray-600 text-sm">
+                        Aprende datos fascinantes sobre cada especie identificada.
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center text-2xl">
+                    🏆
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-1">Colección Personal</h3>
+                    <p class="text-gray-600 text-sm">
+                        Guarda los animales que descubres y construye tu propia galería.
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-start gap-4">
+                <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-2xl">
+                    🌍
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-1">Conciencia Ambiental</h3>
+                    <p class="text-gray-600 text-sm">
+                        Información sobre el estado de conservación de cada especie.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Target Audience -->
+    <div class="bg-white rounded-2xl card-shadow p-8 mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">👥 ¿Para quién es?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="text-center p-6 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl">
+                <div class="text-5xl mb-4">🧳</div>
+                <h3 class="font-bold text-gray-800 mb-2">Turistas</h3>
+                <p class="text-gray-600 text-sm">
+                    Identifica la fauna local durante tus viajes y aprende sobre ella.
+                </p>
+            </div>
+            <div class="text-center p-6 bg-gradient-to-br from-green-50 to-teal-50 rounded-xl">
+                <div class="text-5xl mb-4">🦒</div>
+                <h3 class="font-bold text-gray-800 mb-2">Zoológicos</h3>
+                <p class="text-gray-600 text-sm">
+                    Herramienta interactiva para enriquecer la experiencia de los visitantes.
+                </p>
+            </div>
+            <div class="text-center p-6 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl">
+                <div class="text-5xl mb-4">👨‍👩‍👧‍👦</div>
+                <h3 class="font-bold text-gray-800 mb-2">Familias y Niños</h3>
+                <p class="text-gray-600 text-sm">
+                    Aprendizaje divertido sobre el mundo animal para todas las edades.
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Technology -->
+    <div class="bg-white rounded-2xl card-shadow p-8 mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">🔧 Tecnología</h2>
+        <p class="text-gray-600 mb-6">
+            Animal Recognition está construido con tecnologías modernas para ofrecer la mejor experiencia:
+        </p>
+        <div class="flex flex-wrap gap-3">
+            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700 font-medium">Python</span>
+            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700 font-medium">Django</span>
+            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700 font-medium">TensorFlow</span>
+            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700 font-medium">OpenCV</span>
+            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700 font-medium">WebSocket</span>
+            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700 font-medium">PostgreSQL</span>
+            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700 font-medium">Redis</span>
+            <span class="px-4 py-2 bg-gray-100 rounded-full text-gray-700 font-medium">AWS</span>
+        </div>
+    </div>
+    
+    <!-- CTA -->
+    <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-center text-white">
+        <h2 class="text-2xl font-bold mb-4">¿Listo para explorar?</h2>
+        <p class="text-purple-100 mb-6">
+            Comienza a descubrir animales ahora mismo con tu cámara
+        </p>
+        <a href="{% url 'home' %}" class="inline-block px-8 py-3 bg-white text-purple-600 font-bold rounded-full hover:bg-gray-100 transition">
+            Comenzar ahora →
+        </a>
+    </div>
+</div>
+{% endblock %}

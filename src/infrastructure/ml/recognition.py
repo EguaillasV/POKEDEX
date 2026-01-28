@@ -1,0 +1,239 @@
+"""
+ML Service - Animal Recognition Adapter
+Implements the AnimalRecognitionPort using TensorFlow/OpenCV.
+"""
+import os
+import logging
+from typing import List, Optional
+import numpy as np
+
+from src.domain.entities import RecognitionResult
+from src.domain.value_objects import ImageFrame
+from src.domain.ports import AnimalRecognitionPort
+from src.domain.exceptions import RecognitionException, ModelNotReadyException
+
+logger = logging.getLogger(__name__)
+
+
+# Animal labels - this would be loaded from the model in production
+ANIMAL_LABELS = [
+    "león", "elefante", "jirafa", "cebra", "tigre",
+    "oso", "mono", "gorila", "leopardo", "rinoceronte",
+    "hipopótamo", "cocodrilo", "águila", "pingüino", "tucán",
+    "flamenco", "loro", "búho", "delfín", "tiburón",
+    "ballena", "tortuga", "serpiente", "iguana", "camaleón",
+    "lobo", "zorro", "ciervo", "koala", "canguro"
+]
+
+
+class TensorFlowAnimalRecognition(AnimalRecognitionPort):
+    """
+    TensorFlow implementation of AnimalRecognitionPort.
+    Uses a pre-trained model for animal classification.
+    """
+    
+    def __init__(self, model_path: Optional[str] = None, confidence_threshold: float = 0.7):
+        self._model = None
+        self._model_path = model_path
+        self._confidence_threshold = confidence_threshold
+        self._is_ready = False
+        self._labels = ANIMAL_LABELS
+        
+        # Try to load model on initialization
+        self._load_model()
+    
+    def _load_model(self) -> None:
+        """Load the TensorFlow model"""
+        try:
+            # In production, this would load a real model
+            # For now, we'll use a mock implementation
+            if self._model_path and os.path.exists(self._model_path):
+                import tensorflow as tf
+                self._model = tf.keras.models.load_model(self._model_path)
+                self._is_ready = True
+                logger.info(f"Model loaded from {self._model_path}")
+            else:
+                # Mock mode for development
+                logger.warning("Running in mock mode - no real model loaded")
+                self._is_ready = True
+        except Exception as e:
+            logger.error(f"Failed to load model: {str(e)}")
+            self._is_ready = False
+    
+    def preprocess_image(self, frame: ImageFrame) -> np.ndarray:
+        """Preprocess an image frame for recognition"""
+        try:
+            import cv2
+            
+            # Decode image from bytes
+            nparr = np.frombuffer(frame.data, np.uint8)
+            image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            
+            if image is None:
+                raise RecognitionException("Failed to decode image")
+            
+            # Resize to model input size (224x224 for most models)
+            image = cv2.resize(image, (224, 224))
+            
+            # Convert BGR to RGB
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            
+            # Normalize pixel values
+            image = image.astype(np.float32) / 255.0
+            
+            # Add batch dimension
+            image = np.expand_dims(image, axis=0)
+            
+            return image
+            
+        except Exception as e:
+            raise RecognitionException(f"Image preprocessing failed: {str(e)}")
+    
+    def recognize(self, image: np.ndarray) -> List[RecognitionResult]:
+        """Recognize animals in a preprocessed image"""
+        if not self._is_ready:
+            raise ModelNotReadyException("Model is not ready")
+        
+        try:
+            if self._model is not None:
+                # Real model prediction
+                predictions = self._model.predict(image, verbose=0)
+                return self._process_predictions(predictions[0])
+            else:
+                # Mock prediction for development
+                return self._mock_prediction()
+                
+        except Exception as e:
+            raise RecognitionException(f"Recognition failed: {str(e)}")
+    
+    def _process_predictions(self, predictions: np.ndarray) -> List[RecognitionResult]:
+        """Process model predictions into RecognitionResult objects"""
+        results = []
+        
+        # Get indices sorted by confidence (descending)
+        sorted_indices = np.argsort(predictions)[::-1]
+        
+        for idx in sorted_indices[:5]:  # Top 5 predictions
+            confidence = float(predictions[idx])
+            if confidence >= self._confidence_threshold:
+                results.append(RecognitionResult(
+                    animal_id="",  # Will be filled by the service
+                    animal_name=self._labels[idx],
+                    confidence=confidence,
+                ))
+        
+        return results
+    
+    def _mock_prediction(self) -> List[RecognitionResult]:
+        """Generate mock predictions for development"""
+        import random
+        
+        # Randomly select an animal with random confidence
+        if random.random() > 0.3:  # 70% chance of detection
+            animal = random.choice(self._labels)
+            confidence = random.uniform(0.7, 0.98)
+            
+            return [RecognitionResult(
+                animal_id="",
+                animal_name=animal,
+                confidence=confidence,
+            )]
+        
+        return []
+    
+    def get_supported_animals(self) -> List[str]:
+        """Get list of supported animal names"""
+        return self._labels.copy()
+    
+    def is_ready(self) -> bool:
+        """Check if the recognition service is ready"""
+        return self._is_ready
+
+
+class OpenCVPreprocessor:
+    """
+    OpenCV-based image preprocessing utilities.
+    """
+    
+    @staticmethod
+    def decode_base64_image(base64_string: str) -> np.ndarray:
+        """Decode a base64 image string to numpy array"""
+        import cv2
+        import base64
+        
+        # Remove data URL prefix if present
+        if ',' in base64_string:
+            base64_string = base64_string.split(',')[1]
+        
+        # Decode base64
+        img_data = base64.b64decode(base64_string)
+        nparr = np.frombuffer(img_data, np.uint8)
+        
+        # Decode image
+        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        
+        return image
+    
+    @staticmethod
+    def create_thumbnail(image: np.ndarray, size: tuple = (100, 100)) -> bytes:
+        """Create a thumbnail from an image"""
+        import cv2
+        
+        # Resize maintaining aspect ratio
+        h, w = image.shape[:2]
+        aspect = w / h
+        
+        if aspect > 1:
+            new_w = size[0]
+            new_h = int(size[0] / aspect)
+        else:
+            new_h = size[1]
+            new_w = int(size[1] * aspect)
+        
+        thumbnail = cv2.resize(image, (new_w, new_h))
+        
+        # Encode to JPEG
+        _, buffer = cv2.imencode('.jpg', thumbnail, [cv2.IMWRITE_JPEG_QUALITY, 85])
+        
+        return buffer.tobytes()
+    
+    @staticmethod
+    def draw_bounding_box(
+        image: np.ndarray,
+        box: dict,
+        label: str,
+        confidence: float
+    ) -> np.ndarray:
+        """Draw a bounding box with label on an image"""
+        import cv2
+        
+        x, y, w, h = box['x'], box['y'], box['width'], box['height']
+        
+        # Draw rectangle
+        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        
+        # Draw label background
+        label_text = f"{label}: {confidence:.1%}"
+        (text_w, text_h), _ = cv2.getTextSize(
+            label_text, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1
+        )
+        cv2.rectangle(
+            image,
+            (x, y - text_h - 10),
+            (x + text_w + 10, y),
+            (0, 255, 0),
+            -1
+        )
+        
+        # Draw label text
+        cv2.putText(
+            image,
+            label_text,
+            (x + 5, y - 5),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.6,
+            (0, 0, 0),
+            1
+        )
+        
+        return image

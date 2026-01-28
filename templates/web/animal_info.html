@@ -1,0 +1,822 @@
+{% extends 'base.html' %}
+
+{% block title %}Información del Animal - Animal Recognition{% endblock %}
+
+{% block content %}
+<div id="animal-content">
+    <!-- Loading state -->
+    <div id="loading-state" class="text-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+        <p class="text-gray-500">Cargando información...</p>
+    </div>
+</div>
+
+<template id="animal-template">
+    <div class="bg-white rounded-2xl card-shadow overflow-hidden">
+        <!-- Header -->
+        <div class="gradient-bg text-white p-8">
+            <a href="{% url 'home' %}" class="inline-flex items-center text-purple-200 hover:text-white mb-4">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Volver al inicio
+            </a>
+            <div class="flex items-center gap-6">
+                <div class="w-24 h-24 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center text-6xl" id="animal-emoji">
+                    🦁
+                </div>
+                <div class="flex-1">
+                    <h1 class="text-4xl font-bold" id="animal-name">León</h1>
+                    <p class="text-purple-200 text-xl italic" id="animal-scientific">Panthera leo</p>
+                </div>
+                <!-- Sound Button -->
+                <div id="sound-container" class="hidden">
+                    <button id="play-sound-btn" class="w-16 h-16 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full flex items-center justify-center transition group">
+                        <svg id="play-icon" class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <svg id="pause-icon" class="w-8 h-8 text-white hidden" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                        </svg>
+                    </button>
+                    <p class="text-purple-200 text-sm text-center mt-2">🔊 Escuchar</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Audio Player (hidden) -->
+        <audio id="animal-audio" preload="auto"></audio>
+        
+        <!-- Content -->
+        <div class="p-8">
+            <!-- Quick facts -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-gray-50 rounded-xl p-4 text-center">
+                    <div class="text-3xl mb-2">📋</div>
+                    <span class="text-gray-500 text-sm">Clase</span>
+                    <p class="font-bold text-gray-800" id="animal-class">Mamífero</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4 text-center">
+                    <div class="text-3xl mb-2">🍖</div>
+                    <span class="text-gray-500 text-sm">Dieta</span>
+                    <p class="font-bold text-gray-800" id="animal-diet">Carnívoro</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4 text-center">
+                    <div class="text-3xl mb-2">🌍</div>
+                    <span class="text-gray-500 text-sm">Hábitat</span>
+                    <p class="font-bold text-gray-800" id="animal-habitat">Sabana</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4 text-center">
+                    <div class="text-3xl mb-2">⚠️</div>
+                    <span class="text-gray-500 text-sm">Conservación</span>
+                    <p class="font-bold text-gray-800" id="animal-status">Vulnerable</p>
+                </div>
+            </div>
+            
+            <!-- Sound Player Card -->
+            <div id="sound-player-card" class="hidden mb-8 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
+                <div class="flex items-center gap-4">
+                    <button id="play-sound-btn-large" class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition">
+                        <svg id="play-icon-large" class="w-6 h-6 text-purple-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <svg id="pause-icon-large" class="w-6 h-6 text-purple-600 hidden" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                        </svg>
+                    </button>
+                    <div class="flex-1">
+                        <h3 class="font-bold text-lg">🔊 Sonido del animal</h3>
+                        <p class="text-purple-200 text-sm">Escucha cómo suena este animal</p>
+                    </div>
+                    <div class="text-4xl" id="sound-emoji">🦁</div>
+                </div>
+            </div>
+            
+            <!-- More details -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="bg-blue-50 rounded-xl p-4">
+                    <span class="text-blue-600 text-sm font-medium">Esperanza de vida</span>
+                    <p class="text-xl font-bold text-blue-800" id="animal-lifespan">10-14 años</p>
+                </div>
+                <div class="bg-green-50 rounded-xl p-4">
+                    <span class="text-green-600 text-sm font-medium">Peso promedio</span>
+                    <p class="text-xl font-bold text-green-800" id="animal-weight">190 kg</p>
+                </div>
+                <div class="bg-orange-50 rounded-xl p-4">
+                    <span class="text-orange-600 text-sm font-medium">Distribución</span>
+                    <p class="text-xl font-bold text-orange-800" id="animal-distribution">África subsahariana</p>
+                </div>
+            </div>
+            
+            <!-- Description -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">📖 Descripción</h2>
+                <p class="text-gray-600 leading-relaxed" id="animal-description">
+                    Descripción del animal...
+                </p>
+            </div>
+            
+            <!-- Fun Facts -->
+            <div class="bg-yellow-50 rounded-2xl p-6">
+                <h2 class="text-2xl font-bold text-yellow-800 mb-4">💡 Datos Curiosos</h2>
+                <ul id="animal-facts" class="space-y-3">
+                    <li class="flex items-start gap-3">
+                        <span class="text-yellow-500">✓</span>
+                        <span class="text-yellow-800">Dato curioso...</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Endangered warning -->
+            <div id="endangered-warning" class="hidden mt-8 bg-red-50 border border-red-200 rounded-2xl p-6">
+                <div class="flex items-start gap-4">
+                    <div class="text-4xl">🚨</div>
+                    <div>
+                        <h3 class="text-xl font-bold text-red-800 mb-2">Animal en Peligro</h3>
+                        <p class="text-red-700">
+                            Este animal se encuentra en una categoría de riesgo de extinción. 
+                            Es importante tomar conciencia sobre la conservación de su especie.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const animalId = '{{ animal_id }}';
+    let isPlaying = false;
+    let audioElement = null;
+    
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const response = await fetch(`/api/animals/${animalId}/`);
+            
+            if (!response.ok) {
+                throw new Error('Animal not found');
+            }
+            
+            const animal = await response.json();
+            renderAnimal(animal);
+            
+        } catch (error) {
+            console.error('Error fetching animal:', error);
+            document.getElementById('animal-content').innerHTML = `
+                <div class="text-center py-12">
+                    <div class="text-6xl mb-4">😕</div>
+                    <h3 class="text-xl font-semibold text-gray-700 mb-2">Animal no encontrado</h3>
+                    <p class="text-gray-500 mb-4">No pudimos encontrar información sobre este animal.</p>
+                    <a href="{% url 'home' %}" class="text-purple-600 hover:text-purple-700">
+                        ← Volver al inicio
+                    </a>
+                </div>
+            `;
+        }
+    });
+    
+    function renderAnimal(animal) {
+        const template = document.getElementById('animal-template');
+        const clone = template.content.cloneNode(true);
+        
+        // Fill in the data
+        const emoji = getAnimalEmoji(animal.name, animal.animal_class);
+        clone.getElementById('animal-emoji').textContent = emoji;
+        clone.getElementById('animal-name').textContent = animal.name;
+        clone.getElementById('animal-scientific').textContent = animal.scientific_name;
+        clone.getElementById('animal-class').textContent = animal.animal_class;
+        clone.getElementById('animal-diet').textContent = animal.diet;
+        clone.getElementById('animal-habitat').textContent = animal.habitat;
+        clone.getElementById('animal-status').textContent = animal.conservation_status;
+        clone.getElementById('animal-lifespan').textContent = animal.average_lifespan || 'No disponible';
+        clone.getElementById('animal-weight').textContent = animal.average_weight || 'No disponible';
+        clone.getElementById('animal-distribution').textContent = animal.geographic_distribution || 'No disponible';
+        clone.getElementById('animal-description').textContent = animal.description;
+        
+        // Fun facts
+        const factsContainer = clone.getElementById('animal-facts');
+        if (animal.fun_facts && animal.fun_facts.length > 0) {
+            factsContainer.innerHTML = animal.fun_facts.map(fact => `
+                <li class="flex items-start gap-3">
+                    <span class="text-yellow-500">✓</span>
+                    <span class="text-yellow-800">${fact}</span>
+                </li>
+            `).join('');
+        } else {
+            factsContainer.innerHTML = '<li class="text-yellow-700">No hay datos curiosos disponibles.</li>';
+        }
+        
+        // Show endangered warning if applicable
+        if (animal.is_endangered) {
+            clone.getElementById('endangered-warning').classList.remove('hidden');
+        }
+        
+        // Sound handling - siempre mostrar porque usamos Web Audio API
+        clone.getElementById('sound-container').classList.remove('hidden');
+        clone.getElementById('sound-player-card').classList.remove('hidden');
+        clone.getElementById('sound-emoji').textContent = emoji;
+        
+        // Replace content
+        const container = document.getElementById('animal-content');
+        container.innerHTML = '';
+        container.appendChild(clone);
+        
+        // Setup audio controls after DOM is updated
+        setupAudioControls();
+    }
+    
+    function setupAudioControls() {
+        audioElement = document.getElementById('animal-audio');
+        const playBtn = document.getElementById('play-sound-btn');
+        const playBtnLarge = document.getElementById('play-sound-btn-large');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+        const playIconLarge = document.getElementById('play-icon-large');
+        const pauseIconLarge = document.getElementById('pause-icon-large');
+        
+        if (!audioElement) {
+            console.log('No audio element found');
+            return;
+        }
+        
+        // Debug: log audio source
+        console.log('Audio source:', audioElement.src);
+        
+        // Handle audio errors
+        audioElement.addEventListener('error', (e) => {
+            console.error('Audio error:', e);
+            showAudioError();
+        });
+        
+        audioElement.addEventListener('canplaythrough', () => {
+            console.log('Audio ready to play');
+        });
+        
+        function togglePlay() {
+            if (!audioElement || !audioElement.src) {
+                console.log('No audio source');
+                showAudioError();
+                return;
+            }
+            
+            if (isPlaying) {
+                audioElement.pause();
+                updatePlayIcons(false);
+            } else {
+                audioElement.play()
+                    .then(() => {
+                        console.log('Audio playing');
+                        updatePlayIcons(true);
+                    })
+                    .catch(err => {
+                        console.error('Play failed:', err);
+                        showAudioError();
+                    });
+            }
+            isPlaying = !isPlaying;
+        }
+        
+        function updatePlayIcons(playing) {
+            if (playing) {
+                playIcon?.classList.add('hidden');
+                pauseIcon?.classList.remove('hidden');
+                playIconLarge?.classList.add('hidden');
+                pauseIconLarge?.classList.remove('hidden');
+            } else {
+                playIcon?.classList.remove('hidden');
+                pauseIcon?.classList.add('hidden');
+                playIconLarge?.classList.remove('hidden');
+                pauseIconLarge?.classList.add('hidden');
+            }
+        }
+        
+        function showAudioError() {
+            const card = document.getElementById('sound-player-card');
+            if (card) {
+                card.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                            <span class="text-2xl">🔇</span>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-bold text-lg">Sonido no disponible</h3>
+                            <p class="text-purple-200 text-sm">El audio de este animal no está disponible</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        playBtn?.addEventListener('click', handlePlay);
+        playBtnLarge?.addEventListener('click', handlePlay);
+    }
+    
+    // Usar Web Audio API para generar sonidos de animales
+    function handlePlay() {
+        if (isPlaying) return;
+        
+        const animalName = document.getElementById('animal-name')?.textContent;
+        isPlaying = true;
+        updateGlobalPlayIcons(true);
+        
+        // Intentar primero con archivo de audio local
+        const soundFile = getLocalSoundFile(animalName);
+        if (soundFile) {
+            const audio = new Audio(soundFile);
+            audio.addEventListener('ended', () => {
+                isPlaying = false;
+                updateGlobalPlayIcons(false);
+            });
+            audio.addEventListener('error', () => {
+                // Si falla el archivo local, usar sonido sintético
+                console.log('Archivo local no encontrado, usando síntesis');
+                const duration = playAnimalSound(animalName);
+                setTimeout(() => {
+                    isPlaying = false;
+                    updateGlobalPlayIcons(false);
+                }, duration);
+            });
+            audio.play().catch(() => {
+                const duration = playAnimalSound(animalName);
+                setTimeout(() => {
+                    isPlaying = false;
+                    updateGlobalPlayIcons(false);
+                }, duration);
+            });
+        } else {
+            const duration = playAnimalSound(animalName);
+            setTimeout(() => {
+                isPlaying = false;
+                updateGlobalPlayIcons(false);
+            }, duration);
+        }
+    }
+    
+    function getLocalSoundFile(animalName) {
+        const soundFiles = {
+            'León': '/static/sounds/leon.mp3',
+            'Elefante Africano': '/static/sounds/elefante.mp3',
+            'Tigre': '/static/sounds/tigre.mp3',
+            'Lobo Gris': '/static/sounds/lobo.mp3',
+            'Oso Pardo': '/static/sounds/oso.mp3',
+            'Gorila de Montaña': '/static/sounds/gorila.mp3',
+            'Águila Real': '/static/sounds/aguila.mp3',
+            'Pingüino Emperador': '/static/sounds/pinguino.mp3',
+            'Delfín Nariz de Botella': '/static/sounds/delfin.mp3',
+            'Koala': '/static/sounds/koala.mp3',
+            'Canguro Rojo': '/static/sounds/canguro.mp3',
+            'Cebra': '/static/sounds/cebra.mp3',
+            'Jirafa': '/static/sounds/jirafa.mp3',
+            'Cocodrilo del Nilo': '/static/sounds/cocodrilo.mp3',
+            'Tortuga Marina Verde': '/static/sounds/tortuga.mp3',
+        };
+        return soundFiles[animalName] || null;
+    }
+    
+    function updateGlobalPlayIcons(playing) {
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+        const playIconLarge = document.getElementById('play-icon-large');
+        const pauseIconLarge = document.getElementById('pause-icon-large');
+        
+        if (playing) {
+            playIcon?.classList.add('hidden');
+            pauseIcon?.classList.remove('hidden');
+            playIconLarge?.classList.add('hidden');
+            pauseIconLarge?.classList.remove('hidden');
+        } else {
+            playIcon?.classList.remove('hidden');
+            pauseIcon?.classList.add('hidden');
+            playIconLarge?.classList.remove('hidden');
+            pauseIconLarge?.classList.add('hidden');
+        }
+    }
+    
+    function playAnimalSound(animalName) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return 1000;
+        
+        const ctx = new AudioContext();
+        
+        // Sonidos realistas usando síntesis avanzada
+        const sounds = {
+            'León': () => playRoar(ctx, 80, 2.5),
+            'Tigre': () => playRoar(ctx, 100, 2),
+            'Elefante Africano': () => playTrumpet(ctx),
+            'Lobo Gris': () => playHowl(ctx),
+            'Oso Pardo': () => playGrowl(ctx, 60, 2),
+            'Gorila de Montaña': () => playChestBeat(ctx),
+            'Águila Real': () => playBirdCall(ctx, 2000, 1.5),
+            'Pingüino Emperador': () => playBirdCall(ctx, 800, 1),
+            'Delfín Nariz de Botella': () => playDolphin(ctx),
+            'Koala': () => playGrowl(ctx, 150, 1.5),
+            'Canguro Rojo': () => playThump(ctx),
+            'Cebra': () => playNeigh(ctx),
+            'Jirafa': () => playHum(ctx),
+            'Cocodrilo del Nilo': () => playGrowl(ctx, 40, 2),
+            'Tortuga Marina Verde': () => playHum(ctx),
+        };
+        
+        const playFunc = sounds[animalName];
+        if (playFunc) {
+            return playFunc();
+        }
+        return playGeneric(ctx);
+    }
+    
+    // Rugido de león/tigre
+    function playRoar(ctx, baseFreq, duration) {
+        const masterGain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(500, ctx.currentTime);
+        
+        // Múltiples osciladores para textura
+        for (let i = 0; i < 4; i++) {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(baseFreq * (1 + i * 0.1), ctx.currentTime);
+            
+            // Vibrato
+            osc.frequency.linearRampToValueAtTime(baseFreq * 0.7, ctx.currentTime + duration * 0.3);
+            osc.frequency.linearRampToValueAtTime(baseFreq * 1.2, ctx.currentTime + duration * 0.5);
+            osc.frequency.linearRampToValueAtTime(baseFreq * 0.5, ctx.currentTime + duration);
+            
+            gain.gain.setValueAtTime(0, ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.15 / (i + 1), ctx.currentTime + 0.1);
+            gain.gain.linearRampToValueAtTime(0.25 / (i + 1), ctx.currentTime + duration * 0.4);
+            gain.gain.linearRampToValueAtTime(0, ctx.currentTime + duration);
+            
+            osc.connect(gain);
+            gain.connect(filter);
+            osc.start();
+            osc.stop(ctx.currentTime + duration);
+        }
+        
+        // Añadir ruido para textura
+        const noise = createNoise(ctx, duration);
+        const noiseGain = ctx.createGain();
+        noiseGain.gain.setValueAtTime(0, ctx.currentTime);
+        noiseGain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.2);
+        noiseGain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + duration * 0.7);
+        noiseGain.gain.linearRampToValueAtTime(0, ctx.currentTime + duration);
+        noise.connect(noiseGain);
+        noiseGain.connect(filter);
+        
+        filter.connect(masterGain);
+        masterGain.gain.setValueAtTime(0.6, ctx.currentTime);
+        masterGain.connect(ctx.destination);
+        
+        return duration * 1000;
+    }
+    
+    // Trompeteo de elefante
+    function playTrumpet(ctx) {
+        const duration = 2.5;
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(0.5, ctx.currentTime);
+        
+        for (let i = 0; i < 3; i++) {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = i === 0 ? 'sawtooth' : 'sine';
+            
+            const startFreq = 150 + i * 50;
+            osc.frequency.setValueAtTime(startFreq, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(startFreq * 3, ctx.currentTime + 0.3);
+            osc.frequency.exponentialRampToValueAtTime(startFreq * 2.5, ctx.currentTime + 0.8);
+            osc.frequency.linearRampToValueAtTime(startFreq * 1.5, ctx.currentTime + duration);
+            
+            gain.gain.setValueAtTime(0, ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.2 / (i + 1), ctx.currentTime + 0.1);
+            gain.gain.linearRampToValueAtTime(0.15 / (i + 1), ctx.currentTime + duration * 0.8);
+            gain.gain.linearRampToValueAtTime(0, ctx.currentTime + duration);
+            
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start();
+            osc.stop(ctx.currentTime + duration);
+        }
+        
+        masterGain.connect(ctx.destination);
+        return duration * 1000;
+    }
+    
+    // Aullido de lobo
+    function playHowl(ctx) {
+        const duration = 4;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+        
+        osc.type = 'sine';
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(600, ctx.currentTime);
+        filter.Q.setValueAtTime(2, ctx.currentTime);
+        
+        // Curva del aullido
+        osc.frequency.setValueAtTime(300, ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(500, ctx.currentTime + 0.5);
+        osc.frequency.linearRampToValueAtTime(700, ctx.currentTime + 1.5);
+        osc.frequency.linearRampToValueAtTime(650, ctx.currentTime + 2.5);
+        osc.frequency.linearRampToValueAtTime(400, ctx.currentTime + 3.5);
+        osc.frequency.linearRampToValueAtTime(250, ctx.currentTime + duration);
+        
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 0.8);
+        gain.gain.linearRampToValueAtTime(0.35, ctx.currentTime + 2.5);
+        gain.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 3.5);
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + duration);
+        
+        // Añadir armónico
+        const osc2 = ctx.createOscillator();
+        const gain2 = ctx.createGain();
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(600, ctx.currentTime);
+        osc2.frequency.linearRampToValueAtTime(1000, ctx.currentTime + 0.5);
+        osc2.frequency.linearRampToValueAtTime(1400, ctx.currentTime + 1.5);
+        osc2.frequency.linearRampToValueAtTime(1300, ctx.currentTime + 2.5);
+        osc2.frequency.linearRampToValueAtTime(800, ctx.currentTime + 3.5);
+        osc2.frequency.linearRampToValueAtTime(500, ctx.currentTime + duration);
+        gain2.gain.setValueAtTime(0, ctx.currentTime);
+        gain2.gain.linearRampToValueAtTime(0.15, ctx.currentTime + 0.8);
+        gain2.gain.linearRampToValueAtTime(0, ctx.currentTime + duration);
+        
+        osc.connect(gain);
+        osc2.connect(gain2);
+        gain.connect(filter);
+        gain2.connect(filter);
+        filter.connect(ctx.destination);
+        
+        osc.start();
+        osc2.start();
+        osc.stop(ctx.currentTime + duration);
+        osc2.stop(ctx.currentTime + duration);
+        
+        return duration * 1000;
+    }
+    
+    // Gruñido
+    function playGrowl(ctx, freq, duration) {
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(300, ctx.currentTime);
+        
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        
+        // Vibración
+        const lfo = ctx.createOscillator();
+        const lfoGain = ctx.createGain();
+        lfo.frequency.setValueAtTime(30, ctx.currentTime);
+        lfoGain.gain.setValueAtTime(freq * 0.3, ctx.currentTime);
+        lfo.connect(lfoGain);
+        lfoGain.connect(osc.frequency);
+        
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 0.1);
+        gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + duration * 0.7);
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + duration);
+        
+        const noise = createNoise(ctx, duration);
+        const noiseGain = ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.08, ctx.currentTime);
+        noise.connect(noiseGain);
+        noiseGain.connect(filter);
+        
+        osc.connect(gain);
+        gain.connect(filter);
+        filter.connect(ctx.destination);
+        
+        lfo.start();
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+        
+        return duration * 1000;
+    }
+    
+    // Golpe de pecho de gorila
+    function playChestBeat(ctx) {
+        const duration = 2;
+        for (let i = 0; i < 6; i++) {
+            const time = ctx.currentTime + i * 0.3;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(80, time);
+            osc.frequency.exponentialRampToValueAtTime(40, time + 0.15);
+            gain.gain.setValueAtTime(0, time);
+            gain.gain.linearRampToValueAtTime(0.5, time + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.01, time + 0.2);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(time);
+            osc.stop(time + 0.25);
+        }
+        return duration * 1000;
+    }
+    
+    // Llamada de ave
+    function playBirdCall(ctx, freq, duration) {
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(0.3, ctx.currentTime);
+        
+        const numCalls = Math.floor(duration * 2);
+        for (let i = 0; i < numCalls; i++) {
+            const time = ctx.currentTime + i * 0.4;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, time);
+            osc.frequency.linearRampToValueAtTime(freq * 1.3, time + 0.1);
+            osc.frequency.linearRampToValueAtTime(freq * 0.8, time + 0.25);
+            gain.gain.setValueAtTime(0, time);
+            gain.gain.linearRampToValueAtTime(0.4, time + 0.05);
+            gain.gain.linearRampToValueAtTime(0, time + 0.3);
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(time);
+            osc.stop(time + 0.35);
+        }
+        
+        masterGain.connect(ctx.destination);
+        return duration * 1000;
+    }
+    
+    // Sonido de delfín
+    function playDolphin(ctx) {
+        const duration = 2;
+        const masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(0.25, ctx.currentTime);
+        
+        // Clicks y chirridos
+        for (let i = 0; i < 8; i++) {
+            const time = ctx.currentTime + i * 0.2 + Math.random() * 0.1;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const startFreq = 2000 + Math.random() * 2000;
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(startFreq, time);
+            osc.frequency.exponentialRampToValueAtTime(startFreq * 2, time + 0.05);
+            osc.frequency.exponentialRampToValueAtTime(startFreq * 0.5, time + 0.15);
+            gain.gain.setValueAtTime(0, time);
+            gain.gain.linearRampToValueAtTime(0.3, time + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.01, time + 0.15);
+            osc.connect(gain);
+            gain.connect(masterGain);
+            osc.start(time);
+            osc.stop(time + 0.2);
+        }
+        
+        masterGain.connect(ctx.destination);
+        return duration * 1000;
+    }
+    
+    // Relincho de caballo/cebra
+    function playNeigh(ctx) {
+        const duration = 1.5;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        
+        osc.frequency.setValueAtTime(200, ctx.currentTime);
+        osc.frequency.linearRampToValueAtTime(600, ctx.currentTime + 0.2);
+        osc.frequency.linearRampToValueAtTime(400, ctx.currentTime + 0.5);
+        osc.frequency.linearRampToValueAtTime(500, ctx.currentTime + 0.8);
+        osc.frequency.linearRampToValueAtTime(300, ctx.currentTime + duration);
+        
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.1);
+        gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + 0.8);
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + duration);
+        
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(800, ctx.currentTime);
+        
+        osc.connect(gain);
+        gain.connect(filter);
+        filter.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+        
+        return duration * 1000;
+    }
+    
+    // Zumbido/mugido suave
+    function playHum(ctx) {
+        const duration = 1.5;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(150, ctx.currentTime);
+        
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.3);
+        gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + duration * 0.7);
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + duration);
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+        
+        return duration * 1000;
+    }
+    
+    // Golpe seco (canguro)
+    function playThump(ctx) {
+        const duration = 0.8;
+        for (let i = 0; i < 2; i++) {
+            const time = ctx.currentTime + i * 0.3;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(100, time);
+            osc.frequency.exponentialRampToValueAtTime(30, time + 0.2);
+            gain.gain.setValueAtTime(0, time);
+            gain.gain.linearRampToValueAtTime(0.5, time + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.01, time + 0.25);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(time);
+            osc.stop(time + 0.3);
+        }
+        return duration * 1000;
+    }
+    
+    // Sonido genérico
+    function playGeneric(ctx) {
+        const duration = 1;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.frequency.setValueAtTime(300, ctx.currentTime);
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.1);
+        gain.gain.linearRampToValueAtTime(0, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+        return duration * 1000;
+    }
+    
+    // Crear ruido blanco
+    function createNoise(ctx, duration) {
+        const bufferSize = ctx.sampleRate * duration;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+        noise.start();
+        return noise;
+    }
+    
+    function getAnimalEmoji(name, animalClass) {
+        const animalEmojis = {
+            'León': '🦁',
+            'Elefante Africano': '🐘',
+            'Jirafa': '🦒',
+            'Tigre': '🐅',
+            'Cebra': '🦓',
+            'Oso Pardo': '🐻',
+            'Águila Real': '🦅',
+            'Pingüino Emperador': '🐧',
+            'Delfín Nariz de Botella': '🐬',
+            'Cocodrilo del Nilo': '🐊',
+            'Tortuga Marina Verde': '🐢',
+            'Gorila de Montaña': '🦍',
+            'Koala': '🐨',
+            'Canguro Rojo': '🦘',
+            'Lobo Gris': '🐺',
+        };
+        
+        if (animalEmojis[name]) {
+            return animalEmojis[name];
+        }
+        
+        const classEmojis = {
+            'Mamífero': '🦁',
+            'Ave': '🦅',
+            'Reptil': '🐊',
+            'Anfibio': '🐸',
+            'Pez': '🐠',
+            'Invertebrado': '🦋'
+        };
+        return classEmojis[animalClass] || '🐾';
+    }
+    
+    function getDefaultAnimalSound(name) {
+        // No se usa, los sonidos se generan con Web Audio API
+        return null;
+    }
+</script>
+{% endblock %}
