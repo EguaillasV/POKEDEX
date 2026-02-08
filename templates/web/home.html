@@ -8,18 +8,22 @@
     <div class="bg-white bg-opacity-95 rounded-3xl p-8 text-center max-w-sm mx-4 shadow-2xl">
         <div class="relative w-24 h-24 mx-auto mb-6">
             <div class="absolute inset-0 border-4 border-purple-200 rounded-full"></div>
-            <div class="absolute inset-0 border-4 border-purple-600 rounded-full border-t-transparent animate-spin" style="animation-duration: 1.5s;"></div>
+            <div class="absolute inset-0 border-4 border-purple-600 rounded-full border-t-transparent animate-spin"
+                style="animation-duration: 1.5s;"></div>
             <div class="absolute inset-3 border-4 border-green-200 rounded-full"></div>
-            <div class="absolute inset-3 border-4 border-green-500 rounded-full border-b-transparent animate-spin" style="animation-direction: reverse; animation-duration: 1s;"></div>
+            <div class="absolute inset-3 border-4 border-green-500 rounded-full border-b-transparent animate-spin"
+                style="animation-direction: reverse; animation-duration: 1s;"></div>
             <div class="absolute inset-0 flex items-center justify-center">
-                <span class="text-3xl animate-pulse">🔍</span>
+                <span class="text-3xl animate-pulse"><img src="https://img.icons8.com/windows/32/search.png"
+                        alt="buscar" class="w-8 h-8 inline-block" /></span>
             </div>
         </div>
         <h3 class="text-xl font-bold text-gray-800 mb-2">Analizando imagen...</h3>
         <p class="text-gray-500" id="analyzing-status">Procesando imagen</p>
         <!-- Progress bar -->
         <div class="mt-4 w-full bg-gray-200 rounded-full h-2">
-            <div id="analyzing-progress" class="bg-purple-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            <div id="analyzing-progress" class="bg-purple-600 h-2 rounded-full transition-all duration-300"
+                style="width: 0%"></div>
         </div>
         <p class="text-sm text-gray-400 mt-2" id="analyzing-step">Paso 1 de 4</p>
     </div>
@@ -31,54 +35,69 @@
         <div class="bg-white rounded-2xl card-shadow overflow-hidden">
             <!-- Mode Selector Tabs -->
             <div class="flex border-b">
-                <button id="tab-camera" class="flex-1 py-4 px-6 text-center font-semibold transition bg-purple-600 text-white">
+                <button id="tab-camera"
+                    class="flex-1 py-4 px-6 text-center font-semibold transition bg-purple-600 text-white">
                     <span class="flex items-center justify-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                         </svg>
                         Cámara en Tiempo Real
                     </span>
                 </button>
-                <button id="tab-upload" class="flex-1 py-4 px-6 text-center font-semibold transition bg-gray-100 text-gray-600 hover:bg-gray-200">
+                <button id="tab-upload"
+                    class="flex-1 py-4 px-6 text-center font-semibold transition bg-gray-100 text-gray-600 hover:bg-gray-200">
                     <span class="flex items-center justify-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                         Subir Foto
                     </span>
                 </button>
             </div>
-            
+
             <!-- Camera Mode -->
             <div id="camera-mode" class="block">
                 <div class="relative bg-gray-900 aspect-video">
                     <video id="camera-feed" class="w-full h-full object-cover" autoplay playsinline></video>
                     <canvas id="overlay-canvas" class="camera-overlay"></canvas>
-                    
+
                     <!-- Camera Controls -->
                     <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-4">
-                        <button id="start-camera-btn" class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full font-semibold shadow-lg transition flex items-center gap-2">
+                        <button id="start-camera-btn"
+                            class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full font-semibold shadow-lg transition flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                             </svg>
                             Iniciar Cámara
                         </button>
-                        <button id="stop-camera-btn" class="hidden px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-full font-semibold shadow-lg transition flex items-center gap-2">
+                        <button id="stop-camera-btn"
+                            class="hidden px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-full font-semibold shadow-lg transition flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
                             </svg>
                             Detener
                         </button>
                     </div>
-                    
+
                     <!-- Connection Status -->
-                    <div id="connection-status" class="absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-300">
-                        ⚪ Desconectado
+                    <div id="connection-status"
+                        class="absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-300 flex items-center gap-2">
+
+                        <img class="w-5 h-5" src="https://img.icons8.com/color/48/no-camera--v1.png"
+                            alt="no-camera--v1" />
+                        Desconectado
                     </div>
 
+
                     <!-- Live Analyzing Indicator -->
-                    <div id="live-analyzing" class="hidden absolute top-4 left-4 px-4 py-2 rounded-full bg-black bg-opacity-50 backdrop-blur-sm">
+                    <div id="live-analyzing"
+                        class="hidden absolute top-4 left-4 px-4 py-2 rounded-full bg-black bg-opacity-50 backdrop-blur-sm">
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
                             <span class="text-white text-sm font-medium">Analizando...</span>
@@ -86,55 +105,65 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Upload Mode -->
             <div id="upload-mode" class="hidden">
                 <!-- Empty state / Upload zone -->
                 <div id="upload-zone" class="aspect-video bg-gray-100 flex flex-col items-center justify-center p-8">
                     <div class="text-center">
                         <div class="w-20 h-20 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center">
-                            <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                            <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                             </svg>
                         </div>
                         <h3 class="text-xl font-semibold text-gray-700 mb-2">Arrastra una imagen aquí</h3>
                         <p class="text-gray-500 mb-4">o haz clic para seleccionar</p>
-                        <label for="photo-upload" class="cursor-pointer inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-semibold transition">
+                        <label for="photo-upload"
+                            class="cursor-pointer inline-flex items-center gap-2 px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-semibold transition">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                             Seleccionar Imagen
                         </label>
                         <input type="file" id="photo-upload" accept="image/*" class="hidden">
                     </div>
                 </div>
-                
+
                 <!-- Image preview -->
                 <div id="preview-zone" class="hidden">
                     <div class="relative aspect-video bg-gray-900">
                         <img id="preview-image" class="w-full h-full object-contain" alt="Imagen cargada">
-                        <button id="clear-upload-btn" class="absolute top-4 right-4 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition">
+                        <button id="clear-upload-btn"
+                            class="absolute top-4 right-4 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
                     <div class="p-4 bg-gray-50">
-                        <button id="analyze-photo-btn" class="w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold text-lg transition flex items-center justify-center gap-3">
+                        <button id="analyze-photo-btn"
+                            class="w-full py-4 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold text-lg transition flex items-center justify-center gap-3">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                             Analizar Imagen
                         </button>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Recognition Result -->
             <div id="recognition-result" class="hidden p-6 border-t">
                 <div class="flex items-start gap-4">
-                    <div class="w-20 h-20 rounded-xl bg-gray-100 flex items-center justify-center text-4xl" id="result-emoji">
-                        🦁
+                    <div class="w-20 h-20 rounded-xl bg-gray-100 flex items-center justify-center text-4xl"
+                        id="result-emoji">
+                        <img src="https://img.icons8.com/windows/32/lion.png" alt="animal"
+                            class="w-8 h-8 inline-block" />
                     </div>
                     <div class="flex-1">
                         <h3 id="result-name" class="text-2xl font-bold text-gray-800">León</h3>
@@ -142,38 +171,50 @@
                         <div class="mt-2 flex items-center gap-2">
                             <span class="text-sm text-gray-600">Confianza:</span>
                             <div class="flex-1 h-3 bg-gray-200 rounded-full overflow-hidden">
-                                <div id="confidence-bar" class="h-full bg-green-500 confidence-bar" style="width: 95%"></div>
+                                <div id="confidence-bar" class="h-full bg-green-500 confidence-bar" style="width: 95%">
+                                </div>
                             </div>
                             <span id="confidence-text" class="text-sm font-semibold text-green-600">95%</span>
                         </div>
                     </div>
-                    <button id="view-details-btn" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
+                    <button id="view-details-btn"
+                        class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition">
                         Ver más →
                     </button>
                 </div>
             </div>
         </div>
-        
         <!-- Instructions -->
         <div class="mt-6 bg-white rounded-2xl card-shadow p-6">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">📖 Cómo usar</h2>
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <img width="22" height="22" class="shrink-0" src="https://img.icons8.com/ios-filled/50/open-book.png"
+                    alt="open-book" />
+                Cómo usar
+            </h2>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="flex items-start gap-3">
-                    <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold">1</div>
+                    <div
+                        class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold">
+                        1</div>
                     <div>
                         <h3 class="font-semibold text-gray-800">Activa la cámara</h3>
                         <p class="text-sm text-gray-600">Haz clic en "Iniciar Cámara"</p>
                     </div>
                 </div>
                 <div class="flex items-start gap-3">
-                    <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold">2</div>
+                    <div
+                        class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold">
+                        2</div>
                     <div>
                         <h3 class="font-semibold text-gray-800">Enfoca al animal</h3>
                         <p class="text-sm text-gray-600">Apunta hacia el animal que quieras identificar</p>
                     </div>
                 </div>
                 <div class="flex items-start gap-3">
-                    <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold">3</div>
+                    <div
+                        class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 font-bold">
+                        3</div>
                     <div>
                         <h3 class="font-semibold text-gray-800">Aprende</h3>
                         <p class="text-sm text-gray-600">Descubre información fascinante</p>
@@ -182,32 +223,41 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Discoveries Sidebar -->
     <div class="lg:col-span-1">
         <div class="bg-white rounded-2xl card-shadow overflow-hidden sticky top-8">
             <div class="p-6 bg-gradient-to-r from-yellow-400 to-orange-500 text-white">
                 <h2 class="text-xl font-bold flex items-center gap-2">
-                    🏆 Mis Descubrimientos
+                    <img src="https://img.icons8.com/external-global-made-by-made/50/external-Goblet-politics-global-made-by-made.png"
+                        alt="Goblet" class="inline-block w-8 h-8" />
+                    Mis Descubrimientos
                 </h2>
+
                 <p class="text-yellow-100 mt-1">
                     <span id="discovery-count">0</span> animales encontrados
                 </p>
             </div>
-            
+
+
             <div id="discoveries-list" class="p-4 max-h-96 overflow-y-auto">
                 <!-- Empty state -->
                 <div id="empty-discoveries" class="text-center py-8">
-                    <div class="text-6xl mb-4">🔍</div>
+                    <div class="text-6xl mb-4">
+                        <img src="https://img.icons8.com/nolan/64/search-more.png" alt="search-more"
+                            class="w-16 h-16 mx-auto" />
+                    </div>
                     <p class="text-gray-500">Aún no has descubierto ningún animal</p>
                     <p class="text-sm text-gray-400 mt-2">¡Inicia la cámara y comienza a explorar!</p>
                 </div>
-                
+
+
                 <!-- Discovery items will be added here -->
             </div>
-            
+
             <div class="p-4 border-t bg-gray-50">
-                <a href="{% url 'gallery' %}" class="block text-center text-purple-600 hover:text-purple-700 font-medium">
+                <a href="{% url 'gallery' %}"
+                    class="block text-center text-purple-600 hover:text-purple-700 font-medium">
                     Ver galería completa →
                 </a>
             </div>
@@ -223,12 +273,13 @@
                 <h2 id="modal-name" class="text-3xl font-bold text-gray-800">León</h2>
                 <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
             <p id="modal-scientific" class="text-gray-500 italic mb-4">Panthera leo</p>
-            
+
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div class="bg-gray-50 rounded-xl p-4">
                     <span class="text-gray-500 text-sm">Clase</span>
@@ -247,14 +298,14 @@
                     <p id="modal-status" class="font-semibold text-gray-800">Vulnerable</p>
                 </div>
             </div>
-            
+
             <div class="mb-6">
                 <h3 class="font-bold text-gray-800 mb-2">Descripción</h3>
                 <p id="modal-description" class="text-gray-600">
                     El león es un mamífero carnívoro de la familia de los félidos...
                 </p>
             </div>
-            
+
             <div class="bg-yellow-50 rounded-xl p-4">
                 <h3 class="font-bold text-yellow-800 mb-2">💡 Dato curioso</h3>
                 <p id="modal-fun-fact" class="text-yellow-700">
@@ -274,7 +325,34 @@
     let isStreaming = false;
     let discoveries = [];
     let currentAnimal = null;
+
+    // Cargar descubrimientos desde localStorage cuando la página carga
+    function loadDiscoveriesFromStorage() {
+        const savedDiscoveries = localStorage.getItem('discoveries');
+        if (savedDiscoveries) {
+            try {
+                discoveries = JSON.parse(savedDiscoveries);
+                updateDiscoveryUI();
+                console.log('✅ Discoveries cargadas desde localStorage:', discoveries.length);
+            } catch (e) {
+                console.error('Error loading discoveries from localStorage:', e);
+            }
+        } else {
+            console.log('ℹ️ No hay discoveries guardadas en localStorage');
+        }
+    }
     
+    // Cargar al iniciar la página
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDiscoveriesFromStorage();
+    });
+    
+    // Cargar también cuando la página se vuelve visible (volver del navegador back)
+    document.addEventListener('pageshow', () => {
+        console.log('📄 Página visible - recargando discoveries...');
+        loadDiscoveriesFromStorage();
+    });
+
     // DOM Elements
     const video = document.getElementById('camera-feed');
     const canvas = document.getElementById('overlay-canvas');
@@ -288,7 +366,7 @@
     const emptyDiscoveries = document.getElementById('empty-discoveries');
     const analyzingOverlay = document.getElementById('analyzing-overlay');
     const liveAnalyzing = document.getElementById('live-analyzing');
-    
+
     // Tab elements
     const tabCamera = document.getElementById('tab-camera');
     const tabUpload = document.getElementById('tab-upload');
@@ -296,25 +374,25 @@
     const uploadMode = document.getElementById('upload-mode');
     const uploadZone = document.getElementById('upload-zone');
     const previewZone = document.getElementById('preview-zone');
-    
+
     // Photo upload elements
     const photoUpload = document.getElementById('photo-upload');
     const previewImage = document.getElementById('preview-image');
     const clearUploadBtn = document.getElementById('clear-upload-btn');
     const analyzePhotoBtn = document.getElementById('analyze-photo-btn');
-    
+
     // WebSocket URL
     const wsUrl = `ws://${window.location.host}/ws/recognition/`;
-    
+
     // Tab switching
     tabCamera.addEventListener('click', () => {
         switchToCamera();
     });
-    
+
     tabUpload.addEventListener('click', () => {
         switchToUpload();
     });
-    
+
     function switchToCamera() {
         tabCamera.classList.remove('bg-gray-100', 'text-gray-600');
         tabCamera.classList.add('bg-purple-600', 'text-white');
@@ -323,11 +401,11 @@
         cameraMode.classList.remove('hidden');
         uploadMode.classList.add('hidden');
     }
-    
+
     function switchToUpload() {
-        // Stop camera when switching to upload
-        stopCamera();
-        
+        // Stop camera when switching to upload (no notification)
+        stopCamera({ silent: true });
+
         tabUpload.classList.remove('bg-gray-100', 'text-gray-600');
         tabUpload.classList.add('bg-purple-600', 'text-white');
         tabCamera.classList.remove('bg-purple-600', 'text-white');
@@ -335,28 +413,28 @@
         uploadMode.classList.remove('hidden');
         cameraMode.classList.add('hidden');
     }
-    
+
     // Drag and drop handling
     uploadZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         uploadZone.classList.add('bg-purple-50', 'border-2', 'border-dashed', 'border-purple-400');
     });
-    
+
     uploadZone.addEventListener('dragleave', (e) => {
         e.preventDefault();
         uploadZone.classList.remove('bg-purple-50', 'border-2', 'border-dashed', 'border-purple-400');
     });
-    
+
     uploadZone.addEventListener('drop', (e) => {
         e.preventDefault();
         uploadZone.classList.remove('bg-purple-50', 'border-2', 'border-dashed', 'border-purple-400');
-        
+
         const file = e.dataTransfer.files[0];
         if (file && file.type.startsWith('image/')) {
             handleImageFile(file);
         }
     });
-    
+
     // Photo upload handling
     photoUpload.addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -364,7 +442,7 @@
             handleImageFile(file);
         }
     });
-    
+
     function handleImageFile(file) {
         const reader = new FileReader();
         reader.onload = (event) => {
@@ -374,21 +452,21 @@
         };
         reader.readAsDataURL(file);
     }
-    
+
     clearUploadBtn.addEventListener('click', () => {
         previewZone.classList.add('hidden');
         uploadZone.classList.remove('hidden');
         photoUpload.value = '';
         previewImage.src = '';
     });
-    
+
     analyzePhotoBtn.addEventListener('click', async () => {
         const imageData = previewImage.src;
         if (!imageData) return;
-        
+
         // Show analyzing overlay with progress
         showAnalyzingOverlay();
-        
+
         // Simulate 5 second analysis with progress updates
         const steps = [
             { progress: 20, status: 'Procesando imagen...', step: 'Paso 1 de 4' },
@@ -396,12 +474,12 @@
             { progress: 70, status: 'Identificando especie...', step: 'Paso 3 de 4' },
             { progress: 90, status: 'Obteniendo información...', step: 'Paso 4 de 4' },
         ];
-        
+
         let stepIndex = 0;
         const progressBar = document.getElementById('analyzing-progress');
         const statusText = document.getElementById('analyzing-status');
         const stepText = document.getElementById('analyzing-step');
-        
+
         const progressInterval = setInterval(() => {
             if (stepIndex < steps.length) {
                 progressBar.style.width = steps[stepIndex].progress + '%';
@@ -410,7 +488,7 @@
                 stepIndex++;
             }
         }, 1000);
-        
+
         try {
             // Wait minimum 5 seconds
             const [response] = await Promise.all([
@@ -418,34 +496,78 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
                     },
                     body: JSON.stringify({ image: imageData })
                 }),
                 new Promise(resolve => setTimeout(resolve, 5000))
             ]);
-            
+
             clearInterval(progressInterval);
             progressBar.style.width = '100%';
             statusText.textContent = '¡Animal encontrado!';
             stepText.textContent = 'Completado';
-            
+
             const data = await response.json();
-            
+
             // Small delay to show 100%
             await new Promise(resolve => setTimeout(resolve, 500));
-            
+
             hideAnalyzingOverlay();
-            
+
             if (data.success && data.animal) {
                 currentAnimal = data.animal;
                 showRecognitionResult({ recognition: data.recognition, animal: data.animal });
-                
+
+                // Agregar a descubrimientos
+                if (data.animal.id) {
+                    const discovery = {
+                        id: `discovery-${data.animal.id}-${Date.now()}`,
+                        animal_id: data.animal.id,
+                        animal_name: data.animal.name,
+                        thumbnail_url: data.animal.image_url || 'https://img.icons8.com/windows/32/lion.png',
+                        discovered_at: new Date().toISOString()
+                    };
+                    addDiscovery(discovery);
+                }
+
+                // Persist uploaded image for the detail view
+                if (previewImage?.src) {
+                    sessionStorage.setItem('animalImage', previewImage.src);
+                }
+
                 // Auto redirect after showing result
                 setTimeout(() => {
-                    window.location.href = `/animal/${data.animal.id}/`;
+                    // Persist uploaded image for detail view
+                    if (previewImage?.src) {
+                        sessionStorage.setItem('animalImage', previewImage.src);
+                    }
+                    
+                    // Always pass recognition confidence data
+                    if (data.recognition) {
+                        const recognitionData = {
+                            confidence: data.recognition.confidence,
+                            animal_name: data.recognition.animal_name
+                        };
+                        sessionStorage.setItem('recognitionInfo', JSON.stringify(recognitionData));
+                    }
+                    
+                    // If animal.id is null, it means it was generated by AI and not persisted
+                    // In that case, pass the full data to animal_info page via sessionStorage
+                    if (data.animal.id === null || data.animal.id === undefined) {
+                        const animalPayload = {
+                            ...data.animal,
+                            image_url: previewImage?.src || null,
+                            recognition: data.recognition || null,
+                        };
+                        sessionStorage.setItem('animalData', JSON.stringify(animalPayload));
+                        window.location.href = `/animal/generated/`;
+                    } else {
+                        window.location.href = `/animal/${data.animal.id}/`;
+                    }
                 }, 2000);
             } else {
-                showNotification('No se detectó ningún animal 😕', 'warning');
+                showNotification('No se detectó ningún animal', 'warning');
             }
         } catch (error) {
             clearInterval(progressInterval);
@@ -454,7 +576,7 @@
             showNotification('Error al analizar la imagen', 'error');
         }
     });
-    
+
     function showAnalyzingOverlay() {
         // Reset progress
         document.getElementById('analyzing-progress').style.width = '0%';
@@ -462,185 +584,309 @@
         document.getElementById('analyzing-step').textContent = 'Preparando...';
         analyzingOverlay.classList.remove('hidden');
     }
-    
+
     function hideAnalyzingOverlay() {
         analyzingOverlay.classList.add('hidden');
     }
-    
-    // Start camera and WebSocket
+
+    // Start camera - Accede a webcam local y conecta WebSocket
     startBtn.addEventListener('click', async () => {
         try {
-            // Request camera access
+            console.log('🎥 Solicitando acceso a webcam...');
+
+            // 1️⃣ OBTENER ACCESO A LA WEBCAM DEL USUARIO
             const stream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: 'environment', width: 640, height: 480 }
+                video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
             });
+
+            // 2️⃣ CONECTAR AL VIDEO
             video.srcObject = stream;
             
-            // Connect WebSocket
+            // 3️⃣ ESPERAR A QUE EL VIDEO ESTÉ LISTO
+            await new Promise(resolve => {
+                video.onloadedmetadata = () => {
+                    console.log('✅ Video metadata cargado');
+                    resolve();
+                };
+            });
+
+            // 4️⃣ CONECTAR WEBSOCKET
             connectWebSocket();
-            
-            // Update UI
+
+            // 5️⃣ ACTUALIZAR UI
             startBtn.classList.add('hidden');
             stopBtn.classList.remove('hidden');
-            
+            connectionStatus.innerHTML = '🟡 Conectando...';
+            connectionStatus.className = 'absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-medium bg-yellow-600 text-white';
+
+            showNotification('🎥 Webcam iniciada', 'success');
+            console.log('✅ Webcam y WebSocket listos');
+
         } catch (error) {
-            console.error('Error accessing camera:', error);
-            alert('No se pudo acceder a la cámara. Por favor, permite el acceso.');
+            console.error('❌ Error accediendo a webcam:', error);
+            if (error.name === 'NotAllowedError') {
+                showNotification('Permiso de cámara denegado', 'error');
+            } else if (error.name === 'NotFoundError') {
+                showNotification('No se encontró cámara en el dispositivo', 'error');
+            } else {
+                showNotification('Error al acceder a la webcam', 'error');
+            }
         }
     });
-    
+
     // Stop camera
     stopBtn.addEventListener('click', () => {
         stopCamera();
     });
-    
-    function stopCamera() {
-        // Stop video stream
+
+    function stopCamera(options = {}) {
+        const { silent = false } = options;
+        // Stop video stream if exists
         if (video.srcObject) {
             video.srcObject.getTracks().forEach(track => track.stop());
             video.srcObject = null;
         }
-        
-        // Disconnect WebSocket
+
+        // Disconnect WebSocket if exists
         if (socket) {
             socket.close();
             socket = null;
         }
-        
+
         isStreaming = false;
         liveAnalyzing.classList.add('hidden');
-        
+
         // Update UI
         startBtn.classList.remove('hidden');
         stopBtn.classList.add('hidden');
-        connectionStatus.innerHTML = '⚪ Desconectado';
+        connectionStatus.innerHTML = `
+        <span class="inline-flex items-center gap-2">
+         <img class="w-5 h-5"
+         src="https://img.icons8.com/color/48/no-camera--v1.png"
+         alt="no-camera--v1">
+         Desconectado
+         </span>
+         `;
+
         connectionStatus.className = 'absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-medium bg-gray-700 text-gray-300';
+        if (!silent) {
+            showNotification('🛑 Cámara detenida', 'info');
+            // Recargar página después de detener
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        }
     }
-    
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     function connectWebSocket() {
         socket = new WebSocket(wsUrl);
-        
+
         socket.onopen = () => {
-            console.log('WebSocket connected');
+            console.log('🟢 WebSocket connected');
+            console.log('📍 WebSocket URL:', wsUrl);
+            console.log('📊 ReadyState:', socket.readyState);
             connectionStatus.innerHTML = '🟢 Conectado';
             connectionStatus.className = 'absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-medium bg-green-600 text-white';
-            
+
             // Start sending frames
             isStreaming = true;
+            console.log('▶️ Iniciando envío de frames...');
             sendFrames();
         };
-        
+
         socket.onmessage = (event) => {
+            console.log('📨 Mensaje recibido:', event.data);
             const data = JSON.parse(event.data);
             handleMessage(data);
         };
-        
-        socket.onclose = () => {
-            console.log('WebSocket disconnected');
+
+        socket.onclose = (event) => {
+            console.log('🔴 WebSocket closed. Code:', event.code, 'Reason:', event.reason);
             connectionStatus.innerHTML = '🔴 Desconectado';
             connectionStatus.className = 'absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-medium bg-red-600 text-white';
             isStreaming = false;
         };
-        
+
         socket.onerror = (error) => {
-            console.error('WebSocket error:', error);
+            console.error('❌ WebSocket error:', error);
         };
     }
-    
+
     function sendFrames() {
         if (!isStreaming || !socket || socket.readyState !== WebSocket.OPEN) {
             return;
         }
-        
+
         // Show live analyzing indicator
         liveAnalyzing.classList.remove('hidden');
-        
+
         // Capture frame from video
         const tempCanvas = document.createElement('canvas');
         tempCanvas.width = 640;
         tempCanvas.height = 480;
         const tempCtx = tempCanvas.getContext('2d');
         tempCtx.drawImage(video, 0, 0, 640, 480);
-        
+
         // Convert to base64
         const frameData = tempCanvas.toDataURL('image/jpeg', 0.8);
-        
+
         // Send to server
+        console.log('📤 Enviando frame al servidor...');
         socket.send(JSON.stringify({
             type: 'frame',
             data: frameData
         }));
-        
+
         // Schedule next frame (5 fps)
         setTimeout(sendFrames, 200);
     }
-    
+
     function handleMessage(data) {
         switch (data.type) {
             case 'session_started':
                 sessionId = data.data.id;
-                console.log('Session started:', sessionId);
+                console.log('✅ Sesión iniciada:', sessionId);
+                connectionStatus.innerHTML = '🟢 Detectando';
+                connectionStatus.className = 'absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-medium bg-green-600 text-white';
                 break;
-                
+
+            case 'detections':
+                // 🎨 DIBUJAR BOUNDING BOXES EN TIEMPO REAL
+                if (data.data && data.data.detections) {
+                    drawBoundingBox(data.data.detections);
+                    if (data.data.detections.length > 0) {
+                        liveAnalyzing.classList.remove('hidden');
+                    }
+                }
+                break;
+
             case 'recognition':
+                // CUANDO DETECTA UN ANIMAL COMPLETO
                 showRecognitionResult(data.data);
+                liveAnalyzing.classList.add('hidden');
                 break;
-                
+
             case 'discovery':
                 addDiscovery(data.data);
                 break;
-                
+
             case 'discoveries':
                 updateDiscoveriesList(data.data);
                 break;
-                
+
             case 'error':
-                console.error('Server error:', data.data.message);
+                console.error('❌ Error del servidor:', data.data.message);
+                showNotification('Error: ' + data.data.message, 'error');
                 break;
         }
     }
-    
+
     function showRecognitionResult(data) {
         const { recognition, animal } = data;
-        
+
         currentAnimal = animal;
         recognitionResult.classList.remove('hidden');
         liveAnalyzing.classList.add('hidden');
-        
+
         document.getElementById('result-name').textContent = animal.name;
         document.getElementById('result-scientific').textContent = animal.scientific_name;
-        
+
         const confidence = recognition.confidence * 100;
         document.getElementById('confidence-bar').style.width = `${confidence}%`;
         document.getElementById('confidence-text').textContent = `${confidence.toFixed(1)}%`;
-        
+
         // Store current animal for modal
         recognitionResult.dataset.animal = JSON.stringify(animal);
-        
+
         // Show success notification
-        showNotification(`¡${animal.name} detectado! 🎉`, 'success');
+        showNotification(`¡${animal.name} detectado! <img width="100" height="100" src="https://img.icons8.com/matisse/100/confetti.png" alt="confetti"/>`, 'success');
     }
-    
+
+    function displayAnnotatedFrame(imageSrc) {
+        // Placeholder
+    }
+
+    function drawBoundingBox(detections) {
+        // detections = [{class: 'Deer', confidence: 0.92, x: 100, y: 50, width: 150, height: 200}]
+        
+        if (!canvas || !ctx) return;
+
+        // Obtener dimensiones del video
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        // Limpiar canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Dibujar cada detección
+        if (Array.isArray(detections) && detections.length > 0) {
+            detections.forEach((detection) => {
+                const { x, y, width, height, class: className, confidence } = detection;
+
+                // Color según confianza
+                let color = confidence > 0.8 ? '#00FF00' : confidence > 0.6 ? '#FFFF00' : '#FF0000';
+
+                // Dibujar rectángulo
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 3;
+                ctx.strokeRect(x, y, width, height);
+
+                // Dibujar etiqueta con fondo
+                const label = `${className} ${(confidence * 100).toFixed(1)}%`;
+                ctx.font = 'bold 16px Arial';
+                const textMetrics = ctx.measureText(label);
+                const textWidth = textMetrics.width + 8;
+                const textHeight = 20;
+
+                // Fondo de texto
+                ctx.fillStyle = color;
+                ctx.fillRect(x, y - textHeight - 5, textWidth, textHeight + 5);
+
+                // Texto
+                ctx.fillStyle = '#000000';
+                ctx.fillText(label, x + 4, y - 8);
+            });
+        }
+    }
+
     function addDiscovery(discovery) {
         // Check if already exists
         if (discoveries.some(d => d.animal_id === discovery.animal_id)) {
             return;
         }
-        
+
         discoveries.push(discovery);
         updateDiscoveryUI();
         
+        // Guardar en localStorage
+        localStorage.setItem('discoveries', JSON.stringify(discoveries));
+
         // Show notification
         showNotification(`¡Nuevo descubrimiento! 🎉`);
     }
-    
+
     function updateDiscoveryUI() {
         discoveryCount.textContent = discoveries.length;
-        
+
         if (discoveries.length > 0) {
             emptyDiscoveries.classList.add('hidden');
         }
-        
+
         // Add discovery cards
         discoveries.forEach((discovery, index) => {
             if (!document.getElementById(`discovery-${discovery.id}`)) {
@@ -658,38 +904,38 @@
             }
         });
     }
-    
+
     function updateDiscoveriesList(data) {
         discoveries = data.map(d => d.discovery);
         updateDiscoveryUI();
     }
-    
+
     function showNotification(message, type = 'success') {
         const colors = {
             success: 'bg-green-500',
             warning: 'bg-yellow-500',
             error: 'bg-red-500'
         };
-        
+
         const notification = document.createElement('div');
         notification.className = `fixed top-20 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-bounce`;
-        notification.textContent = message;
+        notification.innerHTML = message;
         document.body.appendChild(notification);
-        
+
         setTimeout(() => notification.remove(), 3000);
     }
-    
+
     // Modal handling - redirect to animal info page
     document.getElementById('view-details-btn')?.addEventListener('click', () => {
         if (currentAnimal && currentAnimal.id) {
             window.location.href = `/animal/${currentAnimal.id}/`;
         }
     });
-    
+
     document.getElementById('close-modal-btn')?.addEventListener('click', () => {
         document.getElementById('animal-modal').classList.add('hidden');
     });
-    
+
     function showAnimalModal(animal) {
         document.getElementById('modal-name').textContent = animal.name;
         document.getElementById('modal-scientific').textContent = animal.scientific_name;
@@ -699,10 +945,10 @@
         document.getElementById('modal-status').textContent = animal.conservation_status;
         document.getElementById('modal-description').textContent = animal.description;
         document.getElementById('modal-fun-fact').textContent = animal.fun_facts?.[0] || 'Sin datos curiosos disponibles';
-        
+
         document.getElementById('animal-modal').classList.remove('hidden');
     }
-    
+
     // Close modal on outside click
     document.getElementById('animal-modal')?.addEventListener('click', (e) => {
         if (e.target.id === 'animal-modal') {

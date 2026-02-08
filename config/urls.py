@@ -5,10 +5,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from src.interfaces.api.views import StartDetectionView
 
 urlpatterns = [
     # Admin
     path('admin/', admin.site.urls),
+    
+    # Detection (root level for simplicity)
+    path('start-detection/', StartDetectionView.as_view(), name='start-detection-root'),
     
     # API endpoints (Interface Layer)
     path('api/', include('src.interfaces.api.urls')),

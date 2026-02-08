@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">🏆 Galería de Animales</h1>
+    <h1 class="text-3xl font-bold text-gray-800 mb-2 flex items-center gap-2"><img src="https://img.icons8.com/windows/32/trophy.png" alt="galería" class="w-8 h-8"/>Galería de Animales</h1>
     <p class="text-gray-600">Explora todos los animales que puedes descubrir con nuestra aplicación</p>
 </div>
 
@@ -20,24 +20,35 @@
             >
         </div>
         <div class="flex gap-2">
-            <button class="filter-btn active px-4 py-2 rounded-lg bg-purple-600 text-white" data-class="all">
-                Todos
-            </button>
-            <button class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-class="MAMMAL">
-                🦁 Mamíferos
-            </button>
-            <button class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-class="BIRD">
-                🦅 Aves
-            </button>
-            <button class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-class="REPTILE">
-                🐊 Reptiles
-            </button>
-            <button class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-class="FISH">
-                🐠 Peces
-            </button>
-        </div>
-    </div>
+  <button class="filter-btn active px-4 py-2 rounded-lg bg-purple-600 text-white" data-class="all">
+    Todos
+  </button>
+
+  <button class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-class="MAMMAL">
+    <img src="https://img.icons8.com/ios-filled/50/capybara.png" alt="capybara"
+      class="inline-block w-6 h-6 mr-2" />
+    Mamíferos
+  </button>
+
+  <button class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-class="BIRD">
+    <img src="https://img.icons8.com/ios-glyphs/30/owl.png" alt="owl"
+      class="inline-block w-6 h-6 mr-2" />
+    Aves
+  </button>
+
+  <button class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-class="REPTILE">
+    <img src="https://img.icons8.com/forma-bold-filled/24/lizard.png" alt="lizard"
+      class="inline-block w-6 h-6 mr-2" />
+    Reptiles
+  </button>
+
+  <button class="filter-btn px-4 py-2 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200" data-class="FISH">
+    <img src="https://img.icons8.com/windows/24/fish.png" alt="peces"
+      class="inline-block w-6 h-6 mr-2" />
+    Peces
+  </button>
 </div>
+
 
 <!-- Animals Grid -->
 <div id="animals-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -50,10 +61,15 @@
 
 <!-- Empty state -->
 <div id="empty-state" class="hidden text-center py-12">
-    <div class="text-6xl mb-4">🔍</div>
-    <h3 class="text-xl font-semibold text-gray-700 mb-2">No se encontraron animales</h3>
-    <p class="text-gray-500">Intenta con otro término de búsqueda</p>
+  <div class="text-6xl mb-4">
+    <img src="https://img.icons8.com/nolan/64/search-more.png" alt="search-more"
+      class="w-16 h-16 mx-auto" />
+  </div>
+
+  <h3 class="text-xl font-semibold text-gray-700 mb-2">No se encontraron animales</h3>
+  <p class="text-gray-500">Intenta con otro término de búsqueda</p>
 </div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -94,7 +110,7 @@
         grid.innerHTML = filteredAnimals.map(animal => `
             <div class="discovery-card bg-white rounded-2xl card-shadow overflow-hidden cursor-pointer" onclick="viewAnimal('${animal.id}')">
                 <div class="aspect-square bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center text-6xl">
-                    ${getAnimalEmoji(animal.animal_class)}
+                    ${animal.image_url ? `<img src="${animal.image_url}" alt="${animal.name}" class="w-full h-full object-cover"/>` : getAnimalEmoji(animal.animal_class)}
                 </div>
                 <div class="p-4">
                     <h3 class="font-bold text-gray-800 text-lg">${animal.name}</h3>
@@ -112,14 +128,14 @@
     
     function getAnimalEmoji(animalClass) {
         const emojis = {
-            'Mamífero': '🦁',
-            'Ave': '🦅',
-            'Reptil': '🐊',
-            'Anfibio': '🐸',
-            'Pez': '🐠',
-            'Invertebrado': '🦋'
+            'Mamífero': '<img src="https://img.icons8.com/windows/32/lion.png" class="inline-block w-10 h-10" alt="mamífero"/>',
+            'Ave': '<img src="https://img.icons8.com/windows/32/eagle.png" class="inline-block w-10 h-10" alt="ave"/>',
+            'Reptil': '<img src="https://img.icons8.com/windows/32/crocodile.png" class="inline-block w-10 h-10" alt="reptil"/>',
+            'Anfibio': '<img src="https://img.icons8.com/windows/32/frog.png" class="inline-block w-10 h-10" alt="anfibio"/>',
+            'Pez': '<img src="https://img.icons8.com/windows/32/fish.png" class="inline-block w-10 h-10" alt="pez"/>',
+            'Invertebrado': '<img src="https://img.icons8.com/windows/32/butterfly.png" class="inline-block w-10 h-10" alt="invertebrado"/>'
         };
-        return emojis[animalClass] || '🐾';
+        return emojis[animalClass] || '<img src="https://img.icons8.com/windows/32/paw-print.png" class="inline-block w-10 h-10" alt="otro"/>';
     }
     
     function viewAnimal(animalId) {

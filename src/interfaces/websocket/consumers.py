@@ -20,7 +20,7 @@ from src.infrastructure.persistence import (
     DjangoSessionRepository,
     DjangoDiscoveryRepository,
 )
-from src.infrastructure.ml import TensorFlowAnimalRecognition
+from src.infrastructure.ml import TensorFlowAnimalRecognition, YOLOAnimalRecognition
 from src.infrastructure.storage import get_image_storage
 
 logger = logging.getLogger(__name__)
@@ -61,6 +61,9 @@ class WebSocketNotificationAdapter(NotificationPort):
             'type': 'error',
             'data': {'message': error},
         })
+    
+    async def send_detections(self, session_id: str, detections: list) -> None:
+        await self._consumer.send_detections(detections)
 
 
 class AnimalRecognitionConsumer(AsyncWebsocketConsumer):
@@ -68,6 +71,9 @@ class AnimalRecognitionConsumer(AsyncWebsocketConsumer):
     WebSocket consumer for real-time animal recognition.
     Handles camera frames and sends back recognition results.
     """
+    
+    # Class variable para lazy loading del modelo
+    _recognition_service = None
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -79,29 +85,47 @@ class AnimalRecognitionConsumer(AsyncWebsocketConsumer):
         self.session_repo = DjangoSessionRepository()
         self.discovery_repo = DjangoDiscoveryRepository()
         
-        # Initialize services
-        self.recognition_service = TensorFlowAnimalRecognition()
+        # Recognition service se carga en connect()
+        self.recognition_service = None
         self.image_storage = get_image_storage()
     
     async def connect(self):
         """Handle WebSocket connection"""
-        await self.accept()
-        
-        # Initialize notification adapter
-        self.notification_adapter = WebSocketNotificationAdapter(self)
-        
-        # Start a new session
-        start_session = StartSessionUseCase(self.session_repo)
-        session_data = await sync_to_async(start_session.execute)()
-        self.session_id = session_data['id']
-        
-        logger.info(f"WebSocket connected. Session: {self.session_id}")
-        
-        # Send session info to client
-        await self.send_json({
-            'type': 'session_started',
-            'data': session_data,
-        })
+        try:
+            await self.accept()
+            
+            # Initialize notification adapter
+            self.notification_adapter = WebSocketNotificationAdapter(self)
+            
+            # Lazy load recognition service on first connection
+            if self.recognition_service is None:
+                logger.info("🔄 Cargando servicio de reconocimiento (primera conexión)...")
+                self.recognition_service = await sync_to_async(
+                    self._load_recognition_service
+                )()
+            
+            # Start a new session
+            start_session = StartSessionUseCase(self.session_repo)
+            session_data = await sync_to_async(start_session.execute)()
+            self.session_id = session_data['id']
+            
+            logger.info(f"✅ WebSocket connected. Session: {self.session_id}")
+            
+            # Send session info to client
+            await self.send_json({
+                'type': 'session_started',
+                'data': session_data,
+            })
+        except Exception as e:
+            logger.error(f"❌ Error en connect: {str(e)}")
+            await self.close()
+    
+    def _load_recognition_service(self):
+        """Carga el servicio de reconocimiento (llamado en sync_to_async)"""
+        logger.info("🚀 Inicializando YOLOAnimalRecognition...")
+        return YOLOAnimalRecognition(
+            confidence_threshold=0.5  # 50% confianza mínima
+        )
     
     async def disconnect(self, close_code):
         """Handle WebSocket disconnection"""
@@ -132,6 +156,10 @@ class AnimalRecognitionConsumer(AsyncWebsocketConsumer):
                 await self.send_json({'type': 'pong'})
             else:
                 logger.warning(f"Unknown message type: {message_type}")
+            
+                if message_type == 'frame':
+                    logger.debug(f"📨 Frame recibido (tamaño: {len(data.get('data', ''))} bytes)")
+                    await self.handle_frame(data.get('data'))
                 
         except json.JSONDecodeError:
             await self.send_json({
@@ -186,3 +214,12 @@ class AnimalRecognitionConsumer(AsyncWebsocketConsumer):
     async def send_json(self, data: dict):
         """Send JSON data to client"""
         await self.send(text_data=json.dumps(data))
+    
+    async def send_detections(self, detections: list) -> None:
+        """Send detection boxes to client (for bounding box visualization)"""
+        await self.send_json({
+            'type': 'detections',
+            'data': {
+                'detections': detections
+            }
+        })

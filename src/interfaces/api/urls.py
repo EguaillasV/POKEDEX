@@ -12,9 +12,13 @@ from .views import (
     SessionEndView,
     SessionDiscoveriesView,
     RecognizeImageView,
+    StartDetectionView,
 )
 
 urlpatterns = [
+    # Detection
+    path('start-detection/', StartDetectionView.as_view(), name='start-detection'),
+    
     # Recognition
     path('recognize/', RecognizeImageView.as_view(), name='recognize-image'),
     

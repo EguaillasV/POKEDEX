@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestión de Cuenta - Animal Recognition{% endblock %}
+
+{% block content %}
+<div class="py-8">
+    <!-- Header -->
+    <div class="gradient-bg text-white rounded-lg p-8 mb-8 card-shadow">
+        <h1 class="text-3xl font-bold mb-2">Gestión de Cuenta</h1>
+        <p class="text-purple-100">Administra tu información personal y configuración</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Método de Inicio de Sesión -->
+        <div class="lg:col-span-2 bg-white rounded-lg p-8 card-shadow">
+            <div class="mb-8">
+                <div class="flex items-center mb-6">
+                    <svg class="w-6 h-6 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+                        </path>
+                    </svg>
+                    <h2 class="text-2xl font-bold text-gray-800">Método de Inicio de Sesión</h2>
+                </div>
+
+                <!-- Email Section -->
+                <div class="border-l-4 border-purple-600 pl-6 mb-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Correo Electrónico</p>
+                            <p class="text-lg font-medium text-gray-800">{{ user.email }}</p>
+                        </div>
+                        <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-3">
+
+  <!-- Cambiar Contraseña -->
+  <a href="{% url 'change_password' %}"
+    class="block w-full text-left px-4 py-3 bg-gray-50 rounded-lg hover:bg-purple-50 transition border border-gray-200">
+    <div class="flex items-center justify-between">
+      <span class="text-purple-600 font-medium inline-flex items-center gap-2">
+        <img
+          src="https://img.icons8.com/ios-filled/50/key.png"
+          alt="key"
+          class="w-5 h-5"
+        />
+        Cambiar Contraseña
+      </span>
+
+      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </div>
+  </a>
+
+  <!-- Cambiar Correo -->
+  <a href="{% url 'change_email' %}"
+    class="block w-full text-left px-4 py-3 bg-gray-50 rounded-lg hover:bg-purple-50 transition border border-gray-200">
+    <div class="flex items-center justify-between">
+      <span class="text-purple-600 font-medium inline-flex items-center gap-2">
+        <img
+          src="https://img.icons8.com/ios-filled/50/new-post.png"
+          alt="mail"
+          class="w-5 h-5"
+        />
+        Cambiar Correo Electrónico
+      </span>
+
+      <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </div>
+  </a>
+
+</div>
+
+            </div>
+
+            <!-- Información Personal -->
+            <div>
+                <div class="flex items-center mb-6">
+                    <svg class="w-6 h-6 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h2 class="text-2xl font-bold text-gray-800">Información Personal</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <!-- Usuario -->
+                    <div>
+                        <label class="text-sm text-gray-600 font-medium">Nombre de Usuario</label>
+                        <p class="text-lg text-gray-800 font-medium">{{ user.username }}</p>
+                    </div>
+
+                    <!-- Nombre Completo -->
+                    <div>
+                        <label class="text-sm text-gray-600 font-medium">Nombre Completo</label>
+                        <p class="text-lg text-gray-800 font-medium">
+                            {% if user.first_name and user.last_name %}
+                            {{ user.first_name }} {{ user.last_name }}
+                            {% else %}
+                            No especificado
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div>
+                        <label class="text-sm text-gray-600 font-medium">Teléfono</label>
+                        <p class="text-lg text-gray-800 font-medium">
+                            {% if user.userprofile.phone %}
+                            {{ user.userprofile.phone }}
+                            {% else %}
+                            No especificado
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- País -->
+                    <div>
+                        <label class="text-sm text-gray-600 font-medium">País</label>
+                        <p class="text-lg text-gray-800 font-medium">
+                            {% if user.userprofile.country %}
+                            {{ user.userprofile.country }}
+                            {% else %}
+                            No especificado
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <!-- Fecha de Registro -->
+                    <div class="md:col-span-2">
+                        <label class="text-sm text-gray-600 font-medium">Fecha de Registro</label>
+                        <p class="text-lg text-gray-800 font-medium">
+                            {{ user.date_joined|date:"d \d\e F \d\e Y, H:i" }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Edit Button -->
+                <a href="{% url 'edit_profile' %}"
+                    class="w-full block text-center bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-4 rounded-lg transition transform hover:scale-105">
+                    Editar Información Personal
+                </a>
+            </div>
+        </div>
+
+        <!-- Sidebar - Acciones Rápidas -->
+        <div class="bg-white rounded-lg p-6 card-shadow h-fit">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Acciones Rápidas</h3>
+            <div class="space-y-3">
+                <a href="{% url 'gallery' %}"
+                    class="flex items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition">
+                    <img src="https://img.icons8.com/ios/50/image--v1.png" alt="image--v1" class="w-7 h-7 mr-3" />
+                    <span class="text-gray-700 font-medium">Mi Galería</span>
+                </a>
+
+                <a href="{% url 'home' %}"
+                    class="flex items-center p-3 bg-green-50 hover:bg-green-100 rounded-lg transition">
+                    <span class="text-2xl mr-3"><img src="https://img.icons8.com/windows/32/search.png" alt="buscar"
+                            class="w-6 h-6 inline-block" /></span>
+                    <span class="text-gray-700 font-medium">Reconocer</span>
+                </a>
+                <a href="#" onclick="document.getElementById('logout-form').submit(); return false;"
+                    class="flex items-center p-3 bg-red-50 hover:bg-red-100 rounded-lg transition">
+
+                    <img src="https://img.icons8.com/ios/50/door.png" alt="door" class="w-7 h-7 mr-3" />
+
+                    <span class="text-gray-700 font-medium">Cerrar Sesión</span>
+                </a>
+
+            </div>
+
+            <!-- Información de Seguridad -->
+            <div class="mt-6 pt-6 border-t border-gray-200">
+                <h4 class="font-bold text-gray-800 mb-3">Seguridad</h4>
+                <div class="space-y-2 text-sm text-gray-600">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <span>Contraseña segura</span>
+                    </div>
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <span>Email verificado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Logout Form (Hidden) -->
+<form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
+    {% csrf_token %}
+</form>
+{% endblock %}

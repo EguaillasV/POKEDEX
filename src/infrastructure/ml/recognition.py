@@ -1,11 +1,13 @@
 """
 ML Service - Animal Recognition Adapter
-Implements the AnimalRecognitionPort using TensorFlow/OpenCV.
+Implements the AnimalRecognitionPort using YOLO (YOLOv8).
+Handles real-time animal detection from camera frames.
 """
 import os
 import logging
 from typing import List, Optional
 import numpy as np
+from pathlib import Path
 
 from src.domain.entities import RecognitionResult
 from src.domain.value_objects import ImageFrame
@@ -15,29 +17,204 @@ from src.domain.exceptions import RecognitionException, ModelNotReadyException
 logger = logging.getLogger(__name__)
 
 
-# Animal labels - this would be loaded from the model in production
-ANIMAL_LABELS = [
-    "león", "elefante", "jirafa", "cebra", "tigre",
-    "oso", "mono", "gorila", "leopardo", "rinoceronte",
-    "hipopótamo", "cocodrilo", "águila", "pingüino", "tucán",
-    "flamenco", "loro", "búho", "delfín", "tiburón",
-    "ballena", "tortuga", "serpiente", "iguana", "camaleón",
-    "lobo", "zorro", "ciervo", "koala", "canguro"
-]
+# Mapeo de clases YOLO a nombres en español
+# Clases del modelo best.pt entrenado con YOLOv11
+YOLO_CLASS_MAPPING = {
+    0: "Bird",      # Ave
+    1: "Cats",      # Gatos
+    2: "Cow",       # Vaca
+    3: "Deer",      # Ciervo
+    4: "Dog",       # Perro
+    5: "Elephant",  # Elefante
+    6: "Giraffe",   # Jirafa
+    7: "Person",    # Persona
+    8: "Pig",       # Cerdo
+    9: "Sheep",     # Oveja
+}
 
 
-class TensorFlowAnimalRecognition(AnimalRecognitionPort):
+class YOLOAnimalRecognition(AnimalRecognitionPort):
     """
-    TensorFlow implementation of AnimalRecognitionPort.
-    Uses a pre-trained model for animal classification.
+    YOLO (YOLOv8) implementation of AnimalRecognitionPort.
+    Uses best.pt pre-trained model for real-time animal detection.
+    
+    El modelo se carga UNA SOLA VEZ en memoria (al iniciar el servidor).
+    Cada frame es procesado en ~20-50ms según GPU disponible.
     """
     
-    def __init__(self, model_path: Optional[str] = None, confidence_threshold: float = 0.7):
+    def __init__(self, model_path: Optional[str] = None, confidence_threshold: float = 0.5):
         self._model = None
         self._model_path = model_path
         self._confidence_threshold = confidence_threshold
         self._is_ready = False
-        self._labels = ANIMAL_LABELS
+        
+        logger.info("🚀 Inicializando YOLOAnimalRecognition...")
+        self._load_model()
+    
+    def _load_model(self) -> None:
+        """
+        Carga el modelo YOLO best.pt.
+        Se ejecuta UNA SOLA VEZ al iniciar el servidor.
+        """
+        try:
+            from ultralytics import YOLO
+            
+            # Ruta del modelo - por defecto en la raíz del proyecto
+            if not self._model_path:
+                # Buscar best.pt en la raíz del proyecto Django
+                base_path = Path(__file__).resolve().parent.parent.parent.parent  # POKEDEX/
+                self._model_path = os.path.join(base_path, "best.pt")
+            
+            # Verificar que el archivo existe
+            if not os.path.exists(self._model_path):
+                raise FileNotFoundError(
+                    f"El modelo best.pt no se encontró en: {self._model_path}\n"
+                    f"Descargalo desde: https://github.com/your-repo/releases/download/v1/best.pt"
+                )
+            
+            # Cargar el modelo YOLO
+            logger.info(f"📦 Cargando YOLO desde: {self._model_path}")
+            self._model = YOLO(self._model_path)
+            
+            # Verificar que se cargó correctamente
+            if self._model is None:
+                raise Exception("Failed to initialize YOLO model")
+            
+            self._is_ready = True
+            logger.info(f"✅ YOLO cargado exitosamente")
+            logger.info(f"   Confianza mínima: {self._confidence_threshold * 100:.0f}%")
+            
+        except ImportError as e:
+            logger.error(
+                f"❌ Error: ultralytics no está instalada\n"
+                f"   Instala con: pip install ultralytics"
+            )
+            self._is_ready = False
+            raise
+        except FileNotFoundError as e:
+            logger.error(f"❌ {str(e)}")
+            self._is_ready = False
+            raise
+        except Exception as e:
+            logger.error(f"❌ Error cargando YOLO: {str(e)}")
+            self._is_ready = False
+            raise
+    
+    def preprocess_image(self, frame: ImageFrame) -> np.ndarray:
+        """
+        Preprocesa un frame de imagen para reconocimiento.
+        Convierte ImageFrame → numpy array OpenCV.
+        """
+        try:
+            import cv2
+            import base64
+            
+            # Decodificar base64 si viene en ese formato
+            if isinstance(frame.data, str):
+                # Es base64
+                if ',' in frame.data:
+                    frame_data = frame.data.split(',')[1]
+                else:
+                    frame_data = frame.data
+                
+                # Decodificar a bytes
+                img_bytes = base64.b64decode(frame_data)
+                nparr = np.frombuffer(img_bytes, np.uint8)
+                image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            else:
+                # Ya es bytes
+                nparr = np.frombuffer(frame.data, np.uint8)
+                image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            
+            if image is None:
+                raise RecognitionException("Failed to decode image")
+            
+            return image
+            
+        except Exception as e:
+            raise RecognitionException(f"Image preprocessing failed: {str(e)}")
+    
+    def recognize(self, image: np.ndarray) -> List[RecognitionResult]:
+        """
+        Detecta animales en la imagen usando YOLO.
+        
+        Args:
+            image: numpy array con formato OpenCV (BGR, HxWx3)
+        
+        Returns:
+            Lista de RecognitionResult con los animales detectados
+        """
+        if not self._is_ready or self._model is None:
+            raise ModelNotReadyException("Modelo YOLO no está listo")
+        
+        try:
+            # Ejecutar YOLO - Simple y directo
+            results = self._model(image)
+
+            if not results or results[0].boxes is None:
+                return []
+
+            recognition_results = []
+
+            # Procesar cada detección
+            for box in results[0].boxes:
+                conf = float(box.conf[0]) if box.conf is not None else 0
+                cls_idx = int(box.cls[0]) if box.cls is not None else -1
+                
+                if conf >= self._confidence_threshold:
+                    animal_name = YOLO_CLASS_MAPPING.get(cls_idx, f"Unknown_{cls_idx}")
+                    
+                    # Extraer bounding box
+                    bounding_box = None
+                    try:
+                        if hasattr(box, 'xyxy'):
+                            coords = box.xyxy[0].tolist() if hasattr(box.xyxy, '__len__') else box.xyxy.tolist()
+                            if coords:
+                                x1, y1, x2, y2 = map(int, coords[:4])
+                                bounding_box = {'x': x1, 'y': y1, 'width': x2-x1, 'height': y2-y1}
+                    except Exception:
+                        pass
+                    
+                    recognition_results.append(RecognitionResult(
+                        animal_id="",
+                        animal_name=animal_name,
+                        confidence=conf,
+                        bounding_box=bounding_box,
+                    ))
+                    
+                    logger.debug(f"🐾 Detectado: {animal_name} (conf: {conf:.1%})")
+            
+            return recognition_results
+            
+        except Exception as e:
+            logger.error(f"❌ Error en reconocimiento YOLO: {str(e)}")
+            raise RecognitionException(f"Reconocimiento fallido: {str(e)}")
+    
+    def get_supported_animals(self) -> List[str]:
+        """Retorna lista de animales soportados por el modelo"""
+        return list(YOLO_CLASS_MAPPING.values())
+    
+    def is_ready(self) -> bool:
+        """Verifica si el modelo está cargado y listo"""
+        return self._is_ready and self._model is not None
+
+
+class TensorFlowAnimalRecognition(AnimalRecognitionPort):
+    """
+    DEPRECATED: Usar YOLOAnimalRecognition en su lugar.
+    Mantener para compatibilidad hacia atrás.
+    """
+    
+    def __init__(self, model_path: Optional[str] = None, confidence_threshold: float = 0.7):
+        logger.warning(
+            "⚠️ TensorFlowAnimalRecognition está deprecated. "
+            "Usar YOLOAnimalRecognition en su lugar."
+        )
+        self._model = None
+        self._model_path = model_path
+        self._confidence_threshold = confidence_threshold
+        self._is_ready = False
+        self._labels = list(YOLO_CLASS_MAPPING.values())
         
         # Try to load model on initialization
         self._load_model()

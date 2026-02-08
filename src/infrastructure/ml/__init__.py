@@ -1,4 +1,4 @@
 """ML Package"""
-from .recognition import TensorFlowAnimalRecognition, OpenCVPreprocessor
+from .recognition import YOLOAnimalRecognition, TensorFlowAnimalRecognition, OpenCVPreprocessor
 
-__all__ = ['TensorFlowAnimalRecognition', 'OpenCVPreprocessor']
+__all__ = ['YOLOAnimalRecognition', 'TensorFlowAnimalRecognition', 'OpenCVPreprocessor']

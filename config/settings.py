@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     
     # Interface Layer (Ports - API, WebSocket, Web)
     'src.interfaces',
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -96,16 +97,19 @@ CHANNEL_LAYERS = {
 }
 
 # Database
+from decouple import config
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME', 'animal_recognition'),
-        'USER': os.getenv('DATABASE_USER', 'postgres'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password'),
-        'HOST': os.getenv('DATABASE_HOST', 'localhost'),
-        'PORT': os.getenv('DATABASE_PORT', '5432'),
+        'NAME': config('DATABASE_NAME', default='animal_recognition'),
+        'USER': config('DATABASE_USER', default='postgres'),
+        'PASSWORD': config('DATABASE_PASSWORD', default='loco123xd'),
+        'HOST': config('DATABASE_HOST', default='localhost'),
+        'PORT': config('DATABASE_PORT', default='5432'),
     }
 }
+
 
 # For development without PostgreSQL, use SQLite
 if os.getenv('USE_SQLITE', 'False').lower() == 'true':
@@ -175,7 +179,8 @@ CACHES = {
 }
 
 # For development without Redis
-if os.getenv('USE_LOCAL_CACHE', 'False').lower() == 'true':
+if os.getenv('USE_LOCAL_CACHE', 'False').lower() == 'true' or DEBUG:
+    # Use local in-memory cache and channel layer in development (no Redis required)
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',

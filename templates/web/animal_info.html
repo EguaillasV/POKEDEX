@@ -7,7 +7,7 @@
     <!-- Loading state -->
     <div id="loading-state" class="text-center py-12">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-        <p class="text-gray-500">Cargando información...</p>
+    <p class="text-gray-500">Cargando información...</p>
     </div>
 </div>
 
@@ -23,11 +23,18 @@
             </a>
             <div class="flex items-center gap-6">
                 <div class="w-24 h-24 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center text-6xl" id="animal-emoji">
-                    🦁
+                    <img id="animal-photo" src="https://img.icons8.com/windows/64/otter.png" alt="animal" class="w-20 h-20 object-cover rounded-xl"/>
                 </div>
                 <div class="flex-1">
                     <h1 class="text-4xl font-bold" id="animal-name">León</h1>
                     <p class="text-purple-200 text-xl italic" id="animal-scientific">Panthera leo</p>
+                    <div id="detection-confidence-container" class="mt-2 hidden">
+                        <span class="text-sm text-gray-200">Confianza:</span>
+                        <div class="w-48 bg-gray-200 rounded-full h-3 inline-block ml-2 align-middle">
+                            <div id="confidence-bar" class="h-full bg-green-500 confidence-bar" style="width: 0%"></div>
+                        </div>
+                        <span id="confidence-text" class="text-sm font-semibold text-green-300 ml-2">0%</span>
+                    </div>
                 </div>
                 <!-- Sound Button -->
                 <div id="sound-container" class="hidden">
@@ -39,7 +46,7 @@
                             <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
                         </svg>
                     </button>
-                    <p class="text-purple-200 text-sm text-center mt-2">🔊 Escuchar</p>
+                    <p class="text-purple-200 text-sm text-center mt-2"><img src="https://img.icons8.com/windows/24/speaker.png" alt="escuchar" class="inline-block w-5 h-5 mr-2"/>Escuchar</p>
                 </div>
             </div>
         </div>
@@ -52,22 +59,29 @@
             <!-- Quick facts -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <div class="bg-gray-50 rounded-xl p-4 text-center">
-                    <div class="text-3xl mb-2">📋</div>
+                    <div class="text-3xl mb-2"><img src="https://img.icons8.com/windows/32/document.png" alt="clase" class="w-8 h-8 mx-auto"/></div>
                     <span class="text-gray-500 text-sm">Clase</span>
                     <p class="font-bold text-gray-800" id="animal-class">Mamífero</p>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4 text-center">
-                    <div class="text-3xl mb-2">🍖</div>
+                    <div class="text-3xl mb-2"><img src="https://img.icons8.com/windows/32/steak.png" alt="dieta" class="w-8 h-8 mx-auto"/></div>
                     <span class="text-gray-500 text-sm">Dieta</span>
                     <p class="font-bold text-gray-800" id="animal-diet">Carnívoro</p>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4 text-center">
-                    <div class="text-3xl mb-2">🌍</div>
-                    <span class="text-gray-500 text-sm">Hábitat</span>
-                    <p class="font-bold text-gray-800" id="animal-habitat">Sabana</p>
-                </div>
+    <div class="text-3xl mb-2">
+        <img 
+            src="https://img.icons8.com/external-outline-wichaiwi/64/external-ecology-climate-change-outline-wichaiwi-2.png"
+            alt="hábitat"
+            class="w-8 h-8 mx-auto"
+        />
+    </div>
+    <span class="text-gray-500 text-sm">Hábitat</span>
+    <p class="font-bold text-gray-800" id="animal-habitat">Sabana</p>
+</div>
+
                 <div class="bg-gray-50 rounded-xl p-4 text-center">
-                    <div class="text-3xl mb-2">⚠️</div>
+                    <div class="text-3xl mb-2"><img src="https://img.icons8.com/windows/32/error.png" alt="conservación" class="w-8 h-8 mx-auto"/></div>
                     <span class="text-gray-500 text-sm">Conservación</span>
                     <p class="font-bold text-gray-800" id="animal-status">Vulnerable</p>
                 </div>
@@ -84,11 +98,12 @@
                             <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
                         </svg>
                     </button>
+                    <!-- Sección de sonido removida por petición del usuario -->
                     <div class="flex-1">
-                        <h3 class="font-bold text-lg">🔊 Sonido del animal</h3>
-                        <p class="text-purple-200 text-sm">Escucha cómo suena este animal</p>
+                        <h3 class="font-bold text-lg">Información de audio deshabilitada</h3>
+                        <p class="text-purple-200 text-sm">La reproducción de sonido ha sido deshabilitada en esta vista.</p>
                     </div>
-                    <div class="text-4xl" id="sound-emoji">🦁</div>
+                    <div class="text-4xl" id="sound-emoji">🔇</div>
                 </div>
             </div>
             
@@ -110,22 +125,31 @@
             
             <!-- Description -->
             <div class="mb-8">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">📖 Descripción</h2>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4"><img src="https://img.icons8.com/windows/24/book.png" alt="descripción" class="inline-block w-5 h-5 mr-2"/>Descripción</h2>
                 <p class="text-gray-600 leading-relaxed" id="animal-description">
                     Descripción del animal...
                 </p>
             </div>
             
             <!-- Fun Facts -->
-            <div class="bg-yellow-50 rounded-2xl p-6">
-                <h2 class="text-2xl font-bold text-yellow-800 mb-4">💡 Datos Curiosos</h2>
-                <ul id="animal-facts" class="space-y-3">
-                    <li class="flex items-start gap-3">
-                        <span class="text-yellow-500">✓</span>
-                        <span class="text-yellow-800">Dato curioso...</span>
-                    </li>
-                </ul>
-            </div>
+           <div class="bg-yellow-50 rounded-2xl p-6">
+    <h2 class="text-2xl font-bold text-yellow-800 mb-4 flex items-center gap-2">
+        <img 
+            src="https://img.icons8.com/dusk/64/idea.png" 
+            alt="idea"
+            class="w-8 h-8"
+        />
+        Datos Curiosos
+    </h2>
+
+    <ul id="animal-facts" class="space-y-3">
+        <li class="flex items-start gap-3">
+            <span class="text-yellow-500">✓</span>
+            <span class="text-yellow-800">Dato curioso...</span>
+        </li>
+    </ul>
+</div>
+
             
             <!-- Endangered warning -->
             <div id="endangered-warning" class="hidden mt-8 bg-red-50 border border-red-200 rounded-2xl p-6">
@@ -153,20 +177,37 @@
     
     document.addEventListener('DOMContentLoaded', async () => {
         try {
-            const response = await fetch(`/api/animals/${animalId}/`);
-            
-            if (!response.ok) {
-                throw new Error('Animal not found');
+            let animal = null;
+
+            // Check if this is a generated animal (id is 'generated')
+            if (animalId === 'generated' || animalId === '' || animalId === 'null') {
+                // Try to load from sessionStorage (data passed from recognition result)
+                const storedData = sessionStorage.getItem('animalData');
+                if (storedData) {
+                    animal = JSON.parse(storedData);
+                    sessionStorage.removeItem('animalData'); // Clear after use
+                    console.log('Loaded generated animal from sessionStorage:', animal);
+                } else {
+                    throw new Error('No generated animal data found');
+                }
+            } else {
+                // Normal flow: fetch from API
+                const response = await fetch(`/api/animals/${animalId}/`);
+                
+                if (!response.ok) {
+                    throw new Error('Animal not found');
+                }
+                
+                animal = await response.json();
             }
-            
-            const animal = await response.json();
+
             renderAnimal(animal);
             
         } catch (error) {
             console.error('Error fetching animal:', error);
             document.getElementById('animal-content').innerHTML = `
                 <div class="text-center py-12">
-                    <div class="text-6xl mb-4">😕</div>
+                    <div class="text-6xl mb-4"><img src="https://img.icons8.com/windows/64/confused.png" alt="no-encontrado" class="w-16 h-16 mx-auto"/></div>
                     <h3 class="text-xl font-semibold text-gray-700 mb-2">Animal no encontrado</h3>
                     <p class="text-gray-500 mb-4">No pudimos encontrar información sobre este animal.</p>
                     <a href="{% url 'home' %}" class="text-purple-600 hover:text-purple-700">
@@ -183,7 +224,15 @@
         
         // Fill in the data
         const emoji = getAnimalEmoji(animal.name, animal.animal_class);
-        clone.getElementById('animal-emoji').textContent = emoji;
+        const storedImage = sessionStorage.getItem('animalImage');
+        const imageSrc = animal.image_url || storedImage || null;
+        const emojiContainer = clone.getElementById('animal-emoji');
+        if (imageSrc) {
+            emojiContainer.innerHTML = `<img src="${imageSrc}" alt="${animal.name}" class="w-20 h-20 object-cover rounded-xl"/>`;
+            if (storedImage) sessionStorage.removeItem('animalImage');
+        } else {
+            emojiContainer.innerHTML = emoji;
+        }
         clone.getElementById('animal-name').textContent = animal.name;
         clone.getElementById('animal-scientific').textContent = animal.scientific_name;
         clone.getElementById('animal-class').textContent = animal.animal_class;
@@ -213,18 +262,57 @@
             clone.getElementById('endangered-warning').classList.remove('hidden');
         }
         
-        // Sound handling - siempre mostrar porque usamos Web Audio API
-        clone.getElementById('sound-container').classList.remove('hidden');
-        clone.getElementById('sound-player-card').classList.remove('hidden');
-        clone.getElementById('sound-emoji').textContent = emoji;
+        // Sound handling - only show if sound_url is present
+        let hasSound = false;
+        if (animal.sound_url) {
+            hasSound = true;
+            clone.getElementById('sound-container').classList.remove('hidden');
+            clone.getElementById('sound-player-card').classList.remove('hidden');
+            clone.getElementById('sound-emoji').textContent = emoji;
+        } else {
+            clone.getElementById('sound-container').classList.add('hidden');
+            clone.getElementById('sound-player-card').classList.add('hidden');
+            clone.getElementById('sound-emoji').textContent = '🔇';
+        }
+
+        // Detection confidence (if provided alongside animal data)
+        const confidenceContainer = clone.querySelector('#detection-confidence-container');
+        if (confidenceContainer) {
+            let recognition = animal.recognition || animal.recognition_info || null;
+            
+            // Try to get from sessionStorage if not in animal data
+            if (!recognition) {
+                const storedRecognition = sessionStorage.getItem('recognitionInfo');
+                if (storedRecognition) {
+                    recognition = JSON.parse(storedRecognition);
+                    sessionStorage.removeItem('recognitionInfo');
+                }
+            }
+            
+            // Usar confianza de sessionStorage primero, luego de animal.last_recognition_confidence
+            if (recognition && typeof recognition.confidence !== 'undefined') {
+                const confidence = recognition.confidence * 100;
+                confidenceContainer.classList.remove('hidden');
+                clone.getElementById('confidence-bar').style.width = `${confidence}%`;
+                clone.getElementById('confidence-text').textContent = `${confidence.toFixed(1)}%`;
+            } else if (animal.last_recognition_confidence) {
+                // Mostrar confianza guardada en BD si no hay reconocimiento en vivo
+                const confidence = animal.last_recognition_confidence * 100;
+                confidenceContainer.classList.remove('hidden');
+                clone.getElementById('confidence-bar').style.width = `${confidence}%`;
+                clone.getElementById('confidence-text').textContent = `${confidence.toFixed(1)}%`;
+            } else {
+                confidenceContainer.classList.add('hidden');
+            }
+        }
         
         // Replace content
         const container = document.getElementById('animal-content');
         container.innerHTML = '';
         container.appendChild(clone);
         
-        // Setup audio controls after DOM is updated
-        setupAudioControls();
+        // Setup audio controls after DOM is updated only if sound exists
+        if (hasSound) setupAudioControls();
     }
     
     function setupAudioControls() {
@@ -782,21 +870,21 @@
     
     function getAnimalEmoji(name, animalClass) {
         const animalEmojis = {
-            'León': '🦁',
-            'Elefante Africano': '🐘',
-            'Jirafa': '🦒',
-            'Tigre': '🐅',
-            'Cebra': '🦓',
-            'Oso Pardo': '🐻',
-            'Águila Real': '🦅',
-            'Pingüino Emperador': '🐧',
-            'Delfín Nariz de Botella': '🐬',
-            'Cocodrilo del Nilo': '🐊',
-            'Tortuga Marina Verde': '🐢',
-            'Gorila de Montaña': '🦍',
-            'Koala': '🐨',
-            'Canguro Rojo': '🦘',
-            'Lobo Gris': '🐺',
+            'León': '<img src="https://img.icons8.com/windows/32/lion.png" class="inline-block w-6 h-6" alt="león">',
+            'Elefante Africano': '<img src="https://img.icons8.com/windows/32/elephant.png" class="inline-block w-6 h-6" alt="elefante">',
+            'Jirafa': '<img src="https://img.icons8.com/windows/32/giraffe.png" class="inline-block w-6 h-6" alt="jirafa">',
+            'Tigre': '<img src="https://img.icons8.com/windows/32/tiger.png" class="inline-block w-6 h-6" alt="tigre">',
+            'Cebra': '<img src="https://img.icons8.com/windows/32/zebra.png" class="inline-block w-6 h-6" alt="cebra">',
+            'Oso Pardo': '<img src="https://img.icons8.com/windows/32/bear.png" class="inline-block w-6 h-6" alt="oso">',
+            'Águila Real': '<img src="https://img.icons8.com/windows/32/eagle.png" class="inline-block w-6 h-6" alt="águila">',
+            'Pingüino Emperador': '<img src="https://img.icons8.com/windows/32/penguin.png" class="inline-block w-6 h-6" alt="pingüino">',
+            'Delfín Nariz de Botella': '<img src="https://img.icons8.com/windows/32/dolphin.png" class="inline-block w-6 h-6" alt="delfín">',
+            'Cocodrilo del Nilo': '<img src="https://img.icons8.com/windows/32/crocodile.png" class="inline-block w-6 h-6" alt="cocodrilo">',
+            'Tortuga Marina Verde': '<img src="https://img.icons8.com/windows/32/turtle.png" class="inline-block w-6 h-6" alt="tortuga">',
+            'Gorila de Montaña': '<img src="https://img.icons8.com/windows/32/gorilla.png" class="inline-block w-6 h-6" alt="gorila">',
+            'Koala': '<img src="https://img.icons8.com/windows/32/koala.png" class="inline-block w-6 h-6" alt="koala">',
+            'Canguro Rojo': '<img src="https://img.icons8.com/windows/32/kangaroo.png" class="inline-block w-6 h-6" alt="canguro">',
+            'Lobo Gris': '<img src="https://img.icons8.com/windows/32/wolf.png" class="inline-block w-6 h-6" alt="lobo"'
         };
         
         if (animalEmojis[name]) {
@@ -804,14 +892,14 @@
         }
         
         const classEmojis = {
-            'Mamífero': '🦁',
-            'Ave': '🦅',
-            'Reptil': '🐊',
-            'Anfibio': '🐸',
-            'Pez': '🐠',
-            'Invertebrado': '🦋'
+            'Mamífero': '<img src="https://img.icons8.com/windows/32/lion.png" class="inline-block w-6 h-6" alt="mamífero"/>',
+            'Ave': '<img src="https://img.icons8.com/windows/32/eagle.png" class="inline-block w-6 h-6" alt="ave"/>',
+            'Reptil': '<img src="https://img.icons8.com/windows/32/crocodile.png" class="inline-block w-6 h-6" alt="reptil"/>',
+            'Anfibio': '<img src="https://img.icons8.com/windows/32/frog.png" class="inline-block w-6 h-6" alt="anfibio"/>',
+            'Pez': '<img src="https://img.icons8.com/windows/32/fish.png" class="inline-block w-6 h-6" alt="pez"/>',
+            'Invertebrado': '<img src="https://img.icons8.com/windows/32/butterfly.png" class="inline-block w-6 h-6" alt="invertebrado"/>'
         };
-        return classEmojis[animalClass] || '🐾';
+        return classEmojis[animalClass] || '<img src="https://img.icons8.com/windows/32/paw-print.png" class="inline-block w-6 h-6" alt="otro"/>';
     }
     
     function getDefaultAnimalSound(name) {

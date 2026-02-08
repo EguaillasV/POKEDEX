@@ -1,0 +1,279 @@
+{
+  "EC": {
+    "name": "Ecuador",
+    "provinces": {
+      "Pichincha": ["Quito", "Cayambe", "Mejía", "Rumiñahui", "San Miguel de los Bancos"],
+      "Guayas": ["Guayaquil", "Daule", "Durán", "Samboróndón", "Milagro"],
+      "Azuay": ["Cuenca", "Gualaceo", "Chordeleg", "Sígsig"],
+      "Imbabura": ["Ibarra", "Otavalo", "Cotacachi", "Pimampiro"],
+      "Tungurahua": ["Ambato", "Latacunga", "Salcedo", "Pelileo"],
+      "El Oro": ["Machala", "Santa Rosa", "Pasaje", "Balsas"],
+      "Manabí": ["Manta", "Portoviejo", "Jipijapa", "Montecristi"],
+      "Los Ríos": ["Babahoyo", "Quevedo", "Vinces", "Puebloviejo"],
+      "Cotopaxi": ["Latacunga", "La Maná", "Pangua", "Salcedo"],
+      "Sucumbíos": ["Nueva Loja", "Coca", "Shushufindi", "Lago Agrio"]
+    }
+  },
+  "US": {
+    "name": "United States",
+    "provinces": {
+      "California": ["Los Angeles", "San Francisco", "San Diego", "Fresno", "Sacramento"],
+      "Texas": ["Houston", "Dallas", "Austin", "San Antonio", "Fort Worth"],
+      "Florida": ["Miami", "Orlando", "Tampa", "Jacksonville", "Tallahassee"],
+      "New York": ["New York City", "Buffalo", "Rochester", "Albany", "Yonkers"],
+      "Pennsylvania": ["Philadelphia", "Pittsburgh", "Allentown", "Erie"],
+      "Illinois": ["Chicago", "Aurora", "Rockford", "Springfield"],
+      "Ohio": ["Columbus", "Cleveland", "Cincinnati", "Toledo"],
+      "Georgia": ["Atlanta", "Augusta", "Savannah", "Athens"],
+      "North Carolina": ["Charlotte", "Raleigh", "Greensboro", "Winston-Salem"],
+      "Arizona": ["Phoenix", "Mesa", "Chandler", "Tempe"],
+      "Virginia": ["Richmond", "Arlington", "Alexandria", "Virginia Beach"],
+      "Washington": ["Seattle", "Spokane", "Tacoma", "Vancouver"],
+      "Colorado": ["Denver", "Colorado Springs", "Aurora", "Fort Collins"],
+      "Massachusetts": ["Boston", "Worcester", "Springfield", "Cambridge"]
+    }
+  },
+  "MX": {
+    "name": "Mexico",
+    "provinces": {
+      "Ciudad de México": ["Ciudad de México", "Coyoacán", "Benito Juárez", "Cuauhtémoc"],
+      "Jalisco": ["Guadalajara", "Zapopan", "Tonalá", "Puerto Vallarta"],
+      "Veracruz": ["Veracruz", "Xalapa", "Coatzacoalcos", "Orizaba"],
+      "Nuevo León": ["Monterrey", "Santa Catarina", "San Nicolás", "Apodaca"],
+      "Puebla": ["Puebla", "Cholula", "Tehuacán", "Tlaxcala"],
+      "Guanajuato": ["León", "Guanajuato", "Irapuato", "Celaya"],
+      "Chiapas": ["Tuxtla Gutiérrez", "San Cristóbal", "Tapachula", "Comitán"],
+      "Querétaro": ["Querétaro", "San Juan del Río", "Corregidora"],
+      "Yucatán": ["Mérida", "Valladolid", "Tizimín", "Motul"],
+      "Quintana Roo": ["Cancún", "Playa del Carmen", "Cozumel", "Tulum"],
+      "Baja California": ["Tijuana", "Mexicali", "Ensenada", "Rosarito"],
+      "Sonora": ["Hermosillo", "Nogales", "Ciudad Obregón", "Navojoa"]
+    }
+  },
+  "CO": {
+    "name": "Colombia",
+    "provinces": {
+      "Bogotá": ["Bogotá"],
+      "Antioquia": ["Medellín", "Envigado", "Bello", "Itagüí"],
+      "Valle del Cauca": ["Cali", "Palmira", "Buenaventura", "Tuluá"],
+      "Atlántico": ["Barranquilla", "Soledad", "Malambo", "Puerto Colombia"],
+      "Bolívar": ["Cartagena", "Turbaco", "Arjona", "Magangué"],
+      "Cundinamarca": ["Soacha", "Zipaquirá", "Ubate", "Fusagasugá"],
+      "Nariño": ["Pasto", "Ipiales", "Tumaco", "Sandona"],
+      "Cauca": ["Popayán", "Santander de Quilichao", "Puerto Tejada"],
+      "Huila": ["Neiva", "Pitalito", "La Plata", "Garzón"],
+      "Tolima": ["Ibagué", "Espinal", "Guamo", "Melgar"]
+    }
+  },
+  "PE": {
+    "name": "Peru",
+    "provinces": {
+      "Lima": ["Lima", "San Isidro", "Miraflores", "San Miguel"],
+      "Arequipa": ["Arequipa", "Puno", "Moquegua"],
+      "Cusco": ["Cusco", "Urubamba", "Machu Picchu"],
+      "La Libertad": ["Trujillo", "Huacho", "Chancay"],
+      "Junín": ["Huancayo", "Satipo"],
+      "Cajamarca": ["Cajamarca", "Bambamarca"]
+    }
+  },
+  "CL": {
+    "name": "Chile",
+    "provinces": {
+      "Santiago": ["Santiago", "Las Condes", "Providencia", "Ñuñoa"],
+      "Valparaíso": ["Valparaíso", "Viña del Mar", "Concón"],
+      "Bío Bío": ["Concepción", "Talcahuano", "Los Ángeles"],
+      "Araucanía": ["Temuco", "Villarrica"],
+      "Los Ríos": ["Valdivia", "Puerto Montt"],
+      "Magallanes": ["Punta Arenas", "Puerto Natales"]
+    }
+  },
+  "AR": {
+    "name": "Argentina",
+    "provinces": {
+      "Buenos Aires": ["Buenos Aires", "La Plata", "Mar del Plata"],
+      "Córdoba": ["Córdoba", "Río Cuarto"],
+      "Rosario": ["Rosario", "Santa Fe"],
+      "Mendoza": ["Mendoza", "San Rafael"],
+      "Tucumán": ["San Miguel de Tucumán", "Tafí Viejo"],
+      "Salta": ["Salta", "Jujuy"]
+    }
+  },
+  "BR": {
+    "name": "Brazil",
+    "provinces": {
+      "São Paulo": ["São Paulo", "Campinas", "Santos"],
+      "Rio de Janeiro": ["Rio de Janeiro", "Niterói", "Duque de Caxias"],
+      "Minas Gerais": ["Belo Horizonte", "Uberlândia", "Betim"],
+      "Bahia": ["Salvador", "Feira de Santana"],
+      "Paraná": ["Curitiba", "Londrina"],
+      "Distrito Federal": ["Brasília"]
+    }
+  },
+  "VE": {
+    "name": "Venezuela",
+    "provinces": {
+      "Distrito Capital": ["Caracas"],
+      "Miranda": ["Los Teques", "Petare"],
+      "Zulia": ["Maracaibo", "Cabimas"],
+      "Lara": ["Barquisimeto", "Quibor"],
+      "Carabobo": ["Valencia", "Puerto Cabello"]
+    }
+  },
+  "ES": {
+    "name": "Spain",
+    "provinces": {
+      "Madrid": ["Madrid", "Alcalá de Henares", "Móstoles", "Leganés"],
+      "Barcelona": ["Barcelona", "Hospitalet", "Badalona", "Sabadell"],
+      "Valencia": ["Valencia", "Paterna", "Torrent", "Requena"],
+      "Seville": ["Seville", "Dos Hermanas", "Écija", "Utrera"],
+      "Málaga": ["Málaga", "Marbella", "Rincón de la Victoria", "Torremolinos"],
+      "Bilbao": ["Bilbao", "Getxo", "Baracaldo", "Durango"],
+      "Alicante": ["Alicante", "Elche", "Torrevieja", "Benidorm"],
+      "Córdoba": ["Córdoba", "Lucena", "Montilla", "Priego"],
+      "Granada": ["Granada", "Motril", "Alhama de Granada"],
+      "Murcia": ["Murcia", "Lorca", "Cartagena", "Molina de Segura"]
+    }
+  },
+  "GB": {
+    "name": "United Kingdom",
+    "provinces": {
+      "England": ["London", "Manchester", "Birmingham", "Liverpool", "Leeds"],
+      "Scotland": ["Edinburgh", "Glasgow", "Aberdeen", "Dundee"],
+      "Wales": ["Cardiff", "Swansea", "Newport", "Wrexham"],
+      "Northern Ireland": ["Belfast", "Derry", "Lisburn", "Newry"]
+    }
+  },
+  "FR": {
+    "name": "France",
+    "provinces": {
+      "Île-de-France": ["Paris", "Boulogne-Billancourt", "Saint-Denis", "Versailles"],
+      "Provence-Alpes-Côte d'Azur": ["Marseille", "Nice", "Toulon", "Cannes"],
+      "Auvergne-Rhône-Alpes": ["Lyon", "Grenoble", "Saint-Étienne", "Annecy"],
+      "Nouvelle-Aquitaine": ["Bordeaux", "Limoges", "Poitiers", "Angoulême"],
+      "Occitanie": ["Toulouse", "Montpellier", "Nîmes", "Perpignan"],
+      "Pays de la Loire": ["Nantes", "Angers", "Le Mans", "Saint-Nazaire"],
+      "Brittany": ["Rennes", "Brest", "Lorient", "Vannes"],
+      "Normandy": ["Rouen", "Le Havre", "Caen", "Cherbourg"],
+      "Bourgogne-Franche-Comté": ["Dijon", "Besançon", "Auxerre", "Chalon-sur-Saône"],
+      "Centre-Val de Loire": ["Orleans", "Tours", "Bourges", "Blois"]
+    }
+  },
+  "DE": {
+    "name": "Germany",
+    "provinces": {
+      "Berlin": ["Berlin"],
+      "Bavaria": ["Munich", "Augsburg", "Ingolstadt", "Nuremberg"],
+      "North Rhine-Westphalia": ["Cologne", "Düsseldorf", "Dortmund", "Essen"],
+      "Baden-Württemberg": ["Stuttgart", "Mannheim", "Karlsruhe", "Freiburg"],
+      "Lower Saxony": ["Hanover", "Bremen", "Oldenburg", "Braunschweig"],
+      "Hesse": ["Frankfurt", "Wiesbaden", "Darmstadt", "Kassel"],
+      "Saxony": ["Dresden", "Leipzig", "Chemnitz", "Zwickau"],
+      "Schleswig-Holstein": ["Kiel", "Lübeck", "Flensburg", "Neumünster"],
+      "Hamburg": ["Hamburg"],
+      "Mecklenburg-Vorpommern": ["Rostock", "Schwerin", "Greifswald", "Stralsund"]
+    }
+  },
+  "IT": {
+    "name": "Italy",
+    "provinces": {
+      "Lazio": ["Rome", "Frascati", "Tivoli", "Latina"],
+      "Lombardy": ["Milan", "Bergamo", "Brescia", "Como"],
+      "Campania": ["Naples", "Salerno", "Caserta", "Benevento"],
+      "Sicily": ["Palermo", "Catania", "Messina", "Syracuse"],
+      "Piedmont": ["Turin", "Alessandria", "Asti", "Cuneo"],
+      "Tuscany": ["Florence", "Siena", "Pisa", "Livorno"],
+      "Veneto": ["Venice", "Verona", "Padua", "Vicenza"],
+      "Emilia-Romagna": ["Bologna", "Parma", "Ravenna", "Reggio Emilia"],
+      "Marche": ["Ancona", "Pesaro", "Ascoli Piceno", "Macerata"],
+      "Sardinia": ["Cagliari", "Sassari", "Alghero", "Nuoro"]
+    }
+  },
+  "JP": {
+    "name": "Japan",
+    "provinces": {
+      "Tokyo": ["Tokyo", "Shinjuku", "Chiyoda", "Shibuya"],
+      "Osaka": ["Osaka", "Kobe", "Kyoto", "Kobe"],
+      "Kanagawa": ["Yokohama", "Kawasaki", "Sagamihara", "Fujisawa"],
+      "Aichi": ["Nagoya", "Toyota", "Okazaki", "Ichinomiya"],
+      "Saitama": ["Saitama City", "Kawagoe", "Urawa", "Omiya"],
+      "Chiba": ["Chiba City", "Funabashi", "Ichikawa", "Kashiwa"],
+      "Hyogo": ["Kobe", "Amagasaki", "Nishinomiya", "Akashi"],
+      "Fukuoka": ["Fukuoka", "Kitakyushu", "Yawatahigashi", "Kurume"],
+      "Hokkaido": ["Sapporo", "Asahikawa", "Tomakomai", "Muroran"],
+      "Kyoto": ["Kyoto", "Uji", "Nantan", "Kameoka"]
+    }
+  },
+  "AU": {
+    "name": "Australia",
+    "provinces": {
+      "New South Wales": ["Sydney", "Newcastle", "Wollongong", "Central Coast"],
+      "Victoria": ["Melbourne", "Geelong", "Ballarat", "Bendigo"],
+      "Queensland": ["Brisbane", "Gold Coast", "Cairns", "Townsville"],
+      "Western Australia": ["Perth", "Fremantle", "Mandurah", "Bunbury"],
+      "South Australia": ["Adelaide", "Port Adelaide", "Mount Gambier"],
+      "Tasmania": ["Hobart", "Launceston", "Devonport"],
+      "Northern Territory": ["Darwin", "Alice Springs"],
+      "Australian Capital Territory": ["Canberra"]
+    }
+  },
+  "PA": {
+    "name": "Panama",
+    "provinces": {
+      "Panamá": ["Panama City", "San Miguelito", "Arraiján"],
+      "Casco Viejo": ["Casco Viejo"],
+      "Colón": ["Colón", "Cristóbal"]
+    }
+  },
+  "CR": {
+    "name": "Costa Rica",
+    "provinces": {
+      "San José": ["San José", "Desamparados", "Puriscal"],
+      "Alajuela": ["Alajuela", "San Ramón", "Grecia"],
+      "Limón": ["Limón", "Puntarenas"],
+      "Heredia": ["Heredia", "Santo Domingo"]
+    }
+  },
+  "GT": {
+    "name": "Guatemala",
+    "provinces": {
+      "Guatemala": ["Guatemala City", "Mixco", "Villa Nueva"],
+      "Sacatepéquez": ["Antigua Guatemala", "Chimals"],
+      "Quetzaltenango": ["Quetzaltenango"]
+    }
+  },
+  "TR": {
+    "name": "Turkey",
+    "provinces": {
+      "Istanbul": ["Istanbul", "Ankara", "Izmir"],
+      "Ankara": ["Ankara"],
+      "Izmir": ["Izmir", "Boşnak"]
+    }
+  },
+  "SA": {
+    "name": "Saudi Arabia",
+    "provinces": {
+      "Riyadh": ["Riyadh"],
+      "Jeddah": ["Jeddah"],
+      "Dammam": ["Dammam", "Khobar"]
+    }
+  },
+  "AE": {
+    "name": "United Arab Emirates",
+    "provinces": {
+      "Dubai": ["Dubai", "Deira"],
+      "Abu Dhabi": ["Abu Dhabi"],
+      "Sharjah": ["Sharjah"]
+    }
+  },
+  "IN": {
+    "name": "India",
+    "provinces": {
+      "Maharashtra": ["Mumbai", "Pune", "Nagpur"],
+      "Delhi": ["New Delhi", "Delhi"],
+      "Karnataka": ["Bangalore", "Mysore"],
+      "Tamil Nadu": ["Chennai", "Coimbatore"],
+      "West Bengal": ["Kolkata", "Darjeeling"],
+      "Gujarat": ["Ahmedabad", "Surat", "Vadodara"]
+    }
+  }
+}

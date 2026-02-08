@@ -1,0 +1,116 @@
+{% extends 'base_auth.html' %}
+{% load static %}
+
+{% block title %}Crear Cuenta{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.8.0/build/css/intlTelInput.css">
+    <style>
+        .iti { width: 100%; }
+        .iti__flag-container { background-image: url(https://cdn.jsdelivr.net/npm/intl-tel-input@23.8.0/build/img/flags.png); }
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .iti__flag-container { background-image: url(https://cdn.jsdelivr.net/npm/intl-tel-input@23.8.0/build/img/flags@2x.png); }
+        }
+        .iti__input { width: 100%; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.5rem 1rem; font-size: 1rem; }
+        .iti__input:focus { outline: none; ring: 2px; ring-color: rgba(99, 102, 241, 0.2); }
+        .iti--allow-dropdown .iti__input { padding-left: 52px; }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[70vh]">
+    <div class="auth-card">
+        <h1 class="text-3xl font-bold text-center mb-2">
+  <span class="inline-flex items-center gap-2">
+    <img src="https://img.icons8.com/ios/50/gears--v1.png" alt="gears--v1" class="w-8 h-8" />
+    Crear Cuenta
+  </span>
+</h1>
+
+        <p class="text-center text-gray-500 mb-6">Únete a nuestra comunidad</p>
+
+        <form method="post" novalidate id="register-form">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="text-sm text-gray-600">Nombre de Usuario</label>
+                    <div class="mt-2">{{ form.username }}</div>
+                    <p class="text-xs text-gray-400 mt-1">El nombre de usuario debe ser único.</p>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600">Nombre completo</label>
+                    <div class="mt-2">{{ form.full_name }}</div>
+                    <p class="text-xs text-gray-400 mt-1">Incluye tus nombres y apellidos completos.</p>
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-600">Correo Electrónico</label>
+                    <div class="mt-2">{{ form.email }}</div>
+                    <p class="text-xs text-gray-400 mt-1">Usaremos este correo para notificaciones y recuperación.</p>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600">Teléfono</label>
+                    <div class="mt-2">
+                        <input type="tel" name="phone" id="id_phone" value="{{ form.phone.value|default:'' }}" placeholder="">
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1" id="phone-help">Formato internacional detectado automáticamente.</p>
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-600">País</label>
+                    <div class="mt-2">
+                        <select name="country" id="id_country" class="w-full border border-gray-200 rounded px-4 py-2" data-initial="{{ form.country.value|default:'Ecuador' }}"></select>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Selecciona tu país para autocompletar el código telefónico.</p>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600">Provincia / Estado</label>
+                    <div class="mt-2">
+                        <select name="province" id="id_province" class="w-full border border-gray-200 rounded px-4 py-2" data-initial="{{ form.province.value|default:'' }}"></select>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Las provincias se filtrarán según el país seleccionado.</p>
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-600">Ciudad</label>
+                    <div class="mt-2">
+                        <select name="city" id="id_city" class="w-full border border-gray-200 rounded px-4 py-2" data-initial="{{ form.city.value|default:'' }}"></select>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Las ciudades se filtrarán según la provincia seleccionada.</p>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600">Dirección</label>
+                    <div class="mt-2">{{ form.address }}</div>
+                </div>
+
+                <div>
+                    <label class="text-sm text-gray-600">Contraseña</label>
+                    <div class="mt-2">{{ form.password }}</div>
+                    <ul class="text-xs text-gray-400 mt-1 ml-4" id="password-criteria">
+                        <li id="pc-length">Al menos 8 caracteres</li>
+                        <li id="pc-upper">Una letra mayúscula</li>
+                        <li id="pc-lower">Una letra minúscula</li>
+                        <li id="pc-digit">Un número</li>
+                        <li id="pc-symbol">Un símbolo (ej: !@#$%)</li>
+                    </ul>
+                </div>
+                <div>
+                    <label class="text-sm text-gray-600">Confirmar contraseña</label>
+                    <div class="mt-2">{{ form.password_confirm }}</div>
+                    <p class="text-xs text-red-500 mt-1 invisible" id="pw-match">Las contraseñas no coinciden.</p>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <button type="submit" class="w-full bg-[#5c53c6] text-white py-2 rounded-lg hover:bg-[#4d42a8] transition">Crear Cuenta</button>
+            </div>
+        </form>
+
+        <div class="text-center mt-4">
+            <p>¿Ya tienes cuenta? <a href="{% url 'login-page' %}" class="text-indigo-200">Inicia sesión</a></p>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.8.0/build/js/intlTelInput.min.js"></script>
+<script src="{% static 'js/register.js' %}"></script>
+{% endblock %}

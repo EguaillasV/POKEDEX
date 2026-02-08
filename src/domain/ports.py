@@ -183,3 +183,8 @@ class NotificationPort(ABC):
     async def send_error(self, session_id: str, error: str) -> None:
         """Send an error message to a client"""
         pass
+    
+    @abstractmethod
+    async def send_detections(self, session_id: str, detections: List[dict]) -> None:
+        """Send detection boxes (bounding boxes) to a client for visualization"""
+        pass

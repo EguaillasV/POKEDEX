@@ -5,6 +5,8 @@ Run with: python manage.py shell < scripts/seed_animals.py
 import os
 import sys
 import django
+import requests
+import json
 
 # Setup Django
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -13,6 +15,10 @@ django.setup()
 
 from src.infrastructure.persistence.models import AnimalModel
 import uuid
+
+# OpenRouter configuration
+OPENROUTER_API_KEY = "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"
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 
 ANIMALS_DATA = [
@@ -31,7 +37,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "10-14 años",
         "average_weight": "190 kg",
-        "geographic_distribution": "África subsahariana"
+        "geographic_distribution": "África subsahariana",
+        "aliases": ["Lion", "Leone"]
     },
     {
         "name": "Elefante Africano",
@@ -48,7 +55,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "60-70 años",
         "average_weight": "6000 kg",
-        "geographic_distribution": "África"
+        "geographic_distribution": "África",
+        "aliases": ["African Elephant", "Elephant"]
     },
     {
         "name": "Jirafa",
@@ -65,7 +73,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "25 años",
         "average_weight": "1200 kg",
-        "geographic_distribution": "África subsahariana"
+        "geographic_distribution": "África subsahariana",
+        "aliases": ["Giraffe"]
     },
     {
         "name": "Tigre",
@@ -82,7 +91,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "10-15 años",
         "average_weight": "220 kg",
-        "geographic_distribution": "Asia"
+        "geographic_distribution": "Asia",
+        "aliases": ["Tiger"]
     },
     {
         "name": "Cebra",
@@ -99,7 +109,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "25 años",
         "average_weight": "350 kg",
-        "geographic_distribution": "África oriental y meridional"
+        "geographic_distribution": "África oriental y meridional",
+        "aliases": ["Zebra"]
     },
     {
         "name": "Oso Pardo",
@@ -116,7 +127,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "25-30 años",
         "average_weight": "300 kg",
-        "geographic_distribution": "Hemisferio Norte"
+        "geographic_distribution": "Hemisferio Norte",
+        "aliases": ["Brown Bear"]
     },
     {
         "name": "Águila Real",
@@ -133,7 +145,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "30 años",
         "average_weight": "6 kg",
-        "geographic_distribution": "Hemisferio Norte"
+        "geographic_distribution": "Hemisferio Norte",
+        "aliases": ["Golden Eagle"]
     },
     {
         "name": "Pingüino Emperador",
@@ -150,7 +163,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "20 años",
         "average_weight": "40 kg",
-        "geographic_distribution": "Antártida"
+        "geographic_distribution": "Antártida",
+        "aliases": ["Emperor Penguin"]
     },
     {
         "name": "Delfín Nariz de Botella",
@@ -167,7 +181,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "40-50 años",
         "average_weight": "200 kg",
-        "geographic_distribution": "Océanos de todo el mundo"
+        "geographic_distribution": "Océanos de todo el mundo",
+        "aliases": ["Bottlenose Dolphin"]
     },
     {
         "name": "Cocodrilo del Nilo",
@@ -184,7 +199,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "70-100 años",
         "average_weight": "500 kg",
-        "geographic_distribution": "África"
+        "geographic_distribution": "África",
+        "aliases": ["Nile Crocodile"]
     },
     {
         "name": "Tortuga Marina Verde",
@@ -201,7 +217,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "80-100 años",
         "average_weight": "200 kg",
-        "geographic_distribution": "Océanos tropicales y subtropicales"
+        "geographic_distribution": "Océanos tropicales y subtropicales",
+        "aliases": ["Green Sea Turtle"]
     },
     {
         "name": "Gorila de Montaña",
@@ -218,7 +235,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "35-40 años",
         "average_weight": "200 kg",
-        "geographic_distribution": "Ruanda, Uganda, República Democrática del Congo"
+        "geographic_distribution": "Ruanda, Uganda, República Democrática del Congo",
+        "aliases": ["Mountain Gorilla"]
     },
     {
         "name": "Koala",
@@ -235,7 +253,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "13-18 años",
         "average_weight": "14 kg",
-        "geographic_distribution": "Australia"
+        "geographic_distribution": "Australia",
+        "aliases": ["Koala"]
     },
     {
         "name": "Canguro Rojo",
@@ -252,7 +271,8 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "12-18 años",
         "average_weight": "85 kg",
-        "geographic_distribution": "Australia"
+        "geographic_distribution": "Australia",
+        "aliases": ["Red Kangaroo"]
     },
     {
         "name": "Lobo Gris",
@@ -269,9 +289,106 @@ ANIMALS_DATA = [
         ],
         "average_lifespan": "6-8 años",
         "average_weight": "45 kg",
-        "geographic_distribution": "Hemisferio Norte"
+        "geographic_distribution": "Hemisferio Norte",
+        "aliases": ["Grey Wolf", "Gray Wolf"]
+    },
+    {
+        "name": "Oveja",
+        "scientific_name": "Ovis aries",
+        "description": "La oveja es un mamífero domesticado criado por su lana y carne.",
+        "animal_class": "MAMMAL",
+        "habitat": "Granjas y pastizales",
+        "diet": "HERBIVORE",
+        "conservation_status": "LEAST_CONCERN",
+        "fun_facts": [
+            "Las ovejas fueron uno de los primeros animales domesticados",
+            "La lana de oveja es aislante y útil para climas fríos"
+        ],
+        "average_lifespan": "10-12 años",
+        "average_weight": "70 kg",
+        "geographic_distribution": "Domesticado mundialmente",
+        "aliases": ["Sheep"]
+    },
+    {
+        "name": "Gato",
+        "scientific_name": "Felis catus",
+        "description": "",
+        "animal_class": "MAMMAL",
+        "habitat": "Hogares y ambientes urbanos",
+        "diet": "CARNIVORE",
+        "conservation_status": "LEAST_CONCERN",
+        "fun_facts": [
+            "Los gatos tienen 32 músculos en cada oreja",
+            "Pueden girar sus orejas 180 grados",
+            "Los gatos duermen entre 12 y 16 horas al día"
+        ],
+        "average_lifespan": "12-18 años",
+        "average_weight": "4.5 kg",
+        "geographic_distribution": "Domesticado mundialmente",
+        "aliases": ["Cats", "Cat"]
+    },
+    {
+        "name": "Persona",
+        "scientific_name": "Homo sapiens",
+        "description": "",
+        "animal_class": "MAMMAL",
+        "habitat": "Ambientes urbanos, rurales y salvajes",
+        "diet": "OMNIVORE",
+        "conservation_status": "LEAST_CONCERN",
+        "fun_facts": [
+            "Homo sapiens es la única especie humana viviente",
+            "Tienen capacidades cognitivas superiores entre todos los animales",
+            "Pueden comunicarse a través del lenguaje complejo"
+        ],
+        "average_lifespan": "72-75 años",
+        "average_weight": "70 kg",
+        "geographic_distribution": "Todo el mundo",
+        "aliases": ["Person", "Human", "Humano"]
     },
 ]
+
+
+def generate_description_with_ai(animal_name: str, scientific_name: str) -> str:
+    """Generate description using OpenRouter REST API directly"""
+    prompt = f"""Genera una descripción científica pero accesible en español para el siguiente animal:
+- Nombre común: {animal_name}
+- Nombre científico: {scientific_name}
+
+La descripción debe:
+1. Ser de 2-3 oraciones
+2. Describir características físicas y comportamentales principales
+3. Ser educativa pero comprensible para el público general
+4. Estar completamente en español
+5. Ser única y diferente a otras descripciones
+
+Responde SOLO con la descripción, sin explicaciones adicionales."""
+
+    try:
+        headers = {
+            "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+            "HTTP-Referer": "https://pokedex.local",
+            "X-Title": "Pokedex Animal Recognition",
+            "Content-Type": "application/json"
+        }
+        
+        payload = {
+            "model": "mistral-7b-instruct",
+            "messages": [
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.7,
+            "max_tokens": 200,
+        }
+        
+        response = requests.post(OPENROUTER_URL, headers=headers, json=payload, timeout=30)
+        response.raise_for_status()
+        
+        data = response.json()
+        description = data['choices'][0]['message']['content'].strip()
+        return description
+    except Exception as e:
+        print(f"  [ERROR] {str(e)[:60]}")
+        return f"{animal_name} ({scientific_name}) es un miembro interesante del reino animal."
 
 
 def seed_animals():
@@ -281,28 +398,71 @@ def seed_animals():
     for animal_data in ANIMALS_DATA:
         animal_id = str(uuid.uuid4())
         
-        animal, created = AnimalModel.objects.update_or_create(
-            name=animal_data['name'],
-            defaults={
-                'id': animal_id,
-                'scientific_name': animal_data['scientific_name'],
-                'description': animal_data['description'],
-                'animal_class': animal_data['animal_class'],
-                'habitat': animal_data['habitat'],
-                'diet': animal_data['diet'],
-                'conservation_status': animal_data['conservation_status'],
-                'fun_facts': animal_data['fun_facts'],
-                'average_lifespan': animal_data.get('average_lifespan'),
-                'average_weight': animal_data.get('average_weight'),
-                'geographic_distribution': animal_data.get('geographic_distribution'),
-            }
-        )
-        
-        status = "Created" if created else "Updated"
-        print(f"  {status}: {animal.name}")
+        # Prefer updating existing record (do not change primary key). If not exists, create new.
+        existing = AnimalModel.objects.filter(name=animal_data['name']).first()
+        if existing:
+            existing.scientific_name = animal_data['scientific_name']
+            existing.description = animal_data['description']
+            existing.animal_class = animal_data['animal_class']
+            existing.habitat = animal_data['habitat']
+            existing.diet = animal_data['diet']
+            existing.conservation_status = animal_data['conservation_status']
+            existing.fun_facts = animal_data['fun_facts']
+            existing.average_lifespan = animal_data.get('average_lifespan')
+            existing.average_weight = animal_data.get('average_weight')
+            existing.geographic_distribution = animal_data.get('geographic_distribution')
+            existing.aliases = animal_data.get('aliases', [])
+            existing.save()
+            animal = existing
+            created = False
+            print(f"  Updated: {animal.name}")
+        else:
+            animal = AnimalModel.objects.create(
+                id=animal_id,
+                name=animal_data['name'],
+                scientific_name=animal_data['scientific_name'],
+                description=animal_data['description'],
+                animal_class=animal_data['animal_class'],
+                habitat=animal_data['habitat'],
+                diet=animal_data['diet'],
+                conservation_status=animal_data['conservation_status'],
+                fun_facts=animal_data['fun_facts'],
+                average_lifespan=animal_data.get('average_lifespan'),
+                average_weight=animal_data.get('average_weight'),
+                geographic_distribution=animal_data.get('geographic_distribution'),
+                aliases=animal_data.get('aliases', []),
+            )
+            created = True
+            print(f"  Created: {animal.name}")
     
     print(f"\nTotal animals: {AnimalModel.objects.count()}")
-    print("Seeding complete!")
+    
+    # Generate descriptions for animals without them or with placeholders
+    print("\n[AI] Generando descripciones faltantes con OpenRouter...")
+    generate_missing_descriptions()
+    
+    print("\nSeeding complete!")
+
+
+def generate_missing_descriptions():
+    """Generate AI descriptions for animals without descriptions or with very short ones"""
+    animals = AnimalModel.objects.all()
+    updated_count = 0
+    
+    for animal in animals:
+        if not animal.description or len(animal.description) < 30:
+            print(f"  [*] Generando para: {animal.name}")
+            new_desc = generate_description_with_ai(animal.name, animal.scientific_name)
+            animal.description = new_desc
+            animal.save()
+            updated_count += 1
+            print(f"     [OK] {new_desc[:70]}...")
+    
+    if updated_count > 0:
+        print(f"\n  [OK] {updated_count} descripciones generadas")
+    else:
+        print(f"  [OK] Todos los animales tienen descripciones")
+
 
 
 if __name__ == '__main__':

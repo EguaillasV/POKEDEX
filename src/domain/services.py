@@ -5,6 +5,8 @@ Business logic that doesn't naturally fit within an entity.
 from typing import List, Optional
 from .entities import Animal, Discovery, RecognitionResult, UserSession
 from .value_objects import ImageFrame, Confidence
+# Import OpenCV preprocessor for drawing boxes on thumbnails
+from src.infrastructure.ml.recognition import OpenCVPreprocessor
 from .ports import (
     AnimalRepositoryPort,
     DiscoveryRepositoryPort,

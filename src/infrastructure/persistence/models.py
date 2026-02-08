@@ -51,12 +51,21 @@ class AnimalModel(models.Model):
         choices=ConservationStatus.choices
     )
     fun_facts = models.JSONField(default=list)
+    aliases = models.JSONField(default=list, blank=True)
     average_lifespan = models.CharField(max_length=50, blank=True, null=True)
     average_weight = models.CharField(max_length=50, blank=True, null=True)
     average_height = models.CharField(max_length=50, blank=True, null=True)
     geographic_distribution = models.CharField(max_length=200, blank=True, null=True)
     image_url = models.URLField(blank=True, null=True)
     sound_url = models.URLField(blank=True, null=True)
+    last_recognition_confidence = models.FloatField(blank=True, null=True, help_text="Última confianza del modelo YOLO")
+    created_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='created_animals'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -68,6 +77,34 @@ class AnimalModel(models.Model):
     
     def __str__(self):
         return f"{self.name} ({self.scientific_name})"
+    
+    def to_dict(self):
+        """Convert model to dictionary for API responses"""
+        # Map animal class to display name
+        animal_class_map = {choice[0]: choice[1] for choice in self.AnimalClass.choices}
+        diet_map = {choice[0]: choice[1] for choice in self.DietType.choices}
+        status_map = {choice[0]: choice[1] for choice in self.ConservationStatus.choices}
+        
+        return {
+            'id': str(self.id),
+            'name': self.name,
+            'scientific_name': self.scientific_name,
+            'description': self.description,
+            'animal_class': animal_class_map.get(self.animal_class, self.animal_class),
+            'habitat': self.habitat,
+            'diet': diet_map.get(self.diet, self.diet),
+            'conservation_status': status_map.get(self.conservation_status, self.conservation_status),
+            'fun_facts': self.fun_facts or [],
+            'average_lifespan': self.average_lifespan,
+            'average_weight': self.average_weight,
+            'average_height': self.average_height,
+            'geographic_distribution': self.geographic_distribution,
+            'image_url': self.image_url,
+            'sound_url': self.sound_url,
+            'is_endangered': self.conservation_status in [
+                'EXTINCT', 'EXTINCT_IN_WILD', 'CRITICALLY_ENDANGERED', 'ENDANGERED'
+            ]
+        }
 
 
 class SessionModel(models.Model):
@@ -129,3 +166,26 @@ class DiscoveryModel(models.Model):
     
     def __str__(self):
         return f"Discovery: {self.animal.name} on {self.discovered_at}"
+
+
+class ProfileModel(models.Model):
+    """Extended profile information for users"""
+
+    user = models.OneToOneField(
+        get_user_model(),
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)
+    province = models.CharField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    address = models.CharField(max_length=250, blank=True, null=True)
+
+    class Meta:
+        db_table = 'user_profiles'
+        verbose_name = 'Perfil de Usuario'
+        verbose_name_plural = 'Perfiles de Usuario'
+
+    def __str__(self):
+        return f"Profile for {self.user.username}"

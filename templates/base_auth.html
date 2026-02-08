@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Animal Recognition{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --auth-bg-1: #6b63d9;
+            --auth-bg-2: #6f6bd9;
+        }
+        body.auth-bg {
+            background: linear-gradient(90deg, var(--auth-bg-1) 0%, var(--auth-bg-2) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 520px;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 36px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+        /* Optional subtle bottom band like the reference image */
+        .auth-footer-band {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 36px;
+            background: rgba(0,0,0,0.06);
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="auth-bg">
+    <main class="w-full px-6">
+        {% block content %}{% endblock %}
+    </main>
+    <div class="auth-footer-band" aria-hidden="true"></div>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

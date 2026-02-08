@@ -5,6 +5,7 @@ Handles the animal recognition workflow.
 from dataclasses import dataclass
 from typing import Optional, List
 import logging
+from asgiref.sync import sync_to_async
 
 from src.domain.entities import Animal, Discovery, RecognitionResult, UserSession
 from src.domain.value_objects import ImageFrame
@@ -84,8 +85,8 @@ class ProcessFrameUseCase:
             if not self._recognition_port.is_ready():
                 raise ModelNotReadyException("Recognition model is not ready")
             
-            # Get session
-            session = self._session_repo.get_by_id(session_id)
+            # Get session (DB access - run in thread)
+            session = await sync_to_async(self._session_repo.get_by_id, thread_sensitive=False)(session_id)
             if not session:
                 raise SessionNotFoundException(session_id)
             
@@ -95,8 +96,36 @@ class ProcessFrameUseCase:
             except Exception as e:
                 raise InvalidImageException(f"Invalid image data: {str(e)}")
             
-            # Process frame
-            result = self._recognition_service.process_frame(frame, session)
+            # ====== STEP 1: Preprocess image ======
+            processed_image = await sync_to_async(
+                self._recognition_port.preprocess_image, 
+                thread_sensitive=False
+            )(frame)
+            
+            # ====== STEP 2: Get ALL detections (for bounding box visualization) ======
+            all_detections = await sync_to_async(
+                self._recognition_port.recognize, 
+                thread_sensitive=False
+            )(processed_image)
+            
+            # Convert detections to dict format for WebSocket
+            detections_data = []
+            if all_detections:
+                for det in all_detections:
+                    detection_dict = {
+                        'class': det.animal_name,
+                        'confidence': det.confidence,
+                    }
+                    # Add bounding box if available
+                    if det.bounding_box:
+                        detection_dict.update(det.bounding_box)
+                    detections_data.append(detection_dict)
+            
+            # Send detections to client (for bounding box visualization)
+            await self._notification.send_detections(session_id, detections_data)
+            
+            # ====== STEP 3: Process frame (filter by confidence threshold) ======
+            result = await sync_to_async(self._recognition_service.process_frame, thread_sensitive=False)(frame, session)
             
             if not result:
                 return RecognitionResponse(success=True)
