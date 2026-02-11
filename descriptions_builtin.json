@@ -1,0 +1,218 @@
+{
+  "pajaro": {
+    "description": "Los pájaros son animales vertebrados de la clase Aves, caracterizados por tener plumas, alas adaptadas para el vuelo, y un esqueleto ligero. Poseen sacos aéreos que les permiten respirar de manera eficiente durante el vuelo. Presentan una gran diversidad de tamaños, colores y formas adaptadas a diferentes hábitats.",
+    "scientific_name": "Aves",
+    "animal_class": "BIRD",
+    "habitat": "Bosques, ciudades, zonas costeras, montañas y áreas urbanas",
+    "diet": "Omnívoro (semillas, insectos, néctar, pequeños animales)",
+    "conservation_status": "Varía por especie",
+    "average_lifespan": "5-50 años según especie",
+    "average_weight": "2.5 gramos a 100+ kg según especie",
+    "geographic_distribution": "Encontrados en todos los continentes excepto la Antártida",
+    "fun_facts": [
+      "Los colibrís pueden volar hacia atrás y suspenderse en el aire",
+      "Existen más de 10,000 especies de pájaros en el mundo",
+      "Las aves migratorias pueden viajar miles de kilómetros",
+      "El loro gris africano puede vivir más de 60 años",
+      "Los búhos pueden rotar la cabeza 270 grados"
+    ]
+  },
+  "gato": {
+    "description": "Los gatos son mamíferos carnívoros de la familia Felidae, domesticados hace miles de años. Poseen una excelente visión nocturna, reflejos rápidos y agilidad excepcional. Son animales independientes pero también pueden formar vínculos afectuosos con los humanos.",
+    "scientific_name": "Felis catus",
+    "animal_class": "MAMMAL",
+    "habitat": "Variado - se adaptan a ambientes urbanos, rurales y salvajes",
+    "diet": "Carnívoro obligado (carnes, aves, peces)",
+    "conservation_status": "No amenazado",
+    "average_lifespan": "12-18 años",
+    "average_weight": "2.5-4.5 kg",
+    "geographic_distribution": "Distribuidos mundialmente por domesticación",
+    "fun_facts": [
+      "Los gatos tienen 18 músculos en cada oreja para una audición precisa",
+      "Ronronean a una frecuencia que promueve la curación ósea",
+      "Tienen un tercer párpado llamado membrana nictitante",
+      "Los gatos tienen glándulas odoríferas en sus patas",
+      "Duermen entre 12 y 16 horas diarias"
+    ]
+  },
+  "perro": {
+    "description": "Los perros son mamíferos carnívoros domesticados hace más de 15,000 años. Son animales sociales, inteligentes y leales. Poseen un olfato extraordinario y capacidades cognitivas avanzadas. Han sido seleccionados para diversas tareas junto a los humanos.",
+    "scientific_name": "Canis familiaris",
+    "animal_class": "MAMMAL",
+    "habitat": "Cercano a humanos - hogares, granjas, áreas urbanas y rurales",
+    "diet": "Omnívoro (principalmente carnívoro, pero adaptado a dieta mixta)",
+    "conservation_status": "No amenazado",
+    "average_lifespan": "10-13 años",
+    "average_weight": "1.4-90 kg según raza",
+    "geographic_distribution": "Distribuidos mundialmente por domesticación",
+    "fun_facts": [
+      "Los perros tienen unos 300 millones de receptores olfatorios",
+      "Pueden entender más de 250 palabras y gestos",
+      "La nariz de cada perro es única, como las huellas dactilares humanas",
+      "Los perros ven en escala de grises, no en blanco y negro",
+      "Tienen un sentido del oído cinco veces mejor que los humanos"
+    ]
+  },
+  "cangrejo": {
+    "description": "Los cangrejos son crustáceos decápodos, pertenecientes a la infraorden Brachyura. Poseen un cuerpo aplastado, diez patas (dos con pinzas) y una cola doblada hacia el abdomen. Se encuentran tanto en entornos marinos como de agua dulce, adaptándose a diversos hábitats costeros y profundos.",
+    "scientific_name": "Brachyura",
+    "animal_class": "INVERTEBRATE",
+    "habitat": "Océanos, playas, estuarios y agua dulce",
+    "diet": "Omnívoro",
+    "conservation_status": "Preocupación menor",
+    "average_lifespan": "3-100 años según especie",
+    "average_weight": "10 gramos a 20 kg según especie",
+    "geographic_distribution": "Encontrados en todos los océanos y muchas aguas dulces",
+    "fun_facts": [
+      "Los cangrejos caminan de lado por la posición de sus articulaciones",
+      "Pueden regenerar patas perdidas en el proceso de muda",
+      "El caparazón del cangrejo violinista es más grande en algunos machos",
+      "Los cangrejos tienen sangre azul debido al cobre en su hemocianina",
+      "Pueden comunicarse por vibración y luz en algunas especies"
+    ]
+  },
+  "leon marino": {
+    "description": "Los leones marinos son mamíferos pinnípedos pertenecientes a la familia Otariidae. Poseen aletas capaces de rotar, permitiéndoles caminar en tierra. Son animales sociales e inteligentes que viven en colonias costeras. Excelentes nadadores y buceadores adaptados a la vida marina.",
+    "scientific_name": "Otairidae",
+    "animal_class": "MAMMAL",
+    "habitat": "Costas rocosas, islas, zonas de surgencia marina",
+    "diet": "Carnívoro (peces y calamares)",
+    "conservation_status": "Preocupación menor",
+    "average_lifespan": "20-30 años",
+    "average_weight": "50-300 kg según sexo y especie",
+    "geographic_distribution": "Costas del Océano Pacífico y algunas del Atlántico",
+    "fun_facts": [
+      "Los leones marinos pueden bucar a profundidades de 200+ metros",
+      "Tienen un sistema acústico sofisticado para comunicación social",
+      "Las aletas de los leones marinos evolucionaron de extremidades terrestres",
+      "Son animales muy juguetones e interactivos",
+      "Pueden alcanzar velocidades de 40 km/h en el agua"
+    ]
+  },
+  "vaca": {
+    "description": "Las vacas son mamíferos artiodáctilos domesticados pertenecientes al género Bos. Son herbívoros rumiantes de gran tamaño adaptados para procesar grandes cantidades de plantas fibrosas. Han sido domesticadas durante miles de años para producción de leche, carne y trabajo agrícola.",
+    "scientific_name": "Bos taurus",
+    "animal_class": "MAMMAL",
+    "habitat": "Pastizales, praderas, granjas",
+    "diet": "Herbívoro (pasto, heno, granos)",
+    "conservation_status": "No amenazado",
+    "average_lifespan": "15-20 años",
+    "average_weight": "400-900 kg",
+    "geographic_distribution": "Distribuidas mundialmente en granjas",
+    "fun_facts": [
+      "Las vacas tienen excelente memoria y pueden recordar eventos negativos",
+      "Tienen un sistema digestivo de cuatro estómagos para procesar plantas",
+      "Las vacas pueden comunicarse a través de moo con diferentes significados",
+      "Tienen mejores amigos dentro de su rebaño",
+      "Las manchas de cada vaca son únicas como las huellas dactilares"
+    ]
+  },
+  "elefante": {
+    "description": "Los elefantes son los mamíferos terrestres más grandes, pertenecientes a la familia Elephantidae. Poseen una trompa con 40,000 músculos que les permite realizar tareas delicadas y fuertes. Son animales altamente inteligentes, sociales y longevos, con complejas estructuras familiares matriarcales.",
+    "scientific_name": "Elephantidae",
+    "animal_class": "MAMMAL",
+    "habitat": "Sabanas, bosques tropicales, bosques de niebla",
+    "diet": "Herbívoro (hierbas, corteza, frutas, hojas)",
+    "conservation_status": "Vulnerable",
+    "average_lifespan": "60-70 años",
+    "average_weight": "4,000-7,000 kg",
+    "geographic_distribution": "África y Asia del Sur y Sudeste",
+    "fun_facts": [
+      "La trompa de un elefante tiene 40,000 músculos y es muy sensible",
+      "Los elefantes pueden reconocer a individuos después de años",
+      "Tienen empatía y ayudan a miembros heridos de su rebaño",
+      "Son uno de los pocos animales que se reconocen en el espejo",
+      "Pueden comunicarse con infrasonidos que viajan kilómetros"
+    ]
+  },
+  "ciervo": {
+    "description": "Los ciervos son mamíferos rumiantes de la familia Cervidae, caracterizados por la presencia de astas óseas que los machos mudan anualmente. Son animales gráciles con excelente sentido del olfato e audición. Viven en diversos hábitats desde bosques templados hasta tundra.",
+    "scientific_name": "Cervidae",
+    "animal_class": "MAMMAL",
+    "habitat": "Bosques, bosques abiertos, montañas, llanuras",
+    "diet": "Herbívoro (hojas, ramas, hierbas, frutas)",
+    "conservation_status": "Preocupación menor",
+    "average_lifespan": "10-15 años en la naturaleza",
+    "average_weight": "50-400 kg según especie",
+    "geographic_distribution": "Distribuidos en América del Norte, Europa, Asia",
+    "fun_facts": [
+      "Los ciervos pueden saltar hasta 2.5 metros de altura",
+      "Las astas crecen aproximadamente 15 cm por mes durante el crecimiento",
+      "Tienen excelente visión y pueden ver movimientos a 400 metros",
+      "Los ciervos mudan sus pelos dos veces al año",
+      "Pueden nadar a velocidades de 10 km/h"
+    ]
+  },
+  "oveja": {
+    "description": "Las ovejas son mamíferos rumiantes domesticados pertenecientes al género Ovis. Poseen lana que crece continuamente y es uno de sus productos principales. Son animales gregarios que viven en rebaños, conocidos por su capacidad para recordar rostros y formas.",
+    "scientific_name": "Ovis aries",
+    "animal_class": "MAMMAL",
+    "habitat": "Pastizales, montañas, granjas",
+    "diet": "Herbívoro (hierbas, arbustos, granos)",
+    "conservation_status": "No amenazado",
+    "average_lifespan": "11-12 años",
+    "average_weight": "45-160 kg",
+    "geographic_distribution": "Distribuidas mundialmente en granjas",
+    "fun_facts": [
+      "Las ovejas pueden reconocer y recordar hasta 50 rostros diferentes",
+      "Tienen una visión casi de 360 grados",
+      "Las ovejas tienen excelente memoria espacial",
+      "Pueden producir lana durante toda su vida",
+      "Son animales muy sociales y se estresan cuando se separan del rebaño"
+    ]
+  },
+  "cerdo": {
+    "description": "Los cerdos son mamíferos artiodáctilos domesticados pertenecientes al género Sus. Son animales inteligentes y sociales, considerados entre los más inteligentes de los mamíferos domésticos. Poseen un hocico sensible usado para explorar su entorno y buscar alimento.",
+    "scientific_name": "Sus scrofa domesticus",
+    "animal_class": "MAMMAL",
+    "habitat": "Granjas, áreas rurales, algunos en estado salvaje",
+    "diet": "Omnívoro (granos, vegetales, proteína, restos)",
+    "conservation_status": "No amenazado",
+    "average_lifespan": "15-20 años",
+    "average_weight": "100-300 kg",
+    "geographic_distribution": "Distribuidos mundialmente en granjas",
+    "fun_facts": [
+      "Los cerdos son más inteligentes que los perros en pruebas cognitivas",
+      "Tienen un sentido del olfato 2000 veces mejor que los humanos",
+      "Pueden usar espejos para encontrar comida",
+      "Los cerdos disfrutan bañarse en barro por termorregulación",
+      "Tienen habilidades sociales complejas y pueden reconocer rostros"
+    ]
+  },
+  "jirafa": {
+    "description": "Las jirafas son mamíferos rumiantes africanos de la familia Giraffidae, conocidas por ser los animales terrestres más altos. Poseen un cuello largo adaptado para alcanzar follaje de árboles altos. Tienen un patrón de manchas único e inconfundible en cada individuo.",
+    "scientific_name": "Giraffa camelopardalis",
+    "animal_class": "MAMMAL",
+    "habitat": "Sabanas, llanuras abiertas, bosques abiertos",
+    "diet": "Herbívoro (principalmente acacia, otras frutas y hojas)",
+    "conservation_status": "Vulnerable",
+    "average_lifespan": "20-28 años en la naturaleza",
+    "average_weight": "750-1,600 kg",
+    "geographic_distribution": "África subsahariana",
+    "fun_facts": [
+      "Las jirafas pueden alcanzar alturas de 5.5 a 6 metros",
+      "El largo cuello tiene el mismo número de vértebras que los humanos",
+      "Las jirafas pueden no dormir pero solo necesitan 5-30 minutos diarios",
+      "Su lengua puede alcanzar hasta 50 cm de largo",
+      "El patrón de manchas de cada jirafa es completamente único"
+    ]
+  },
+  "persona": {
+    "description": "Los humanos son primates del género Homo, caracterizados por su capacidad para el lenguaje, razonamiento abstracto y creatividad. Poseen un cerebro altamente desarrollado que les permite crear cultura, tecnología y sociedades complejas. Son animales profundamente sociales.",
+    "scientific_name": "Homo sapiens",
+    "animal_class": "MAMMAL",
+    "habitat": "Diversos - urbano, rural, múltiples climas",
+    "diet": "Omnívoro",
+    "conservation_status": "No amenazado",
+    "average_lifespan": "70-80 años",
+    "average_weight": "50-100 kg",
+    "geographic_distribution": "Todos los continentes",
+    "fun_facts": [
+      "Los humanos son la única especie que crea arte por placer",
+      "El cerebro humano tiene aproximadamente 86 mil millones de neuronas",
+      "Los humanos son unos de los pocos animales que ríen",
+      "Podemos comunicarnos en miles de idiomas diferentes",
+      "Los humanos son capaces de empatía y compasión únicos"
+    ]
+  }
+}

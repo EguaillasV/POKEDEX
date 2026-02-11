@@ -19,7 +19,7 @@ from src.infrastructure.persistence.models import AnimalModel
 
 # OpenRouter configuration
 # Prefer environment variable, fallback to the user-provided key (one-time test)
-OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY') or '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'
+OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY') or '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'
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 

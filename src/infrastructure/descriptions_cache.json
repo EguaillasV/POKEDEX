@@ -1,0 +1,153 @@
+{
+  "crab": {
+    "description": "Los cangrejos son crustáceos que se caracterizan por tener un cuerpo robusto y una concha dura. Se encuentran en ambientes acuáticos y terrestres, y son conocidos por su movimiento lateral.",
+    "scientific_name": "Brachyura",
+    "habitat": "Ambientes marinos, de agua dulce y terrestres",
+    "diet": "Omnívoro",
+    "conservation_status": "Preocupación menor",
+    "average_lifespan": "3-5 años",
+    "average_weight": "0.5-4 kg",
+    "geographic_distribution": "Distribuidos en todo el mundo, especialmente en zonas costeras",
+    "fun_facts": [
+      "Los cangrejos pueden regenerar sus patas perdidas.",
+      "Existen más de 6,800 especies de cangrejos.",
+      "Algunos cangrejos son excelentes nadadores y pueden vivir en aguas profundas."
+    ]
+  },
+  "wolf": {
+    "description": "El lobo es un mamífero carnívoro que pertenece a la familia Canidae. Es conocido por su comportamiento social, viviendo en manadas y comunicándose a través de aullidos.",
+    "scientific_name": "Canis lupus",
+    "habitat": "Bosques, tundras, praderas y montañas",
+    "diet": "Carnívoro",
+    "conservation_status": "Preocupación menor",
+    "average_lifespan": "6-8 años en la naturaleza, hasta 16 años en cautiverio",
+    "average_weight": "25-45 kg",
+    "geographic_distribution": "América del Norte, Europa, Asia y partes del Medio Oriente",
+    "fun_facts": [
+      "Los lobos pueden recorrer hasta 20 km en un solo día en busca de alimento.",
+      "Tienen un sentido del olfato entre 10 y 100 veces más agudo que el de los humanos.",
+      "Los lobos son animales muy sociales y viven en grupos familiares llamados manadas."
+    ]
+  },
+  "orca": {
+    "description": "La orca, también conocida como ballena asesina, es un mamífero marino perteneciente a la familia de los delfines. Es conocida por su inteligencia, habilidades sociales y su distintivo patrón de color blanco y negro.",
+    "scientific_name": "Orcinus orca",
+    "habitat": "Océanos y mares de todo el mundo, preferentemente en aguas costeras y frías.",
+    "diet": "Carnívoro",
+    "conservation_status": "Preocupación menor",
+    "average_lifespan": "30-50 años",
+    "average_weight": "De 2000 a 6000 kg",
+    "geographic_distribution": "Distribuidas en todos los océanos, especialmente en aguas frías del Ártico y Antártico.",
+    "fun_facts": [
+      "Las orcas son capaces de comunicarse entre sí mediante una variedad de sonidos.",
+      "Pueden nadar a velocidades de hasta 56 km/h.",
+      "Existen diferentes ecotipos de orcas que se especializan en distintas presas."
+    ]
+  },
+  "sports car, sport car": {
+    "description": "Un 'sports car' o 'sport car' es un tipo de automóvil diseñado para ofrecer un alto rendimiento y una conducción emocionante. Estos vehículos suelen tener un diseño aerodinámico y potentes motores que permiten alcanzar altas velocidades.",
+    "scientific_name": "Desconocido",
+    "habitat": "Desconocido",
+    "diet": "Desconocido",
+    "conservation_status": "Desconocido",
+    "average_lifespan": "Desconocido",
+    "average_weight": "Desconocido",
+    "geographic_distribution": "Desconocido",
+    "fun_facts": [
+      "Los sports cars suelen tener tracción trasera para mejorar la maniobrabilidad.",
+      "Algunos modelos son capaces de acelerar de 0 a 100 km/h en menos de 3 segundos.",
+      "Los sports cars han sido protagonistas en numerosas películas de acción."
+    ]
+  },
+  "perro": {
+    "description": "El perro es un mamífero domesticado que ha sido criado por los humanos durante miles de años. Son conocidos por su lealtad y capacidad para ser entrenados en diversas tareas, desde mascotas hasta perros de trabajo.",
+    "scientific_name": "Canis lupus familiaris",
+    "habitat": "Entornos urbanos y rurales, hogares humanos",
+    "diet": "Omnívoro",
+    "conservation_status": "Desconocido",
+    "average_lifespan": "10-15 años",
+    "average_weight": "5-90 kg",
+    "geographic_distribution": "Todo el mundo, principalmente en entornos humanos",
+    "fun_facts": [
+      "Los perros pueden entender hasta 165 palabras y señales.",
+      "Tienen un sentido del olfato entre 10,000 y 100,000 veces más agudo que el de los humanos.",
+      "Existen más de 340 razas de perros reconocidas en todo el mundo."
+    ]
+  },
+  "cangrejo": {
+    "description": "Los cangrejos son crustáceos que pertenecen al orden Decapoda, caracterizados por su cuerpo robusto y pinzas prominentes. Se encuentran en una variedad de hábitats acuáticos, desde aguas saladas hasta dulces, y son conocidos por su capacidad de caminar lateralmente.",
+    "scientific_name": "Brachyura",
+    "habitat": "Costas marinas, ríos y lagos",
+    "diet": "Omnívoro",
+    "conservation_status": "Preocupación menor",
+    "average_lifespan": "3 a 5 años",
+    "average_weight": "0.5 a 4 kg",
+    "geographic_distribution": "Todo el mundo, especialmente en zonas costeras",
+    "fun_facts": [
+      "Los cangrejos pueden regenerar sus extremidades perdidas.",
+      "Existen más de 6,800 especies de cangrejos en el mundo.",
+      "Algunos cangrejos son capaces de vivir tanto en agua como en tierra."
+    ]
+  },
+  "león marino": {
+    "description": "El león marino es un mamífero marino perteneciente a la familia de los otáridos. Se caracteriza por su cuerpo robusto y su melena en los machos, además de ser un excelente nadador y cazador en el océano.",
+    "scientific_name": "Zalophus californianus",
+    "habitat": "Costas y océanos del Pacífico",
+    "diet": "Carnívoro",
+    "conservation_status": "Preocupación menor",
+    "average_lifespan": "15-25 años",
+    "average_weight": "100-300 kg",
+    "geographic_distribution": "Desde Alaska hasta México en la costa del Pacífico",
+    "fun_facts": [
+      "Pueden sumergirse a profundidades de hasta 200 metros.",
+      "Tienen una capacidad auditiva excepcional, lo que les ayuda a comunicarse en el agua.",
+      "Los machos son significativamente más grandes que las hembras."
+    ]
+  },
+  "barn spider, araneus cavaticus": {
+    "description": "El Araneus cavaticus, conocido como la araña de los graneros, es una especie de araña que se caracteriza por su habilidad para tejer grandes telarañas en espacios abiertos y oscuros. Suele encontrarse en graneros, cobertizos y otros lugares similares, donde caza insectos que quedan atrapados en su red.",
+    "scientific_name": "Araneus cavaticus",
+    "habitat": "Graneros, cobertizos y espacios oscuros",
+    "diet": "Carnívoro",
+    "conservation_status": "Preocupación menor",
+    "average_lifespan": "1-2 años",
+    "average_weight": "Desconocido",
+    "geographic_distribution": "América del Norte",
+    "fun_facts": [
+      "Puede cambiar de color para camuflarse con su entorno.",
+      "Su telaraña puede alcanzar un tamaño considerable, a veces más de un metro de diámetro.",
+      "Es una araña nocturna y suele ser más activa durante la noche."
+    ]
+  },
+  "pájaro": {
+    "description": "Los pájaros son vertebrados de sangre caliente que pertenecen al grupo de las aves. Se caracterizan por tener plumas, un pico sin dientes y la capacidad de volar, aunque no todas las especies son voladoras.",
+    "scientific_name": "Aves",
+    "habitat": "Bosques, praderas, montañas, y áreas urbanas.",
+    "diet": "Omnívoro",
+    "conservation_status": "Preocupación menor",
+    "average_lifespan": "5-10 años",
+    "average_weight": "1-5 kg",
+    "geographic_distribution": "En todo el mundo, excepto en las regiones más extremas como la Antártida.",
+    "fun_facts": [
+      "Los pájaros son los únicos animales con plumas.",
+      "Algunas especies de pájaros pueden migrar miles de kilómetros.",
+      "Los colibríes son los únicos pájaros que pueden volar hacia atrás."
+    ]
+  },
+  "frog": {
+    "description": "Las ranas son anfibios que se caracterizan por su piel húmeda y su capacidad de vivir tanto en el agua como en la tierra. Tienen un ciclo de vida que incluye una etapa larval acuática conocida como renacuajo.",
+    "scientific_name": "Anura",
+    "animal_class": "AMPHIBIAN",
+    "habitat": "Zonas húmedas, como estanques, ríos y bosques tropicales",
+    "diet": "Insectívoro",
+    "conservation_status": "Vulnerable",
+    "average_lifespan": "5 a 10 años",
+    "average_weight": "30 a 200 gramos",
+    "geographic_distribution": "Distribuidas en todo el mundo, excepto en regiones polares",
+    "fun_facts": [
+      "Pueden saltar hasta 20 veces la longitud de su cuerpo.",
+      "Algunas especies tienen piel tóxica que les protege de depredadores.",
+      "Las ranas pueden respirar a través de su piel."
+    ]
+  }
+}

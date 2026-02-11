@@ -18,18 +18,18 @@ logger = logging.getLogger(__name__)
 
 
 # Mapeo de clases YOLO a nombres en español
-# Clases del modelo best.pt entrenado con YOLOv11
+# Clases del modelo best.pt (Modelo personalizado con 10 animales)
 YOLO_CLASS_MAPPING = {
-    0: "Bird",      # Ave
-    1: "Cats",      # Gatos
-    2: "Cow",       # Vaca
-    3: "Deer",      # Ciervo
-    4: "Dog",       # Perro
-    5: "Elephant",  # Elefante
-    6: "Giraffe",   # Jirafa
-    7: "Person",    # Persona
-    8: "Pig",       # Cerdo
-    9: "Sheep",     # Oveja
+    0: "Bird",       # Pájaro
+    1: "Cats",       # Gato
+    2: "Cow",        # Vaca
+    3: "Deer",       # Ciervo
+    4: "Dog",        # Perro
+    5: "Elephant",   # Elefante
+    6: "Giraffle",   # Jirafa (nota: modelo tiene typo "Giraffle")
+    7: "Person",     # Persona
+    8: "Pig",        # Cerdo
+    9: "Sheep",      # Oveja
 }
 
 

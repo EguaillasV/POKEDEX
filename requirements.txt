@@ -92,3 +92,12 @@ CacheControl==0.14.4
 cbor2==5.8.0
 py-ubjson==0.16.1
 PyYAML==6.0.3
+
+# Missing dependencies (added)
+Django==5.2.11
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+channels==4.0.0
+transformers==4.46.0
+python-decouple==3.8
+python-dotenv==1.0.1

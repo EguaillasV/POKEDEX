@@ -17,302 +17,33 @@ from src.infrastructure.persistence.models import AnimalModel
 import uuid
 
 # OpenRouter configuration
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = "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"
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 
 ANIMALS_DATA = [
     {
-        "name": "León",
-        "scientific_name": "Panthera leo",
-        "description": "El león es un mamífero carnívoro de la familia de los félidos. Es uno de los cuatro grandes felinos del género Panthera. Los machos son fácilmente reconocibles por su melena.",
-        "animal_class": "MAMMAL",
-        "habitat": "Sabanas y praderas de África subsahariana",
-        "diet": "CARNIVORE",
-        "conservation_status": "VULNERABLE",
-        "fun_facts": [
-            "Los leones son los únicos felinos que viven en grupos llamados manadas",
-            "Un león puede dormir hasta 20 horas al día",
-            "El rugido de un león puede escucharse a 8 kilómetros de distancia"
-        ],
-        "average_lifespan": "10-14 años",
-        "average_weight": "190 kg",
-        "geographic_distribution": "África subsahariana",
-        "aliases": ["Lion", "Leone"]
-    },
-    {
-        "name": "Elefante Africano",
-        "scientific_name": "Loxodonta africana",
-        "description": "El elefante africano es el animal terrestre más grande del mundo. Se caracteriza por su trompa larga, grandes orejas y colmillos de marfil.",
-        "animal_class": "MAMMAL",
-        "habitat": "Sabanas, bosques y desiertos de África",
-        "diet": "HERBIVORE",
-        "conservation_status": "ENDANGERED",
-        "fun_facts": [
-            "Los elefantes tienen una memoria excepcional",
-            "Pueden comunicarse a través de infrasonidos",
-            "Un elefante adulto puede beber hasta 200 litros de agua al día"
-        ],
-        "average_lifespan": "60-70 años",
-        "average_weight": "6000 kg",
-        "geographic_distribution": "África",
-        "aliases": ["African Elephant", "Elephant"]
-    },
-    {
-        "name": "Jirafa",
-        "scientific_name": "Giraffa camelopardalis",
-        "description": "La jirafa es el animal terrestre más alto del mundo. Su característica más distintiva es su largo cuello que puede medir hasta 2 metros.",
-        "animal_class": "MAMMAL",
-        "habitat": "Sabanas de África",
-        "diet": "HERBIVORE",
-        "conservation_status": "VULNERABLE",
-        "fun_facts": [
-            "Las jirafas duermen solo 30 minutos al día en intervalos cortos",
-            "Su lengua puede medir hasta 50 centímetros",
-            "Cada jirafa tiene un patrón de manchas único, como las huellas dactilares"
-        ],
-        "average_lifespan": "25 años",
-        "average_weight": "1200 kg",
-        "geographic_distribution": "África subsahariana",
-        "aliases": ["Giraffe"]
-    },
-    {
-        "name": "Tigre",
-        "scientific_name": "Panthera tigris",
-        "description": "El tigre es el félido más grande del mundo. Es reconocible por su pelaje naranja con rayas negras verticales.",
-        "animal_class": "MAMMAL",
-        "habitat": "Bosques tropicales, manglares y taigas de Asia",
-        "diet": "CARNIVORE",
-        "conservation_status": "ENDANGERED",
-        "fun_facts": [
-            "Las rayas del tigre son únicas como las huellas dactilares humanas",
-            "Son excelentes nadadores y disfrutan del agua",
-            "Pueden saltar hasta 5 metros de altura"
-        ],
-        "average_lifespan": "10-15 años",
-        "average_weight": "220 kg",
-        "geographic_distribution": "Asia",
-        "aliases": ["Tiger"]
-    },
-    {
-        "name": "Cebra",
-        "scientific_name": "Equus quagga",
-        "description": "La cebra es un équido africano caracterizado por sus distintivas rayas blancas y negras que son únicas para cada individuo.",
-        "animal_class": "MAMMAL",
-        "habitat": "Sabanas y praderas de África",
-        "diet": "HERBIVORE",
-        "conservation_status": "NEAR_THREATENED",
-        "fun_facts": [
-            "Las rayas de la cebra pueden confundir a los depredadores",
-            "Son sociales y viven en grupos familiares",
-            "Pueden correr a velocidades de hasta 65 km/h"
-        ],
-        "average_lifespan": "25 años",
-        "average_weight": "350 kg",
-        "geographic_distribution": "África oriental y meridional",
-        "aliases": ["Zebra"]
-    },
-    {
-        "name": "Oso Pardo",
-        "scientific_name": "Ursus arctos",
-        "description": "El oso pardo es una de las especies de osos más grandes. Es omnívoro y habita en bosques y montañas del hemisferio norte.",
-        "animal_class": "MAMMAL",
-        "habitat": "Bosques y montañas de Norteamérica, Europa y Asia",
-        "diet": "OMNIVORE",
-        "conservation_status": "LEAST_CONCERN",
-        "fun_facts": [
-            "Pueden correr hasta 55 km/h a pesar de su tamaño",
-            "Hibernan durante 5-7 meses en invierno",
-            "Tienen un olfato 100 veces mejor que el de los humanos"
-        ],
-        "average_lifespan": "25-30 años",
-        "average_weight": "300 kg",
-        "geographic_distribution": "Hemisferio Norte",
-        "aliases": ["Brown Bear"]
-    },
-    {
-        "name": "Águila Real",
-        "scientific_name": "Aquila chrysaetos",
-        "description": "El águila real es una de las aves de presa más conocidas y ampliamente distribuidas. Es un símbolo de poder en muchas culturas.",
+        "name": "Pájaro",
+        "scientific_name": "Aves",
+        "description": "Las aves son animales vertebrados caracterizados por tener plumas, alas y la capacidad de volar. Son descendientes directos de los dinosaurios y se encuentran en todos los continentes.",
         "animal_class": "BIRD",
-        "habitat": "Montañas, bosques y terrenos abiertos",
+        "habitat": "Cielos, bosques, y agua",
         "diet": "CARNIVORE",
         "conservation_status": "LEAST_CONCERN",
         "fun_facts": [
-            "Pueden ver hasta 8 veces mejor que los humanos",
-            "Alcanzan velocidades de 320 km/h en picada",
-            "Construyen nidos que pueden pesar hasta 450 kg"
+            "Las aves tienen huesos huecos para facilitar el vuelo",
+            "Algunas aves pueden volar a altitudes de más de 10,000 metros",
+            "El ritmo cardíaco de un pájaro es mucho más rápido que el de los humanos"
         ],
-        "average_lifespan": "30 años",
-        "average_weight": "6 kg",
-        "geographic_distribution": "Hemisferio Norte",
-        "aliases": ["Golden Eagle"]
-    },
-    {
-        "name": "Pingüino Emperador",
-        "scientific_name": "Aptenodytes forsteri",
-        "description": "El pingüino emperador es la especie de pingüino más alta y pesada. Vive exclusivamente en la Antártida.",
-        "animal_class": "BIRD",
-        "habitat": "Costas y océanos de la Antártida",
-        "diet": "PISCIVORE",
-        "conservation_status": "NEAR_THREATENED",
-        "fun_facts": [
-            "Son los únicos animales que pasan el invierno en la Antártida abierta",
-            "Pueden bucear hasta 500 metros de profundidad",
-            "Los machos incuban los huevos durante 2 meses sin comer"
-        ],
-        "average_lifespan": "20 años",
-        "average_weight": "40 kg",
-        "geographic_distribution": "Antártida",
-        "aliases": ["Emperor Penguin"]
-    },
-    {
-        "name": "Delfín Nariz de Botella",
-        "scientific_name": "Tursiops truncatus",
-        "description": "El delfín nariz de botella es una de las especies de delfines más conocidas. Son muy inteligentes y sociales.",
-        "animal_class": "MAMMAL",
-        "habitat": "Océanos templados y tropicales de todo el mundo",
-        "diet": "PISCIVORE",
-        "conservation_status": "LEAST_CONCERN",
-        "fun_facts": [
-            "Duermen con un ojo abierto, descansando medio cerebro a la vez",
-            "Pueden reconocerse en un espejo",
-            "Se comunican usando silbidos únicos como nombres"
-        ],
-        "average_lifespan": "40-50 años",
-        "average_weight": "200 kg",
-        "geographic_distribution": "Océanos de todo el mundo",
-        "aliases": ["Bottlenose Dolphin"]
-    },
-    {
-        "name": "Cocodrilo del Nilo",
-        "scientific_name": "Crocodylus niloticus",
-        "description": "El cocodrilo del Nilo es el segundo reptil más grande del mundo. Es un depredador formidable que habita en ríos africanos.",
-        "animal_class": "REPTILE",
-        "habitat": "Ríos, lagos y pantanos de África",
-        "diet": "CARNIVORE",
-        "conservation_status": "LEAST_CONCERN",
-        "fun_facts": [
-            "Pueden vivir hasta un año sin comer",
-            "Sus ancestros existían en la época de los dinosaurios",
-            "Lloran mientras comen (lágrimas de cocodrilo)"
-        ],
-        "average_lifespan": "70-100 años",
-        "average_weight": "500 kg",
-        "geographic_distribution": "África",
-        "aliases": ["Nile Crocodile"]
-    },
-    {
-        "name": "Tortuga Marina Verde",
-        "scientific_name": "Chelonia mydas",
-        "description": "La tortuga marina verde es una de las tortugas marinas más grandes. Se alimenta principalmente de pastos marinos y algas.",
-        "animal_class": "REPTILE",
-        "habitat": "Océanos tropicales y subtropicales",
-        "diet": "HERBIVORE",
-        "conservation_status": "ENDANGERED",
-        "fun_facts": [
-            "Pueden contener la respiración hasta 5 horas mientras duermen",
-            "Vuelven a la misma playa donde nacieron para poner huevos",
-            "La temperatura del nido determina el sexo de las crías"
-        ],
-        "average_lifespan": "80-100 años",
-        "average_weight": "200 kg",
-        "geographic_distribution": "Océanos tropicales y subtropicales",
-        "aliases": ["Green Sea Turtle"]
-    },
-    {
-        "name": "Gorila de Montaña",
-        "scientific_name": "Gorilla beringei beringei",
-        "description": "El gorila de montaña es una subespecie de gorila oriental. Son los primates más grandes y viven en las montañas de África Central.",
-        "animal_class": "MAMMAL",
-        "habitat": "Bosques montañosos de África Central",
-        "diet": "HERBIVORE",
-        "conservation_status": "ENDANGERED",
-        "fun_facts": [
-            "Comparten el 98% de su ADN con los humanos",
-            "Los machos golpean su pecho para comunicarse",
-            "Cada gorila tiene huellas nasales únicas"
-        ],
-        "average_lifespan": "35-40 años",
-        "average_weight": "200 kg",
-        "geographic_distribution": "Ruanda, Uganda, República Democrática del Congo",
-        "aliases": ["Mountain Gorilla"]
-    },
-    {
-        "name": "Koala",
-        "scientific_name": "Phascolarctos cinereus",
-        "description": "El koala es un marsupial australiano conocido por su apariencia adorable y su dieta de hojas de eucalipto.",
-        "animal_class": "MAMMAL",
-        "habitat": "Bosques de eucalipto de Australia",
-        "diet": "HERBIVORE",
-        "conservation_status": "VULNERABLE",
-        "fun_facts": [
-            "Duermen hasta 22 horas al día",
-            "Sus huellas dactilares son casi idénticas a las humanas",
-            "No necesitan beber agua, la obtienen del eucalipto"
-        ],
-        "average_lifespan": "13-18 años",
-        "average_weight": "14 kg",
-        "geographic_distribution": "Australia",
-        "aliases": ["Koala"]
-    },
-    {
-        "name": "Canguro Rojo",
-        "scientific_name": "Macropus rufus",
-        "description": "El canguro rojo es el marsupial más grande del mundo y un símbolo icónico de Australia.",
-        "animal_class": "MAMMAL",
-        "habitat": "Praderas y desiertos de Australia",
-        "diet": "HERBIVORE",
-        "conservation_status": "LEAST_CONCERN",
-        "fun_facts": [
-            "Pueden saltar hasta 9 metros de longitud",
-            "No pueden caminar hacia atrás",
-            "Las crías nacen del tamaño de una uva"
-        ],
-        "average_lifespan": "12-18 años",
-        "average_weight": "85 kg",
-        "geographic_distribution": "Australia",
-        "aliases": ["Red Kangaroo"]
-    },
-    {
-        "name": "Lobo Gris",
-        "scientific_name": "Canis lupus",
-        "description": "El lobo gris es el miembro más grande de la familia de los cánidos. Son animales sociales que viven en manadas.",
-        "animal_class": "MAMMAL",
-        "habitat": "Bosques, tundras y montañas del hemisferio norte",
-        "diet": "CARNIVORE",
-        "conservation_status": "LEAST_CONCERN",
-        "fun_facts": [
-            "Pueden comunicarse a través de aullidos a 16 km de distancia",
-            "Son los ancestros de todos los perros domésticos",
-            "Una manada puede tener un territorio de hasta 1000 km²"
-        ],
-        "average_lifespan": "6-8 años",
-        "average_weight": "45 kg",
-        "geographic_distribution": "Hemisferio Norte",
-        "aliases": ["Grey Wolf", "Gray Wolf"]
-    },
-    {
-        "name": "Oveja",
-        "scientific_name": "Ovis aries",
-        "description": "La oveja es un mamífero domesticado criado por su lana y carne.",
-        "animal_class": "MAMMAL",
-        "habitat": "Granjas y pastizales",
-        "diet": "HERBIVORE",
-        "conservation_status": "LEAST_CONCERN",
-        "fun_facts": [
-            "Las ovejas fueron uno de los primeros animales domesticados",
-            "La lana de oveja es aislante y útil para climas fríos"
-        ],
-        "average_lifespan": "10-12 años",
-        "average_weight": "70 kg",
-        "geographic_distribution": "Domesticado mundialmente",
-        "aliases": ["Sheep"]
+        "average_lifespan": "5-50 años",
+        "average_weight": "0.5 kg",
+        "geographic_distribution": "Todo el mundo",
+        "aliases": ["Bird", "Aves"]
     },
     {
         "name": "Gato",
         "scientific_name": "Felis catus",
-        "description": "",
+        "description": "El gato es un mamífero felino domesticado conocido por su agilidad, independencia y habilidades de caza. Son animales inteligentes y afectuosos que han sido compañeros humanos durante miles de años.",
         "animal_class": "MAMMAL",
         "habitat": "Hogares y ambientes urbanos",
         "diet": "CARNIVORE",
@@ -328,9 +59,99 @@ ANIMALS_DATA = [
         "aliases": ["Cats", "Cat"]
     },
     {
+        "name": "Vaca",
+        "scientific_name": "Bos taurus",
+        "description": "La vaca es un mamífero ungulado domesticado criado principalmente por su leche, carne y cuero. Son animales herbívoros tranquilos y sociales que viven en rebaños.",
+        "animal_class": "MAMMAL",
+        "habitat": "Granjas y pastizales",
+        "diet": "HERBIVORE",
+        "conservation_status": "LEAST_CONCERN",
+        "fun_facts": [
+            "Las vacas tienen amigos y les afecta la separación",
+            "Una vaca adulta puede pesar hasta 900 kg",
+            "Las vacas pueden recordar y reconocer a otros individuos"
+        ],
+        "average_lifespan": "18-22 años",
+        "average_weight": "700 kg",
+        "geographic_distribution": "Domesticado mundialmente",
+        "aliases": ["Cow", "Cattle"]
+    },
+    {
+        "name": "Ciervo",
+        "scientific_name": "Cervidae",
+        "description": "El ciervo es un mamífero ungulado silvestre conocido por sus astas ramificadas y su elegancia. Son animales ágiles que habitan en bosques y praderas de todo el mundo.",
+        "animal_class": "MAMMAL",
+        "habitat": "Bosques, bosques mixtos y praderas",
+        "diet": "HERBIVORE",
+        "conservation_status": "LEAST_CONCERN",
+        "fun_facts": [
+            "Los ciervos machos mudan sus astas cada año",
+            "Pueden saltar hasta 2.5 metros de altura",
+            "Los ciervos tienen visión de 310 grados"
+        ],
+        "average_lifespan": "15-20 años",
+        "average_weight": "200 kg",
+        "geographic_distribution": "Hemisferio Norte",
+        "aliases": ["Deer"]
+    },
+    {
+        "name": "Perro",
+        "scientific_name": "Canis familiaris",
+        "description": "El perro es un mamífero carnívoro domesticado derivado del lobo gris. Son animales sociales, leales y altamente inteligentes que viven entre humanos.",
+        "animal_class": "MAMMAL",
+        "habitat": "Hogares, granjas y ambientes urbanos",
+        "diet": "CARNIVORE",
+        "conservation_status": "LEAST_CONCERN",
+        "fun_facts": [
+            "Los perros pueden entender hasta 250 palabras diferentes",
+            "Tienen un sentido del olfato 10,000 veces mejor que el humano",
+            "Los perros son discípulos del lobo gris"
+        ],
+        "average_lifespan": "10-13 años",
+        "average_weight": "25 kg",
+        "geographic_distribution": "Domesticado mundialmente",
+        "aliases": ["Dog"]
+    },
+    {
+        "name": "Elefante",
+        "scientific_name": "Loxodonta africana",
+        "description": "El elefante africano es el animal terrestre más grande del mundo. Se caracteriza por su trompa larga, grandes orejas y colmillos de marfil. Son animales inteligentes y sociales.",
+        "animal_class": "MAMMAL",
+        "habitat": "Sabanas, bosques y desiertos de África",
+        "diet": "HERBIVORE",
+        "conservation_status": "ENDANGERED",
+        "fun_facts": [
+            "Los elefantes tienen una memoria excepcional",
+            "Pueden comunicarse a través de infrasonidos",
+            "Un elefante adulto puede beber hasta 200 litros de agua al día"
+        ],
+        "average_lifespan": "60-70 años",
+        "average_weight": "6000 kg",
+        "geographic_distribution": "África",
+        "aliases": ["Elephant"]
+    },
+    {
+        "name": "Jirafa",
+        "scientific_name": "Giraffa camelopardalis",
+        "description": "La jirafa es el animal terrestre más alto del mundo. Su característica más distintiva es su largo cuello que puede medir hasta 2 metros, que usa para alimentarse de hojas en árboles altos.",
+        "animal_class": "MAMMAL",
+        "habitat": "Sabanas de África",
+        "diet": "HERBIVORE",
+        "conservation_status": "VULNERABLE",
+        "fun_facts": [
+            "Las jirafas duermen solo 30 minutos al día en intervalos cortos",
+            "Su lengua puede medir hasta 50 centímetros",
+            "Cada jirafa tiene un patrón de manchas único como las huellas dactilares"
+        ],
+        "average_lifespan": "25 años",
+        "average_weight": "1200 kg",
+        "geographic_distribution": "África subsahariana",
+        "aliases": ["Giraffe"]
+    },
+    {
         "name": "Persona",
         "scientific_name": "Homo sapiens",
-        "description": "",
+        "description": "La persona es un primate mamífero inteligente y bípedo. Los humanos se caracterizan por su lenguaje complejo, inteligencia avanzada y capacidad de crear herramientas y culturas.",
         "animal_class": "MAMMAL",
         "habitat": "Ambientes urbanos, rurales y salvajes",
         "diet": "OMNIVORE",
@@ -344,6 +165,42 @@ ANIMALS_DATA = [
         "average_weight": "70 kg",
         "geographic_distribution": "Todo el mundo",
         "aliases": ["Person", "Human", "Humano"]
+    },
+    {
+        "name": "Cerdo",
+        "scientific_name": "Sus scrofa domesticus",
+        "description": "El cerdo es un mamífero ungulado domesticado criado principalmente por su carne y cuero. Son animales inteligentes, sociales y versátiles que se adaptan bien a diferentes ambientes.",
+        "animal_class": "MAMMAL",
+        "habitat": "Granjas y alojamientos rurales",
+        "diet": "OMNIVORE",
+        "conservation_status": "LEAST_CONCERN",
+        "fun_facts": [
+            "Los cerdos son tan inteligentes como los perros",
+            "Pueden reconocerse en un espejo",
+            "Los cerdos tienen sudoración limitada y usan el barro para regularse"
+        ],
+        "average_lifespan": "15-20 años",
+        "average_weight": "300 kg",
+        "geographic_distribution": "Domesticado mundialmente",
+        "aliases": ["Pig"]
+    },
+    {
+        "name": "Oveja",
+        "scientific_name": "Ovis aries",
+        "description": "La oveja es un mamífero ungulado domesticado criado por su lana, carne y leche. Son animales gregarios que viven en rebaños y se caracterizan por su lana espesa y rizada.",
+        "animal_class": "MAMMAL",
+        "habitat": "Granjas y pastizales",
+        "diet": "HERBIVORE",
+        "conservation_status": "LEAST_CONCERN",
+        "fun_facts": [
+            "Las ovejas fueron uno de los primeros animales domesticados",
+            "La lana de oveja es aislante y valiosa para climas fríos",
+            "Las ovejas pueden reconocer y recordar a más de 50 individuos"
+        ],
+        "average_lifespan": "10-12 años",
+        "average_weight": "70 kg",
+        "geographic_distribution": "Domesticado mundialmente",
+        "aliases": ["Sheep"]
     },
 ]
 
