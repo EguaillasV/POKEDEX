@@ -14,6 +14,11 @@
         .iti__input { width: 100%; border: 1px solid #e5e7eb; border-radius: 6px; padding: 0.5rem 1rem; font-size: 1rem; }
         .iti__input:focus { outline: none; ring: 2px; ring-color: rgba(99, 102, 241, 0.2); }
         .iti--allow-dropdown .iti__input { padding-left: 52px; }
+        
+        /* Error styling */
+        input.error, textarea.error { border-color: #ef4444 !important; background-color: #fee2e2; }
+        select.error { border-color: #ef4444 !important; background-color: #fee2e2; }
+        .iti__input.error { border-color: #ef4444 !important; background-color: #fee2e2; }
     </style>
 {% endblock %}
 
@@ -31,73 +36,125 @@
 
         <form method="post" novalidate id="register-form">
             {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                     <label class="text-sm text-gray-600">Nombre de Usuario</label>
                     <div class="mt-2">{{ form.username }}</div>
-                    <p class="text-xs text-gray-400 mt-1">El nombre de usuario debe ser único.</p>
+                    {% if form.username.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.username.errors.0 }}</p>
+                    {% else %}
+                        <p class="text-xs text-gray-400 mt-1">El nombre de usuario debe ser único.</p>
+                    {% endif %}
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">Nombre completo</label>
                     <div class="mt-2">{{ form.full_name }}</div>
-                    <p class="text-xs text-gray-400 mt-1">Incluye tus nombres y apellidos completos.</p>
+                    {% if form.full_name.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.full_name.errors.0 }}</p>
+                    {% else %}
+                        <p class="text-xs text-gray-400 mt-1">Solo letras y espacios (con acentos permitidos).</p>
+                    {% endif %}
                 </div>
 
                 <div>
                     <label class="text-sm text-gray-600">Correo Electrónico</label>
                     <div class="mt-2">{{ form.email }}</div>
-                    <p class="text-xs text-gray-400 mt-1">Usaremos este correo para notificaciones y recuperación.</p>
+                    {% if form.email.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.email.errors.0 }}</p>
+                    {% else %}
+                        <p class="text-xs text-gray-400 mt-1">Usaremos este correo para notificaciones y recuperación.</p>
+                    {% endif %}
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">Teléfono</label>
                     <div class="mt-2">
                         <input type="tel" name="phone" id="id_phone" value="{{ form.phone.value|default:'' }}" placeholder="">
                     </div>
-                    <p class="text-xs text-gray-400 mt-1" id="phone-help">Formato internacional detectado automáticamente.</p>
+                    {% if form.phone.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.phone.errors.0 }}</p>
+                    {% else %}
+                        <p class="text-xs text-gray-400 mt-1" id="phone-help">Formato internacional detectado automáticamente (7-15 dígitos).</p>
+                    {% endif %}
                 </div>
 
                 <div>
                     <label class="text-sm text-gray-600">País</label>
                     <div class="mt-2">
-                        <select name="country" id="id_country" class="w-full border border-gray-200 rounded px-4 py-2" data-initial="{{ form.country.value|default:'Ecuador' }}"></select>
+                        <select name="country" id="id_country" class="w-full border border-gray-200 rounded px-4 py-2" data-initial="{{ form.country.value }}"></select>
                     </div>
-                    <p class="text-xs text-gray-400 mt-1">Selecciona tu país para autocompletar el código telefónico.</p>
+                    {% if form.country.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.country.errors.0 }}</p>
+                    {% else %}
+                        <p class="text-xs text-gray-400 mt-1">Selecciona tu país para autocompletar el código telefónico.</p>
+                    {% endif %}
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">Provincia / Estado</label>
                     <div class="mt-2">
-                        <select name="province" id="id_province" class="w-full border border-gray-200 rounded px-4 py-2" data-initial="{{ form.province.value|default:'' }}"></select>
+                        <select name="province" id="id_province" class="w-full border border-gray-200 rounded px-4 py-2" data-initial="{{ form.province.value }}"></select>
                     </div>
-                    <p class="text-xs text-gray-400 mt-1">Las provincias se filtrarán según el país seleccionado.</p>
+                    {% if form.province.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.province.errors.0 }}</p>
+                    {% else %}
+                        <p class="text-xs text-gray-400 mt-1">Las provincias se filtrarán según el país seleccionado.</p>
+                    {% endif %}
                 </div>
 
                 <div>
                     <label class="text-sm text-gray-600">Ciudad</label>
                     <div class="mt-2">
-                        <select name="city" id="id_city" class="w-full border border-gray-200 rounded px-4 py-2" data-initial="{{ form.city.value|default:'' }}"></select>
+                        <select name="city" id="id_city" class="w-full border border-gray-200 rounded px-4 py-2" data-initial="{{ form.city.value }}"></select>
                     </div>
-                    <p class="text-xs text-gray-400 mt-1">Las ciudades se filtrarán según la provincia seleccionada.</p>
+                    {% if form.city.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.city.errors.0 }}</p>
+                    {% else %}
+                        <p class="text-xs text-gray-400 mt-1">Las ciudades se filtrarán según la provincia seleccionada.</p>
+                    {% endif %}
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">Dirección</label>
                     <div class="mt-2">{{ form.address }}</div>
+                    {% if form.address.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.address.errors.0 }}</p>
+                    {% else %}
+                        <p class="text-xs text-gray-400 mt-1">Ej: Calle #123, Apt 4B (máximo 100 caracteres)</p>
+                    {% endif %}
                 </div>
 
                 <div>
                     <label class="text-sm text-gray-600">Contraseña</label>
                     <div class="mt-2">{{ form.password }}</div>
-                    <ul class="text-xs text-gray-400 mt-1 ml-4" id="password-criteria">
-                        <li id="pc-length">Al menos 8 caracteres</li>
-                        <li id="pc-upper">Una letra mayúscula</li>
-                        <li id="pc-lower">Una letra minúscula</li>
-                        <li id="pc-digit">Un número</li>
-                        <li id="pc-symbol">Un símbolo (ej: !@#$%)</li>
-                    </ul>
+                    {% if form.password.errors %}
+                        <div class="text-sm text-red-500 mt-1">
+                            {% for error in form.password.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <ul class="text-xs text-gray-400 mt-1 ml-4" id="password-criteria">
+                            <li id="pc-length">Al menos 8 caracteres</li>
+                            <li id="pc-upper">Una letra mayúscula</li>
+                            <li id="pc-lower">Una letra minúscula</li>
+                            <li id="pc-digit">Un número</li>
+                            <li id="pc-symbol">Un símbolo (ej: !@#$%)</li>
+                        </ul>
+                    {% endif %}
                 </div>
                 <div>
                     <label class="text-sm text-gray-600">Confirmar contraseña</label>
                     <div class="mt-2">{{ form.password_confirm }}</div>
-                    <p class="text-xs text-red-500 mt-1 invisible" id="pw-match">Las contraseñas no coinciden.</p>
+                    {% if form.password_confirm.errors %}
+                        <p class="text-sm text-red-500 mt-1">{{ form.password_confirm.errors.0 }}</p>
+                    {% else %}
+                        <p class="text-xs text-red-500 mt-1 invisible" id="pw-match">Las contraseñas no coinciden.</p>
+                    {% endif %}
                 </div>
             </div>
 
@@ -111,6 +168,32 @@
         </div>
     </div>
 </div>
+<script>
+    // Highlight fields with errors
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('register-form');
+        if (!form) return;
+
+        // Check each field for errors
+        const fieldsWithErrors = [
+            'username', 'full_name', 'email', 'phone', 
+            'country', 'province', 'city', 'address', 
+            'password', 'password_confirm'
+        ];
+
+        fieldsWithErrors.forEach(fieldName => {
+            const field = form.querySelector(`[name="${fieldName}"]`);
+            const container = field?.closest('div[class*="mt-2"]')?.parentElement;
+            
+            if (field && container) {
+                const errorMsg = container.querySelector('.text-red-500');
+                if (errorMsg && !errorMsg.classList.contains('invisible')) {
+                    field.classList.add('error');
+                }
+            }
+        });
+    });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.8.0/build/js/intlTelInput.min.js"></script>
 <script src="{% static 'js/register.js' %}"></script>
 {% endblock %}

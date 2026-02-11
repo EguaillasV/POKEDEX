@@ -30,13 +30,28 @@ class LocalImageStorage(ImageStoragePort):
         try:
             filepath = os.path.join(self._base_path, filename)
             
+            # Verificar que image.data no esté vacío
+            if not image.data:
+                logger.warning(f"⚠️ save_thumbnail: image.data está vacío para {filename}")
+            
+            # Escribir el archivo
             with open(filepath, 'wb') as f:
-                f.write(image.data)
+                bytes_written = f.write(image.data)
+                logger.info(f"✓ save_thumbnail: Guardado {filename} ({bytes_written} bytes) en {filepath}")
+            
+            # Verificar que el archivo existe después de escribir
+            if os.path.exists(filepath):
+                logger.info(f"✓ save_thumbnail: Archivo verificado, existe en disco")
+            else:
+                logger.error(f"❌ save_thumbnail: Archivo NO existe después de escribir!")
             
             # Return relative URL
-            return f"{settings.MEDIA_URL}thumbnails/{filename}"
+            url = f"{settings.MEDIA_URL}thumbnails/{filename}"
+            logger.info(f"✓ save_thumbnail: Devolviendo URL: {url}")
+            return url
             
         except Exception as e:
+            logger.error(f"❌ save_thumbnail ERROR: {str(e)}")
             raise StorageException(f"Failed to save thumbnail: {str(e)}")
     
     def get_thumbnail_url(self, filename: str) -> str:

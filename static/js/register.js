@@ -19,18 +19,32 @@ document.addEventListener('DOMContentLoaded', async function() {
     const provinceEl = document.getElementById('id_province');
     const cityEl = document.getElementById('id_city');
 
-    const initialCountry = countryEl?.dataset?.initial || 'EC';
-    const initialProvince = provinceEl?.dataset?.initial || '';
-    const initialCity = cityEl?.dataset?.initial || '';
+    // Get initial values - use data-initial attribute, fallback to 'Ecuador'
+    let initialCountry = countryEl?.dataset?.initial?.trim() || 'Ecuador';
+    const initialProvince = provinceEl?.dataset?.initial?.trim() || '';
+    const initialCity = cityEl?.dataset?.initial?.trim() || '';
 
     // Initialize intl-tel-input
     if (phoneEl) {
+        // Get country code from initial country name
+        let countryCode = countriesData.find(c => c.name === initialCountry)?.code || 'EC';
+        
         intlTelInputInstance = window.intlTelInput(phoneEl, {
-            initialCountry: initialCountry.toLowerCase(),
+            initialCountry: countryCode.toLowerCase(),
             preferredCountries: ['ec', 'us', 'mx', 'co', 'es'],
             separateDialCode: false,
             utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@23.8.0/build/js/utils.min.js'
         });
+
+        // After intl-tel-input is initialized, sync with country select
+        setTimeout(() => {
+            if (intlTelInputInstance && initialCountry) {
+                const countryCode = countriesData.find(c => c.name === initialCountry)?.code;
+                if (countryCode) {
+                    intlTelInputInstance.setCountry(countryCode.toLowerCase());
+                }
+            }
+        }, 500);
 
         // Listen to country changes in intl-tel-input
         phoneEl.addEventListener('countrychange', function() {
@@ -55,7 +69,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             const opt = document.createElement('option');
             opt.value = country.name;
             opt.textContent = country.name;
-            if (country.name === initialCountry) opt.selected = true;
+            if (country.name === initialCountry) {
+                opt.selected = true;
+            }
             countryEl.appendChild(opt);
         });
     }
@@ -74,17 +90,22 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const opt = document.createElement('option');
                 opt.value = p;
                 opt.textContent = p;
-                if (p === initialProvince) opt.selected = true;
+                // Restore selected province if it matches initial
+                if (p === initialProvince && initialProvince) {
+                    opt.selected = true;
+                }
                 provinceEl.appendChild(opt);
             });
         }
         
-        // Clear cities when country changes
-        cityEl.innerHTML = '';
-        const defCity = document.createElement('option');
-        defCity.value = '';
-        defCity.textContent = 'Seleccione una ciudad';
-        cityEl.appendChild(defCity);
+        // Only clear cities if we're changing countries (not on initial load)
+        if (countryName !== initialCountry || !initialProvince) {
+            cityEl.innerHTML = '';
+            const defCity = document.createElement('option');
+            defCity.value = '';
+            defCity.textContent = 'Seleccione una ciudad';
+            cityEl.appendChild(defCity);
+        }
     }
 
     function updateCities(countryName, provinceName) {
@@ -102,7 +123,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             const opt = document.createElement('option');
             opt.value = c;
             opt.textContent = c;
-            if (c === initialCity) opt.selected = true;
+            if (c === initialCity && initialCity) {
+                opt.selected = true;
+            }
             cityEl.appendChild(opt);
         });
     }
@@ -110,7 +133,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Populate countries and set initial values
     populateCountries();
     updateProvinces(initialCountry);
-    if (initialProvince) updateCities(initialCountry, initialProvince);
+    if (initialProvince) {
+        updateCities(initialCountry, initialProvince);
+    }
 
     // Country change event
     countryEl?.addEventListener('change', function(e) {

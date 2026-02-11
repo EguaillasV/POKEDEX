@@ -240,197 +240,195 @@ class RecognizeImageView(APIView):
                     if found_animal:
                         break
 
-            # If still not found, generate animal data with AI but DO NOT save to DB
-            if not found_animal:
-                logger.warning(f"❌ Animal '{best_result.animal_name}' no encontrado en BD tras búsqueda")
-                logger.info(f"🤖 Generando datos automáticos con IA para: {best_result.animal_name} (NO se guardarán en BD)")
+            # SIEMPRE generar datos con IA para garantizar información completa
+            logger.info(f"🤖 Generando datos con IA para: {best_result.animal_name}")
 
-                try:
-                    ai_data = self._generate_description_with_ai(best_result.animal_name)
-                except Exception as e:
-                    logger.error(f"Error generating AI data: {e}")
-                    ai_data = self._get_fallback_data(best_result.animal_name)
+            try:
+                ai_data = self._generate_description_with_ai(best_result.animal_name)
+            except Exception as e:
+                logger.error(f"Error generating AI data: {e}")
+                ai_data = self._get_fallback_data(best_result.animal_name)
 
-                # Normalize diet and conservation for display
-                diet_map = {
-                    'CARNIVORE': 'Carnívoro',
-                    'HERBIVORE': 'Herbívoro',
-                    'OMNIVORE': 'Omnívoro',
-                    'PISCIVORE': 'Piscívoro',
-                }
-                conservation_map = {
-                    'LEAST_CONCERN': 'Preocupación menor',
-                    'NEAR_THREATENED': 'Casi amenazado',
-                    'VULNERABLE': 'Vulnerable',
-                    'ENDANGERED': 'En peligro',
-                    'CRITICALLY_ENDANGERED': 'En peligro crítico',
-                    'EXTINCT': 'Extinto',
-                }
-
-                # Map common name to Spanish when YOLO label is English
-                name_map_es = {
-                    'Bird': 'Ave',
-                    'Cats': 'Gato',
-                    'Cow': 'Vaca',
-                    'Deer': 'Ciervo',
-                    'Dog': 'Perro',
-                    'Elephant': 'Elefante',
-                    'Giraffe': 'Jirafa',
-                    'Person': 'Persona',
-                    'Pig': 'Cerdo',
-                    'Sheep': 'Oveja',
-                }
-                # Optional scientific name hints for common YOLO classes
-                scientific_hint = {
-                    'Deer': 'Cervus elaphus',
-                    'Cow': 'Bos taurus',
-                    'Pig': 'Sus scrofa domesticus',
-                    'Sheep': 'Ovis aries',
-                    'Dog': 'Canis lupus familiaris',
-                    'Cats': 'Felis catus',
-                    'Elephant': 'Loxodonta africana',
-                    'Giraffe': 'Giraffa camelopardalis',
-                    'Person': 'Homo sapiens',
-                    'Bird': 'Aves',
-                }
-
-                raw_diet = ai_data.get('diet', 'Omnívoro')
-                raw_conservation = ai_data.get('conservation_status', 'Preocupación menor')
-
-                diet_key = str(raw_diet).strip().upper()
-                conservation_key = str(raw_conservation).strip().upper()
-
-                diet_display = diet_map.get(diet_key, raw_diet)
-                conservation_display = conservation_map.get(conservation_key, raw_conservation)
-
-                # Normalize name and scientific name for Spanish display
-                display_name = name_map_es.get(best_result.animal_name, best_result.animal_name)
-                raw_scientific = ai_data.get('scientific_name')
-                scientific_lower = str(raw_scientific).strip().lower() if raw_scientific else ''
-                invalid_scientific = not raw_scientific or scientific_lower in {
-                    best_result.animal_name.lower(),
-                    display_name.lower(),
-                    'cervidae'
-                }
-                if invalid_scientific and best_result.animal_name in scientific_hint:
-                    scientific_name = scientific_hint[best_result.animal_name]
-                else:
-                    scientific_name = raw_scientific or f"Unknown ({best_result.animal_name})"
-
-                # Build animal_dict and persist in DB
-                try:
-                    from src.infrastructure.persistence.models import AnimalModel
-                    import uuid
-
-                    # Map diet/conservation to DB expected values
-                    diet_reverse = {
-                        'Carnívoro': 'CARNIVORE',
-                        'Herbívoro': 'HERBIVORE',
-                        'Omnívoro': 'OMNIVORE',
-                        'Piscívoro': 'PISCIVORE',
-                    }
-                    conservation_reverse = {
-                        'Preocupación menor': 'LEAST_CONCERN',
-                        'Casi amenazado': 'NEAR_THREATENED',
-                        'Vulnerable': 'VULNERABLE',
-                        'En peligro': 'ENDANGERED',
-                        'En peligro crítico': 'CRITICALLY_ENDANGERED',
-                        'Extinto': 'EXTINCT',
-                    }
-
-                    db_diet = diet_reverse.get(diet_display, 'OMNIVORE')
-                    db_conservation = conservation_reverse.get(conservation_display, 'LEAST_CONCERN')
-
-                    from django.db import IntegrityError
-
-                    created_by = request.user if request.user and request.user.is_authenticated else None
-
-                    existing_animal = AnimalModel.objects.filter(name=display_name).first()
-                    if existing_animal:
-                        found_animal = existing_animal
-                        logger.info(f"🟡 Animal ya existe en BD: {existing_animal.name}")
-                    else:
-                        try:
-                            new_animal = AnimalModel.objects.create(
-                                id=str(uuid.uuid4()),
-                                name=display_name,
-                                scientific_name=scientific_name,
-                                description=ai_data.get('description', f"{display_name} es un animal interesante."),
-                                animal_class=ai_data.get('animal_class', 'MAMMAL'),
-                                habitat=ai_data.get('habitat', 'Desconocido'),
-                                diet=db_diet,
-                                conservation_status=db_conservation,
-                                fun_facts=ai_data.get('fun_facts', []),
-                                average_lifespan=ai_data.get('average_lifespan', 'Desconocido'),
-                                average_weight=ai_data.get('average_weight', 'Desconocido'),
-                                geographic_distribution=ai_data.get('geographic_distribution', 'Desconocido'),
-                                aliases=[best_result.animal_name, display_name],
-                                image_url=uploaded_image_url,
-                                created_by=created_by,
-                            )
-                            found_animal = new_animal
-                            logger.info(f"✨ Nuevo animal agregado a BD con datos IA: {new_animal.name}")
-                        except IntegrityError:
-                            # If another request created it first, load existing record
-                            found_animal = AnimalModel.objects.filter(name=display_name).first()
-                            if found_animal:
-                                logger.info(f"🟡 Animal creado en paralelo, usando existente: {found_animal.name}")
-                            else:
-                                raise
-                except Exception as e:
-                    logger.error(f"Error creando animal en BD: {e}")
-                    import traceback as tb
-                    logger.error(f"Traceback: {tb.format_exc()}")
-                    return Response({
-                        'success': False,
-                        'error': f"Animal detected as '{best_result.animal_name}' but could not create it: {str(e)}"
-                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            logger.info(f"📥 AI Data recibido completo: {ai_data}")
             
-            # Handle both persisted animals (found_animal is object) and AI-generated (found_animal is None)
-            if found_animal is not None:
-                logger.info(f"📊 Retornando resultado: {found_animal.name} ({best_result.confidence:.1%})")
-                
-                # Obtener el modelo Django para actualizar
-                from src.infrastructure.persistence.models import AnimalModel
-                try:
-                    animal_model = AnimalModel.objects.get(id=found_animal.id)
-                    
-                    if (
-                        uploaded_image_url
-                        and getattr(animal_model, 'image_url', None) in (None, '')
-                        and request.user
-                        and request.user.is_authenticated
-                        and getattr(animal_model, 'created_by_id', None) == request.user.id
-                    ):
-                        animal_model.image_url = uploaded_image_url
-                    
-                    # Actualizar confianza del último reconocimiento
-                    animal_model.last_recognition_confidence = float(best_result.confidence)
-                    animal_model.save(update_fields=['last_recognition_confidence', 'updated_at', 'image_url'])
-                except AnimalModel.DoesNotExist:
-                    logger.warning(f"⚠️ Animal {found_animal.id} no encontrado en BD para actualizar")
-                
-                # Serialize response from database
-                try:
-                    animal_dict = found_animal.to_dict()
-                except Exception as e:
-                    logger.error(f"Error serializing animal to dict: {e}")
-                    import traceback
-                    logger.error(f"Traceback: {traceback.format_exc()}")
-                    animal_dict = {
-                        'id': str(found_animal.id),
-                        'name': found_animal.name,
-                        'scientific_name': found_animal.scientific_name,
-                        'description': found_animal.description,
-                        'animal_class': found_animal.animal_class,
-                        'habitat': found_animal.habitat,
-                        'diet': found_animal.diet,
-                        'conservation_status': found_animal.conservation_status,
-                        'fun_facts': found_animal.fun_facts or [],
-                    }
+            # Normalize diet and conservation for display
+            diet_map = {
+                'CARNIVORE': 'Carnívoro',
+                'HERBIVORE': 'Herbívoro',
+                'OMNIVORE': 'Omnívoro',
+                'PISCIVORE': 'Piscívoro',
+            }
+            conservation_map = {
+                'LEAST_CONCERN': 'Preocupación menor',
+                'NEAR_THREATENED': 'Casi amenazado',
+                'VULNERABLE': 'Vulnerable',
+                'ENDANGERED': 'En peligro',
+                'CRITICALLY_ENDANGERED': 'En peligro crítico',
+                'EXTINCT': 'Extinto',
+            }
+
+            # Map common name to Spanish when YOLO label is English
+            name_map_es = {
+                'Bird': 'Ave',
+                'Cats': 'Gato',
+                'Cow': 'Vaca',
+                'Deer': 'Ciervo',
+                'Dog': 'Perro',
+                'Elephant': 'Elefante',
+                'Giraffe': 'Jirafa',
+                'Person': 'Persona',
+                'Pig': 'Cerdo',
+                'Sheep': 'Oveja',
+            }
+            # Optional scientific name hints for common YOLO classes
+            scientific_hint = {
+                'Deer': 'Cervus elaphus',
+                'Cow': 'Bos taurus',
+                'Pig': 'Sus scrofa domesticus',
+                'Sheep': 'Ovis aries',
+                'Dog': 'Canis lupus familiaris',
+                'Cats': 'Felis catus',
+                'Elephant': 'Loxodonta africana',
+                'Giraffe': 'Giraffa camelopardalis',
+                'Person': 'Homo sapiens',
+                'Bird': 'Aves',
+            }
+
+            raw_diet = ai_data.get('diet', 'Omnívoro')
+            raw_conservation = ai_data.get('conservation_status', 'Preocupación menor')
+
+            logger.info(f"🔍 Raw values - Diet: '{raw_diet}', Conservation: '{raw_conservation}'")
+            
+            diet_key = str(raw_diet).strip().upper()
+            conservation_key = str(raw_conservation).strip().upper()
+
+            logger.info(f"🔑 Keys para mapeo - Diet Key: '{diet_key}', Conservation Key: '{conservation_key}'")
+            
+            diet_display = diet_map.get(diet_key, raw_diet)
+            conservation_display = conservation_map.get(conservation_key, raw_conservation)
+            
+            logger.info(f"✏️ Valores después de mapeo - Diet Display: '{diet_display}', Conservation Display: '{conservation_display}'")
+
+            # Normalize name and scientific name for Spanish display
+            display_name = name_map_es.get(best_result.animal_name, best_result.animal_name)
+            raw_scientific = ai_data.get('scientific_name')
+            scientific_lower = str(raw_scientific).strip().lower() if raw_scientific else ''
+            invalid_scientific = not raw_scientific or scientific_lower in {
+                best_result.animal_name.lower(),
+                display_name.lower(),
+                'cervidae'
+            }
+            if invalid_scientific and best_result.animal_name in scientific_hint:
+                scientific_name = scientific_hint[best_result.animal_name]
             else:
-                # found_animal is None, use animal_dict already built from AI data
-                logger.info(f"📊 Retornando resultado generado por IA: {animal_dict.get('name')} ({best_result.confidence:.1%})")
+                scientific_name = raw_scientific or f"Unknown ({best_result.animal_name})"
+
+            # Build animal_dict and persist in DB
+            try:
+                from src.infrastructure.persistence.models import AnimalModel
+                import uuid
+
+                # Map diet/conservation to DB expected values
+                diet_reverse = {
+                    'Carnívoro': 'CARNIVORE',
+                    'Herbívoro': 'HERBIVORE',
+                    'Omnívoro': 'OMNIVORE',
+                    'Piscívoro': 'PISCIVORE',
+                }
+                conservation_reverse = {
+                    'Preocupación menor': 'LEAST_CONCERN',
+                    'Casi amenazado': 'NEAR_THREATENED',
+                    'Vulnerable': 'VULNERABLE',
+                    'En peligro': 'ENDANGERED',
+                    'En peligro crítico': 'CRITICALLY_ENDANGERED',
+                    'Extinto': 'EXTINCT',
+                }
+
+                db_diet = diet_reverse.get(diet_display, 'OMNIVORE')
+                db_conservation = conservation_reverse.get(conservation_display, 'LEAST_CONCERN')
+
+                from django.db import IntegrityError
+
+                created_by = request.user if request.user and request.user.is_authenticated else None
+
+                existing_animal = AnimalModel.objects.filter(name=display_name).first()
+                if existing_animal:
+                    found_animal = existing_animal
+                    logger.info(f"🟡 Animal ya existe en BD: {existing_animal.name}")
+                    # Actualizar datos con los generados por IA
+                    logger.info(f"🔄 Actualizando datos del animal con IA...")
+                    try:
+                        found_animal.scientific_name = scientific_name
+                        found_animal.description = ai_data.get('description', f"{display_name} es un animal interesante.")
+                        found_animal.habitat = ai_data.get('habitat', 'Desconocido')
+                        found_animal.diet = db_diet
+                        found_animal.conservation_status = db_conservation
+                        found_animal.fun_facts = ai_data.get('fun_facts', [])
+                        found_animal.average_lifespan = ai_data.get('average_lifespan', 'Desconocido')
+                        found_animal.average_weight = ai_data.get('average_weight', 'Desconocido')
+                        found_animal.geographic_distribution = ai_data.get('geographic_distribution', 'Desconocido')
+                        found_animal.save()
+                        logger.info(f"✅ Datos del animal actualizados en BD con IA")
+                    except Exception as e:
+                        logger.error(f"⚠️ Error actualizando animal: {e}")
+                else:
+                    try:
+                        new_animal = AnimalModel.objects.create(
+                            id=str(uuid.uuid4()),
+                            name=display_name,
+                            scientific_name=scientific_name,
+                            description=ai_data.get('description', f"{display_name} es un animal interesante."),
+                            animal_class=ai_data.get('animal_class', 'MAMMAL'),
+                            habitat=ai_data.get('habitat', 'Desconocido'),
+                            diet=db_diet,
+                            conservation_status=db_conservation,
+                            fun_facts=ai_data.get('fun_facts', []),
+                            average_lifespan=ai_data.get('average_lifespan', 'Desconocido'),
+                            average_weight=ai_data.get('average_weight', 'Desconocido'),
+                            geographic_distribution=ai_data.get('geographic_distribution', 'Desconocido'),
+                            aliases=[best_result.animal_name, display_name],
+                            image_url=uploaded_image_url,
+                            created_by=created_by,
+                        )
+                        found_animal = new_animal
+                        logger.info(f"✨ Nuevo animal agregado a BD con datos IA: {new_animal.name}")
+                    except IntegrityError:
+                        # If another request created it first, load existing record
+                        found_animal = AnimalModel.objects.filter(name=display_name).first()
+                        if found_animal:
+                            logger.info(f"🟡 Animal creado en paralelo, usando existente: {found_animal.name}")
+                        else:
+                            raise
+            except Exception as e:
+                logger.error(f"Error creando animal en BD: {e}")
+                import traceback as tb
+                logger.error(f"Traceback: {tb.format_exc()}")
+                return Response({
+                    'success': False,
+                    'error': f"Animal detected as '{best_result.animal_name}' but could not create it: {str(e)}"
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            # Construir animal_dict desde los datos generados con IA
+            animal_dict = {
+                'id': str(found_animal.id) if found_animal else str(uuid.uuid4()),
+                'name': display_name,
+                'scientific_name': scientific_name,
+                'description': ai_data.get('description', f"{display_name} es un animal interesante."),
+                'animal_class': ai_data.get('animal_class', 'MAMMAL'),
+                'habitat': ai_data.get('habitat', 'Desconocido'),
+                'diet': diet_display,
+                'conservation_status': conservation_display,
+                'fun_facts': ai_data.get('fun_facts', []),
+                'average_lifespan': ai_data.get('average_lifespan', 'Desconocido'),
+                'average_weight': ai_data.get('average_weight', 'Desconocido'),
+                'geographic_distribution': ai_data.get('geographic_distribution', 'Desconocido'),
+                'image_url': uploaded_image_url or '',
+            }
+            
+            logger.info(f"🎁 animal_dict a devolver: {animal_dict}")
+            
+            # Log resultado
+            logger.info(f"📊 Retornando resultado con datos generados por IA: {display_name} ({best_result.confidence:.1%})")
             
             return Response({
                 'success': True,
@@ -438,8 +436,9 @@ class RecognizeImageView(APIView):
                 'recognition': {
                     'animal_name': best_result.animal_name,
                     'confidence': float(best_result.confidence),
-                }
-            })
+                },
+                'uploaded_image_url': uploaded_image_url
+            }, status=status.HTTP_200_OK)
             
         except Exception as e:
             import traceback
@@ -463,7 +462,7 @@ class RecognizeImageView(APIView):
         logger = logging.getLogger(__name__)
         
         # Try to get key from environment, fallback to hardcoded
-        api_key = os.environ.get('OPENROUTER_API_KEY') or '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'
+        api_key = os.environ.get('OPENROUTER_API_KEY') or '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'
         api_url = "https://openrouter.ai/api/v1/chat/completions"
         
         prompt = f"""IMPORTANTE: Solo genera datos del animal "{animal_name}". No confundas con otros animales.
@@ -514,13 +513,22 @@ REGLAS CRÍTICAS:
         }
         
         try:
+            logger.info(f"🔄 Generando datos con OpenRouter para: {animal_name}")
             r = requests.post(api_url, headers=headers, data=json.dumps(payload), timeout=20)
+            
+            # Log response status
+            logger.info(f"📡 OpenRouter respuesta HTTP: {r.status_code}")
+            
             r.raise_for_status()
             body = r.json()
+            
+            logger.info(f"📦 Respuesta JSON recibida: {str(body)[:500]}")
             
             # Parse response
             if isinstance(body, dict):
                 choices = body.get('choices') or body.get('outputs')
+                logger.info(f"🔍 Choices encontradas: {len(choices) if choices else 0}")
+                
                 if choices and isinstance(choices, list):
                     first = choices[0]
                     msg = first.get('message') or first.get('output') or first
@@ -536,6 +544,8 @@ REGLAS CRÍTICAS:
                         text = str(msg)
                     
                     if text:
+                        logger.info(f"📝 Texto recibido (primeros 200 chars): {str(text)[:200]}")
+                        
                         # Try to parse JSON from response
                         try:
                             # Clean up the response (remove markdown code blocks if present)
@@ -548,16 +558,22 @@ REGLAS CRÍTICAS:
                                 text = text[:-3]
                             text = text.strip()
                             
+                            logger.info(f"📋 Texto después de limpiar (primeros 300 chars): {text[:300]}")
+                            
                             data = json.loads(text)
-                            logger.info(f"✨ Datos completos generados con IA para {animal_name}")
+                            logger.info(f"✨ Datos completos generados con IA para {animal_name}: {data}")
                             return data
                         except json.JSONDecodeError as e:
-                            logger.warning(f"⚠️ Error parseando JSON: {e}, text={text[:100]}")
+                            logger.error(f"❌ Error parseando JSON: {e}, text={text}")
+                            logger.error(f"Full response body: {body}")
                             return self._get_fallback_data(animal_name)
             
+            logger.error(f"❌ Formato de respuesta inesperado: {body}")
             return self._get_fallback_data(animal_name)
         except Exception as e:
-            logger.warning(f"⚠️ Error generando datos con IA: {e}")
+            logger.error(f"❌ Error generando datos con IA: {e}")
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
             return self._get_fallback_data(animal_name)
     
     def _get_fallback_data(self, animal_name: str) -> dict:
@@ -576,12 +592,37 @@ REGLAS CRÍTICAS:
 
 
 class AnimalListView(APIView):
-    """API endpoint to list all animals"""
+    """API endpoint to list all animals or user's discovered animals"""
     
     def get(self, request):
-        use_case = ListAllAnimalsUseCase(DjangoAnimalRepository())
-        animals = use_case.execute()
-        return Response(animals)
+        # If user_only parameter is set and user is authenticated, return only discovered animals
+        user_only = request.query_params.get('user_only', 'false').lower() == 'true'
+        
+        if user_only and request.user.is_authenticated:
+            from src.infrastructure.persistence.models import DiscoveryModel, AnimalModel
+            # Get discoveries for this user with their animal data and thumbnail images
+            discoveries = DiscoveryModel.objects.filter(
+                user=request.user
+            ).select_related('animal').order_by('animal_id', '-discovered_at').distinct('animal_id')
+            
+            # Get animal models with their discovery thumbnail images
+            animals_data = []
+            for discovery in discoveries:
+                try:
+                    animal_dict = discovery.animal.to_dict()
+                    # Use the discovery's thumbnail URL instead of the base animal image
+                    if discovery.thumbnail_url:
+                        animal_dict['image_url'] = discovery.thumbnail_url
+                    animals_data.append(animal_dict)
+                except Exception as e:
+                    print(f"Error converting discovery {discovery.id}: {e}")
+                    pass
+            return Response(animals_data)
+        else:
+            # Return all animals
+            use_case = ListAllAnimalsUseCase(DjangoAnimalRepository())
+            animals = use_case.execute()
+            return Response(animals)
 
 
 class AnimalDetailView(APIView):
@@ -591,6 +632,22 @@ class AnimalDetailView(APIView):
         try:
             use_case = GetAnimalDetailsUseCase(DjangoAnimalRepository())
             animal = use_case.execute(animal_id)
+            
+            # If user is authenticated and has discovered this animal, use their discovery's thumbnail
+            if request.user.is_authenticated:
+                from src.infrastructure.persistence.models import DiscoveryModel
+                try:
+                    discovery = DiscoveryModel.objects.filter(
+                        user=request.user,
+                        animal_id=animal_id
+                    ).order_by('-discovered_at').first()
+                    
+                    if discovery and discovery.thumbnail_url:
+                        animal['image_url'] = discovery.thumbnail_url
+                except Exception as e:
+                    print(f"Error loading user discovery image: {e}")
+                    pass
+            
             return Response(animal)
         except AnimalNotFoundException as e:
             return Response(
@@ -672,3 +729,108 @@ class SessionDiscoveriesView(APIView):
         )
         discoveries = use_case.execute(session_id)
         return Response(discoveries)
+
+class UserDiscoveriesView(APIView):
+    """API endpoint to get the current user's discoveries"""
+    
+    def get(self, request):
+        from src.infrastructure.persistence.models import DiscoveryModel
+        
+        if not request.user.is_authenticated:
+            return Response(
+                {'error': 'User must be authenticated'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        
+        try:
+            discoveries = DiscoveryModel.objects.filter(
+                user=request.user
+            ).select_related('animal').order_by('-discovered_at')
+            
+            result = []
+            for discovery in discoveries:
+                result.append({
+                    'id': str(discovery.id),
+                    'animal_id': str(discovery.animal.id),
+                    'animal_name': discovery.animal.name,
+                    'thumbnail_url': discovery.thumbnail_url,
+                    'discovered_at': discovery.discovered_at.isoformat(),
+                    'confidence': discovery.confidence,
+                })
+            
+            return Response(result)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class CreateDiscoveryView(APIView):
+    """API endpoint to create a discovery for the current user"""
+    
+    def post(self, request):
+        from src.infrastructure.persistence.models import DiscoveryModel, AnimalModel, SessionModel
+        import uuid
+        
+        if not request.user.is_authenticated:
+            return Response(
+                {'error': 'User must be authenticated'},
+                status=status.HTTP_401_UNAUTHORIZED
+            )
+        
+        try:
+            animal_id = request.data.get('animal_id')
+            thumbnail_url = request.data.get('thumbnail_url', '')
+            confidence = request.data.get('confidence', 0.0)
+            
+            if not animal_id:
+                return Response(
+                    {'error': 'animal_id is required'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Get the animal
+            try:
+                animal = AnimalModel.objects.get(id=animal_id)
+            except AnimalModel.DoesNotExist:
+                return Response(
+                    {'error': f'Animal with id {animal_id} not found'},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            
+            # Get or create session for this user
+            session, _ = SessionModel.objects.get_or_create(
+                user=request.user,
+                is_active=True,
+                defaults={'id': str(uuid.uuid4())}
+            )
+            
+            # Create discovery
+            discovery = DiscoveryModel.objects.create(
+                id=str(uuid.uuid4()),
+                session=session,
+                user=request.user,
+                animal=animal,
+                thumbnail_url=thumbnail_url,
+                confidence=float(confidence)
+            )
+            
+            return Response({
+                'success': True,
+                'discovery': {
+                    'id': str(discovery.id),
+                    'animal_id': str(discovery.animal.id),
+                    'animal_name': discovery.animal.name,
+                    'thumbnail_url': discovery.thumbnail_url,
+                    'discovered_at': discovery.discovered_at.isoformat(),
+                    'confidence': discovery.confidence,
+                }
+            }, status=status.HTTP_201_CREATED)
+        
+        except Exception as e:
+            import traceback
+            return Response(
+                {'error': str(e), 'details': traceback.format_exc()},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

@@ -2,6 +2,23 @@
 
 {% block title %}Cambiar Correo Electrónico - Animal Recognition{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Ocultar todos los iconos nativos del navegador en inputs de email */
+    input[type="email"]::-webkit-textfield-decoration-container {
+        display: none !important;
+    }
+    
+    input[type="email"]::-webkit-reveal {
+        display: none !important;
+    }
+    
+    input[type="email"]::-ms-reveal {
+        display: none !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4">
     <div class="max-w-2xl mx-auto bg-white rounded-2xl card-shadow overflow-hidden">
@@ -15,52 +32,80 @@
             <p class="text-blue-100 text-sm">Actualiza tu dirección de correo de seguridad</p>
         </div>
 
-
         <!-- Contenido -->
         <div class="p-8">
+
+            <!-- Mensajes de error/éxito -->
+            {% if error_message %}
+                <div class="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 mb-8">
+                    <div class="flex items-start gap-3">
+                        <img src="https://img.icons8.com/color/32/delete-sign.png" alt="error" class="w-5 h-5 mt-1 flex-shrink-0">
+                        <div>
+                            <p class="text-red-800 text-sm font-semibold">Error</p>
+                            <p class="text-red-700 text-sm mt-1">{{ error_message }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <div class="bg-green-50 border-l-4 border-green-500 rounded-lg p-4 mb-8">
+                            <div class="flex items-start gap-3">
+                                <img src="https://img.icons8.com/color/32/checkmark.png" alt="success" class="w-5 h-5 mt-1 flex-shrink-0">
+                                <div>
+                                    <p class="text-green-800 text-sm font-semibold">Éxito</p>
+                                    <p class="text-green-700 text-sm mt-1">{{ message }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
 
             <!-- Nota informativa -->
             <div class="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-4 mb-8">
                 <div class="flex items-start gap-3">
                     <img src="https://img.icons8.com/color/32/info.png" alt="info" class="w-5 h-5 mt-1 flex-shrink-0">
                     <p class="text-blue-800 text-sm">
-                        Te enviaremos un enlace de verificación a tu nuevo correo electrónico. Deberás confirmar el
-                        cambio en las próximas 24 horas.
+                        Tu correo actual será reemplazado por el nuevo. Máximo 30 caracteres y debe ser un correo válido.
                     </p>
                 </div>
             </div>
 
             <!-- Formulario -->
-            <form class="space-y-6">
+            <form method="post" class="space-y-6" id="change-email-form">
+                {% csrf_token %}
 
                 <!-- Correo Actual -->
                 <div>
                     <label class="block text-gray-700 font-semibold text-sm mb-3">
                         Correo Electrónico Actual
                     </label>
-                    <input type="email" placeholder="tu.correo@ejemplo.com"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                    <input type="email" value="{{ user.email }}"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition bg-gray-100 cursor-not-allowed"
                         disabled>
                 </div>
 
                 <!-- Nuevo Correo -->
                 <div>
-                    <label class="block text-gray-700 font-semibold text-sm mb-3">
+                    <label for="new_email" class="block text-gray-700 font-semibold text-sm mb-3">
                         Nuevo Correo Electrónico
                     </label>
-                    <input type="email" placeholder="nuevo.correo@ejemplo.com"
+                    <input type="email" id="new_email" name="new_email" placeholder="nuevo.correo@ejemplo.com"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                        disabled>
+                        required>
                 </div>
 
                 <!-- Confirmar Correo -->
                 <div>
-                    <label class="block text-gray-700 font-semibold text-sm mb-3">
+                    <label for="confirm_email" class="block text-gray-700 font-semibold text-sm mb-3">
                         Confirmar Nuevo Correo Electrónico
                     </label>
-                    <input type="email" placeholder="Confirme su nuevo correo"
+                    <input type="email" id="confirm_email" name="confirm_email" placeholder="Confirme su nuevo correo"
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                        disabled>
+                        required>
                 </div>
 
                 <!-- Validación de correo -->
@@ -68,19 +113,27 @@
                     <h3 class="text-gray-700 font-semibold text-sm mb-4">Requisitos del correo:</h3>
                     <div class="space-y-3">
                         <div class="flex items-center gap-3">
-                            <input type="checkbox" id="req1" disabled class="w-4 h-4">
-                            <label for="req1" class="text-gray-600 text-sm">Correo válido con formato
-                                usuario@dominio.com</label>
+                            <img id="req1" src="https://img.icons8.com/ios-glyphs/30/visible--v1.png" alt="visible" class="w-6 h-6 opacity-30 requirement-icon">
+                            <label class="text-gray-600 text-sm">Formato válido: usuario@dominio.com</label>
                         </div>
                         <div class="flex items-center gap-3">
-                            <input type="checkbox" id="req2" disabled class="w-4 h-4">
-                            <label for="req2" class="text-gray-600 text-sm">Distinto al correo actual</label>
+                            <img id="req2" src="https://img.icons8.com/ios-glyphs/30/visible--v1.png" alt="visible" class="w-6 h-6 opacity-30 requirement-icon">
+                            <label class="text-gray-600 text-sm">Distinto al correo actual</label>
                         </div>
                         <div class="flex items-center gap-3">
-                            <input type="checkbox" id="req3" disabled class="w-4 h-4">
-                            <label for="req3" class="text-gray-600 text-sm">Debe estar verificado en 24 horas</label>
+                            <img id="req3" src="https://img.icons8.com/ios-glyphs/30/visible--v1.png" alt="visible" class="w-6 h-6 opacity-30 requirement-icon">
+                            <label class="text-gray-600 text-sm">Los correos deben coincidir</label>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <img id="req4" src="https://img.icons8.com/ios-glyphs/30/visible--v1.png" alt="visible" class="w-6 h-6 opacity-30 requirement-icon">
+                            <label class="text-gray-600 text-sm">Máximo 30 caracteres</label>
                         </div>
                     </div>
+                </div>
+
+                <!-- Alerta de coincidencia -->
+                <div id="email-match-alert" class="hidden bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4">
+                    <p class="text-yellow-800 text-sm font-semibold">Los correos no coinciden</p>
                 </div>
 
                 <!-- Botones -->
@@ -90,8 +143,9 @@
                         <img src="https://img.icons8.com/color/24/multiply.png" alt="cancel" class="w-5 h-5">
                         Cancelar
                     </a>
-                    <button type="button" disabled
-                        class="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
+                    <button type="submit" id="submit-btn"
+                        class="flex-1 px-4 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
+                        disabled>
                         <img src="https://img.icons8.com/color/24/checkmark--v1.png" alt="update" class="w-5 h-5">
                         Actualizar Correo
                     </button>
@@ -102,21 +156,111 @@
             <!-- Nota de seguridad -->
             <div class="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4 mt-8">
                 <div class="flex items-start gap-3">
-                    <img src="https://img.icons8.com/arcade/64/lock-2.png" alt="lock"
-                        class="w-6 h-6 mt-1 flex-shrink-0">
+                    <img src="https://img.icons8.com/arcade/64/lock-2.png" alt="lock" class="w-6 h-6 mt-1 flex-shrink-0">
                     <div>
-                        <p class="text-yellow-800 text-sm font-semibold">Verificación Requerida:</p>
+                        <p class="text-yellow-800 text-sm font-semibold">Información:</p>
                         <p class="text-yellow-700 text-sm mt-1">
-                            Se enviará un correo de verificación a tu nueva dirección. El cambio se completará después
-                            de que confirmes
-                            haciendo clic en el enlace enviado.
+                            El cambio es inmediato. Asegúrate de que el nuevo correo sea válido y que tengas acceso a él.
                         </p>
                     </div>
                 </div>
             </div>
 
-
         </div>
     </div>
 </div>
+
+<script>
+    // Validación en tiempo real
+    const newEmailEl = document.getElementById('new_email');
+    const confirmEmailEl = document.getElementById('confirm_email');
+    const submitBtn = document.getElementById('submit-btn');
+    const emailMatchAlert = document.getElementById('email-match-alert');
+    
+    const currentEmail = '{{ user.email }}';
+
+    const requirements = {
+        req1: { 
+            regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 
+            id: 'req1',
+            check: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+        },
+        req2: { 
+            id: 'req2',
+            check: (email) => email !== currentEmail && email.length > 0
+        },
+        req3: { 
+            id: 'req3',
+            check: (email) => email === confirmEmailEl.value && email.length > 0
+        },
+        req4: { 
+            id: 'req4',
+            check: (email) => email.length > 0 && email.length <= 30
+        }
+    };
+
+    function updateCheckboxes() {
+        const newEmail = newEmailEl.value;
+        
+        Object.values(requirements).forEach(req => {
+            const icon = document.getElementById(req.id);
+            if (icon) {
+                const isMet = req.check(newEmail);
+                if (isMet) {
+                    icon.classList.remove('opacity-30');
+                    icon.classList.add('opacity-100');
+                } else {
+                    icon.classList.remove('opacity-100');
+                    icon.classList.add('opacity-30');
+                }
+            }
+        });
+    }
+
+    function checkRequirements() {
+        updateCheckboxes();
+        
+        const newEmail = newEmailEl.value;
+        const confirmEmail = confirmEmailEl.value;
+        
+        // Validar coincidencia de correos
+        let emailsMatch = false;
+        if (newEmail && confirmEmail) {
+            emailsMatch = newEmail === confirmEmail;
+            if (!emailsMatch && confirmEmail.length > 0) {
+                emailMatchAlert.classList.remove('hidden');
+            } else {
+                emailMatchAlert.classList.add('hidden');
+            }
+        } else {
+            emailMatchAlert.classList.add('hidden');
+        }
+
+        // Verificar si todos los requisitos están cumplidos
+        let allMet = true;
+        Object.values(requirements).forEach(req => {
+            if (!req.check(newEmail)) {
+                allMet = false;
+            }
+        });
+
+        // Habilitar botón si todo está bien
+        const buttonEnabled = allMet && emailsMatch && newEmail.length > 0 && confirmEmail.length > 0;
+        
+        if (buttonEnabled) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    }
+
+    // Event listeners
+    newEmailEl?.addEventListener('input', checkRequirements);
+    confirmEmailEl?.addEventListener('input', checkRequirements);
+    
+    // Realizar validación inicial cuando carga la página
+    window.addEventListener('load', checkRequirements);
+</script>
 {% endblock %}

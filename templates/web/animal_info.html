@@ -228,10 +228,10 @@
         const imageSrc = animal.image_url || storedImage || null;
         const emojiContainer = clone.getElementById('animal-emoji');
         if (imageSrc) {
-            emojiContainer.innerHTML = `<img src="${imageSrc}" alt="${animal.name}" class="w-20 h-20 object-cover rounded-xl"/>`;
+            emojiContainer.innerHTML = `<img src="${imageSrc}" alt="${animal.name}" class="w-20 h-20 object-cover rounded-xl" onerror="this.style.display='none';"/>`;
             if (storedImage) sessionStorage.removeItem('animalImage');
         } else {
-            emojiContainer.innerHTML = emoji;
+            emojiContainer.innerHTML = '';
         }
         clone.getElementById('animal-name').textContent = animal.name;
         clone.getElementById('animal-scientific').textContent = animal.scientific_name;

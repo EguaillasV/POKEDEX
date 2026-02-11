@@ -3,6 +3,7 @@
 {% block title %}Animal Recognition - Inicio{% endblock %}
 
 {% block content %}
+<div data-user-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}">
 <!-- Analyzing Overlay -->
 <div id="analyzing-overlay" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50 flex items-center justify-center">
     <div class="bg-white bg-opacity-95 rounded-3xl p-8 text-center max-w-sm mx-4 shadow-2xl">
@@ -315,6 +316,7 @@
         </div>
     </div>
 </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -326,7 +328,39 @@
     let discoveries = [];
     let currentAnimal = null;
 
-    // Cargar descubrimientos desde localStorage cuando la página carga
+    // Cargar descubrimientos desde la API del usuario autenticado
+    function loadDiscoveriesFromServer() {
+        // Solo cargar si el usuario está autenticado
+        const userElement = document.querySelector('[data-user-authenticated]');
+        if (!userElement || userElement.getAttribute('data-user-authenticated') !== 'true') {
+            console.log('ℹ️ Usuario no autenticado, usando localStorage');
+            loadDiscoveriesFromStorage();
+            return;
+        }
+        
+        fetch('/api/user-discoveries/')
+            .then(response => {
+                if (response.status === 401) {
+                    console.log('ℹ️ No autenticado, usando localStorage');
+                    loadDiscoveriesFromStorage();
+                    return null;
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data) {
+                    discoveries = data;
+                    updateDiscoveryUI();
+                    console.log('✅ Discoveries cargadas desde servidor:', discoveries.length);
+                }
+            })
+            .catch(error => {
+                console.error('Error cargando descubrimientos del servidor:', error);
+                loadDiscoveriesFromStorage();
+            });
+    }
+    
+    // Cargar descubrimientos desde localStorage (fallback)
     function loadDiscoveriesFromStorage() {
         const savedDiscoveries = localStorage.getItem('discoveries');
         if (savedDiscoveries) {
@@ -344,7 +378,7 @@
     
     // Cargar al iniciar la página
     document.addEventListener('DOMContentLoaded', () => {
-        loadDiscoveriesFromStorage();
+        loadDiscoveriesFromServer();
     });
     
     // Cargar también cuando la página se vuelve visible (volver del navegador back)
@@ -525,8 +559,9 @@
                         id: `discovery-${data.animal.id}-${Date.now()}`,
                         animal_id: data.animal.id,
                         animal_name: data.animal.name,
-                        thumbnail_url: data.animal.image_url || 'https://img.icons8.com/windows/32/lion.png',
-                        discovered_at: new Date().toISOString()
+                        thumbnail_url: data.uploaded_image_url || data.animal.image_url || 'https://img.icons8.com/windows/32/lion.png',
+                        discovered_at: new Date().toISOString(),
+                        confidence: data.recognition?.confidence || 0.0
                     };
                     addDiscovery(discovery);
                 }
@@ -873,8 +908,40 @@
         discoveries.push(discovery);
         updateDiscoveryUI();
         
-        // Guardar en localStorage
-        localStorage.setItem('discoveries', JSON.stringify(discoveries));
+        // Guardar en servidor si el usuario está autenticado
+        const userElement = document.querySelector('[data-user-authenticated]');
+        if (userElement && userElement.getAttribute('data-user-authenticated') === 'true') {
+            fetch('/api/discoveries/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    animal_id: discovery.animal_id,
+                    thumbnail_url: discovery.thumbnail_url,
+                    confidence: discovery.confidence || 0.0
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('✅ Descubrimiento guardado en servidor');
+                } else {
+                    console.error('Error guardando descubrimiento:', data.error);
+                    // Fallback a localStorage
+                    localStorage.setItem('discoveries', JSON.stringify(discoveries));
+                }
+            })
+            .catch(error => {
+                console.error('Error enviando descubrimiento al servidor:', error);
+                // Fallback a localStorage
+                localStorage.setItem('discoveries', JSON.stringify(discoveries));
+            });
+        } else {
+            // Si no está autenticado, guardar en localStorage
+            localStorage.setItem('discoveries', JSON.stringify(discoveries));
+        }
 
         // Show notification
         showNotification(`¡Nuevo descubrimiento! 🎉`);
@@ -894,7 +961,7 @@
                 card.id = `discovery-${discovery.id}`;
                 card.className = 'discovery-card bg-gray-50 rounded-xl p-3 mb-3 flex items-center gap-3';
                 card.innerHTML = `
-                    <img src="${discovery.thumbnail_url}" alt="" class="w-16 h-16 rounded-lg object-cover bg-gray-200">
+                    <img src="${discovery.thumbnail_url}" alt="" class="w-16 h-16 rounded-lg object-cover bg-gray-200" onerror="this.src='https://img.icons8.com/windows/32/lion.png'">
                     <div class="flex-1">
                         <h4 class="font-semibold text-gray-800">${discovery.animal_name || 'Animal'}</h4>
                         <p class="text-xs text-gray-500">${new Date(discovery.discovered_at).toLocaleTimeString()}</p>

@@ -17,7 +17,7 @@ from src.infrastructure.persistence.models import AnimalModel
 import uuid
 
 # OpenRouter configuration
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = "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"
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 

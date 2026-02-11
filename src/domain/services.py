@@ -72,7 +72,7 @@ class AnimalRecognitionService:
             return (best_result, animal, None)
         
         # Create thumbnail and save discovery
-        thumbnail_filename = f"{session.id}_{animal.id}_{best_result.timestamp.timestamp()}.jpg"
+            thumbnail_filename = f"upload_{animal.id}.jpg"
         thumbnail_url = self._image_storage.save_thumbnail(frame, thumbnail_filename)
         
         discovery = Discovery.create(

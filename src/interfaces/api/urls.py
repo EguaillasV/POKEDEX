@@ -13,6 +13,8 @@ from .views import (
     SessionDiscoveriesView,
     RecognizeImageView,
     StartDetectionView,
+    UserDiscoveriesView,
+    CreateDiscoveryView,
 )
 
 urlpatterns = [
@@ -33,4 +35,8 @@ urlpatterns = [
     path('sessions/start/', SessionStartView.as_view(), name='session-start'),
     path('sessions/<str:session_id>/end/', SessionEndView.as_view(), name='session-end'),
     path('sessions/<str:session_id>/discoveries/', SessionDiscoveriesView.as_view(), name='session-discoveries'),
+    
+    # User Discoveries
+    path('user-discoveries/', UserDiscoveriesView.as_view(), name='user-discoveries'),
+    path('discoveries/', CreateDiscoveryView.as_view(), name='create-discovery'),
 ]

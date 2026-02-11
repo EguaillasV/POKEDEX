@@ -116,8 +116,8 @@
                     <div>
                         <label class="text-sm text-gray-600 font-medium">Teléfono</label>
                         <p class="text-lg text-gray-800 font-medium">
-                            {% if user.userprofile.phone %}
-                            {{ user.userprofile.phone }}
+                            {% if profile.phone %}
+                            {{ profile.phone }}
                             {% else %}
                             No especificado
                             {% endif %}
@@ -128,8 +128,8 @@
                     <div>
                         <label class="text-sm text-gray-600 font-medium">País</label>
                         <p class="text-lg text-gray-800 font-medium">
-                            {% if user.userprofile.country %}
-                            {{ user.userprofile.country }}
+                            {% if profile.country %}
+                            {{ profile.country }}
                             {% else %}
                             No especificado
                             {% endif %}
